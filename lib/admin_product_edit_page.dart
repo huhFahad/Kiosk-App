@@ -1,0 +1,408 @@
+// lib/admin_product_edit_page.dart
+
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'models/product_model.dart';
+import 'services/data_service.dart';
+
+class AdminProductEditPage extends StatefulWidget {
+  final Product? product;
+  final List<Product> allProducts;
+
+  AdminProductEditPage({required this.allProducts, this.product});
+
+  @override
+  _AdminProductEditPageState createState() => _AdminProductEditPageState();
+}
+
+class _AdminProductEditPageState extends State<AdminProductEditPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _dataService = DataService();
+  
+  // Form field values
+  String? _id;
+  String? _name;
+  String? _category;
+  String? _subcategory;
+  double? _price;
+  String? _unit;
+  String? _imagePath;
+  double? _mapX;
+  double? _mapY;
+
+  File? _imageFile;
+  final ImagePicker _picker = ImagePicker();
+
+  List<String> _existingCategories = [];
+  List<String> _existingSubcategories = [];
+  List<String> _existingUnits = [];
+
+  bool get _isEditing => widget.product != null;
+
+  static const String _addNewValue = '++ADD_NEW++';
+
+  late TextEditingController _tagsController;
+
+  @override
+  void initState() {
+    super.initState();
+
+     _tagsController = TextEditingController(text: widget.product?.tags.join(', ') ?? '');
+
+    if (_isEditing) {
+      _id = widget.product!.id;
+      _name = widget.product!.name;
+      _category = widget.product!.category;
+      _subcategory = widget.product!.subcategory;
+      _price = widget.product!.price;
+      _unit = widget.product!.unit;
+      _imagePath = widget.product!.image;
+      _mapX = widget.product!.mapX;
+      _mapY = widget.product!.mapY;
+      }
+
+    _existingCategories = widget.allProducts.map((p) => p.category).toSet().toList();
+    // _existingSubcategories = widget.allProducts.map((p) => p.subcategory).toSet().toList();
+    _existingUnits = widget.allProducts.map((p) => p.unit).where((u) => u.isNotEmpty).toSet().toList();
+    
+    if (_category != null) {
+      _existingSubcategories = widget.allProducts
+          .where((p) => p.category == _category)
+          .map((p) => p.subcategory)
+          .toSet()
+          .toList();
+    }
+
+    if (_isEditing) {
+      if (!_existingCategories.contains(_category)) {
+        _existingCategories.add(_category!);
+      }
+      if (!_existingSubcategories.contains(_subcategory)) {
+        _existingSubcategories.add(_subcategory!);
+      }
+      if (_unit != null && !_existingUnits.contains(_unit)) {
+        _existingUnits.add(_unit!);
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _tagsController.dispose();
+    // ... dispose other controllers ...
+    super.dispose();
+  }
+
+  void _saveForm() async {
+    final isValid = _formKey.currentState?.validate() ?? false;
+    if (!isValid) return;
+    
+    _formKey.currentState?.save();
+
+    final List<String> tags = _tagsController.text
+      .split(',') // Split the string by commas
+      .map((tag) => tag.trim()) // Remove leading/trailing whitespace from each tag
+      .where((tag) => tag.isNotEmpty) // Remove any empty tags that might result
+      .toList();
+    
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Saving...')));
+
+    String finalImagePath = _imagePath ?? 'assets/images/placeholder.jpeg';
+
+    // If a new image file was picked, save it first.
+    if (_imageFile != null) {
+      try {
+        finalImagePath = await _dataService.saveImage(_imageFile!);
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error saving image: $e'), backgroundColor: Colors.red),
+          );
+        }
+        return; // Stop if image saving fails
+      }
+    }
+
+    final productToSave = Product(
+      id: _id ?? '',
+      name: _name!,
+      category: _category!,
+      subcategory: _subcategory!,
+      price: _price!,
+      unit: _unit ?? '',
+      image: finalImagePath,
+      mapX: _mapX ?? 0.5,
+      mapY: _mapY ?? 0.5,
+      tags: tags,
+    );
+
+    try {
+      await _dataService.saveProduct(productToSave);
+      if (mounted) Navigator.of(context).pop();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error saving product: $e'), backgroundColor: Colors.red),
+        );
+      }
+    }
+  }
+
+  Widget _buildNameField() {
+    return TextFormField(
+      initialValue: _name,
+      decoration: InputDecoration(labelText: 'Product Name'),
+      validator: (value) => value!.isEmpty ? 'Please enter a name' : null,
+      onSaved: (value) => _name = value,
+    );
+  }
+
+  Widget _buildDropdown(
+    String label,
+    String? currentValue,
+    List<String> items,
+    Function(String?) onSaved,
+    Function(String?) onChanged,
+  ) {
+
+    final dropdownItems = List<String>.from(items)..add(_addNewValue);
+
+    return DropdownButtonFormField<String>(
+      value: currentValue,
+      decoration: InputDecoration(labelText: label),
+      items: dropdownItems.map((item) {
+        if (item == _addNewValue) {
+          // If it's our special value, style it differently
+          return DropdownMenuItem(
+            value: item,
+            child: Text(
+              'Add New...',
+              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+            ),
+          );
+        }
+        return DropdownMenuItem(value: item, child: Text(item));
+      }).toList(),
+      onChanged: (value) {
+        if (value == _addNewValue) {
+          _showAddNewDialog(label).then((newValue) {
+            if (newValue != null && newValue.isNotEmpty) {
+              setState(() {
+                if (label == 'Category') {
+                  _existingCategories.add(newValue);
+                } else if (label == 'Sub-category') {
+                  _existingSubcategories.add(newValue);
+                } else if (label == 'Unit') {
+                  _existingUnits.add(newValue);
+                }
+                onChanged(newValue);
+              });
+            }
+          });
+        } else {
+          onChanged(value);
+        }
+      },
+      onSaved: onSaved,
+      validator: (value) {
+        if (label != 'Unit' && (value == null || value.isEmpty)) {
+          return 'Please select a $label';
+        }
+        return null;
+      },
+    );
+  }
+  
+  Future<String?> _showAddNewDialog(String label) {
+    final controller = TextEditingController();
+    return showDialog<String>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Add New $label'),
+          content: TextField(
+            controller: controller,
+            autofocus: true,
+            decoration: InputDecoration(hintText: 'Enter new $label name'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(controller.text);
+              },
+              child: Text('Add'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildPriceField() {
+    return TextFormField(
+      initialValue: _price?.toString(),
+      decoration: InputDecoration(labelText: 'Price'),
+      keyboardType: TextInputType.numberWithOptions(decimal: true),
+      validator: (value) => (value!.isEmpty || double.tryParse(value) == null) ? 'Please enter a valid price' : null,
+      onSaved: (value) => _price = double.tryParse(value!),
+    );
+  }
+
+  Widget _buildImagePicker() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Product Image', style: Theme.of(context).textTheme.bodySmall),
+        SizedBox(height: 8),
+        Container(
+          height: 150,
+          width: 150,
+          decoration: BoxDecoration(border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(8)),
+          child: _buildImagePreview(),
+        ),
+        SizedBox(height: 8),
+        TextButton.icon(
+          icon: Icon(Icons.image),
+          label: Text('Select Image'),
+          onPressed: () async {
+            final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+            if (pickedFile != null) {
+              setState(() {
+                _imageFile = File(pickedFile.path);
+              });
+            }
+          },
+        ),
+        if (_isEditing && _imagePath != null)
+          Text('Current Path: $_imagePath', style: TextStyle(fontSize: 12, color: Colors.grey)),
+      ],
+    );
+  }
+
+  Widget _buildImagePreview() {
+    // Priority 1: A new file has been picked by the user.
+    if (_imageFile != null) {
+      return Image.file(_imageFile!, fit: BoxFit.cover, width: double.infinity);
+    }
+    
+    // Priority 2: An existing path is available.
+    if (_imagePath != null && _imagePath!.isNotEmpty) {
+      // Check if it's an asset or a file path.
+      final isAsset = _imagePath!.startsWith('assets/');
+      if (isAsset) {
+        return Image.asset(
+          _imagePath!, 
+          fit: BoxFit.cover, 
+          width: double.infinity,
+          errorBuilder: (ctx, err, st) => Icon(Icons.error, color: Colors.red)
+        );
+      } else {
+        // It's a file path from our documents directory.
+        return Image.file(
+          File(_imagePath!), 
+          fit: BoxFit.cover, 
+          width: double.infinity,
+          errorBuilder: (ctx, err, st) => Icon(Icons.error, color: Colors.red)
+        );
+      }
+    }
+    
+    // Priority 3: No image available.
+    return Center(child: Text('No Image'));
+  }
+
+  Widget _buildMapCoordinateField(String label, String? initialValue, Function(String?) onSaved) {
+    return TextFormField(
+      initialValue: initialValue,
+      decoration: InputDecoration(labelText: label),
+      keyboardType: TextInputType.numberWithOptions(decimal: true),
+      validator: (value) => (value!.isEmpty || double.tryParse(value) == null || double.parse(value) < 0 || double.parse(value) > 1)
+          ? 'Enter a value between 0.0 and 1.0' : null,
+      onSaved: onSaved,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(_isEditing ? 'Edit Product' : 'Add Product'),
+        actions: [IconButton(icon: Icon(Icons.save), onPressed: _saveForm)],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildNameField(),
+                SizedBox(height: 12),
+                _buildDropdown(
+                  'Category',
+                  _category,
+                  _existingCategories,
+                  (value) => _category = value,
+                  (value) { // This is the onChanged callback
+                    setState(() {
+                      _category = value;
+                      // --- NEW LOGIC FOR CASCADING ---
+                      // 1. When the category changes, reset the sub-category
+                      _subcategory = null; 
+                      // 2. Update the list of available sub-categories
+                      _existingSubcategories = widget.allProducts
+                          .where((p) => p.category == value)
+                          .map((p) => p.subcategory)
+                          .toSet()
+                          .toList();
+                    });
+                  },
+                ),
+                SizedBox(height: 12),
+                _buildDropdown(
+                  'Sub-category',
+                  _subcategory,
+                  _existingSubcategories,
+                  (value) => _subcategory = value,
+                  (value) => setState(() => _subcategory = value),
+                ),
+                SizedBox(height: 12),
+                _buildPriceField(),
+                SizedBox(height: 12),
+                _buildDropdown('Unit', _unit, _existingUnits, (value) => _unit = value, (value) => setState(() => _unit = value)),
+                SizedBox(height: 24),
+                _buildImagePicker(),
+                SizedBox(height: 24),
+                _buildMapCoordinateField('Map X (0.0 - 1.0)', _mapX?.toString(), (value) => _mapX = double.tryParse(value!)),
+                SizedBox(height: 12),
+                _buildMapCoordinateField('Map Y (0.0 - 1.0)', _mapY?.toString(), (value) => _mapY = double.tryParse(value!)),
+                SizedBox(height: 12),
+                TextFormField(
+                  controller: _tagsController,
+                  decoration: InputDecoration(
+                    labelText: 'Search Tags',
+                    hintText: 'e.g., morning, breakfast, healthy, snack',
+                    helperText: 'Enter tags separated by commas',
+                  ),
+                ),
+                SizedBox(height: 30),
+                ElevatedButton(
+                  onPressed: _saveForm,
+                  child: Padding(padding: const EdgeInsets.symmetric(vertical: 16.0), child: Text('Save Product')),
+                  style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 50)),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

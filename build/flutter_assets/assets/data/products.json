@@ -1,0 +1,68 @@
+[
+  {
+    "id": "p1",
+    "name": "Granny Smith Apples",
+    "category": "Groceries",
+    "subcategory": "Fruits",
+    "price": 150.0,
+    "unit": "/kg",
+    "image": "assets/images/apples.jpg",
+    "mapX": 0.25,
+    "mapY": 0.30
+  },
+  {
+    "id": "p2",
+    "name": "Cavendish Bananas",
+    "category": "Groceries",
+    "subcategory": "Fruits",
+    "price": 60.0,
+    "unit": "/dozen",
+    "image": "assets/images/bananas.jpg",
+    "mapX": 0.28,
+    "mapY": 0.35
+  },
+  {
+    "id": "p3",
+    "name": "Whole Milk",
+    "category": "Groceries",
+    "subcategory": "Dairy",
+    "price": 50.0,
+    "unit": "/L",
+    "image": "assets/images/milk.jpg",
+    "mapX": 0.70,
+    "mapY": 0.50
+  },
+  {
+    "id": "p4",
+    "name": "Sourdough Bread",
+    "category": "Groceries",
+    "subcategory": "Bakery",
+    "price": 80.0,
+    "unit": "/loaf",
+    "image": "assets/images/bread.jpg",
+    "mapX": 0.45,
+    "mapY": 0.80
+  },
+  {
+    "id": "p5",
+    "name": "Spiral Notebook",
+    "category": "Stationery",
+    "subcategory": "A4",
+    "price": 100.0,
+    "unit": "",
+    "image": "assets/images/spiral-notebook.jpg",
+    "mapX": 0.85,
+    "mapY": 0.15
+  },
+  {
+    "id": "p6",
+    "name": "Pocket Journal",
+    "category": "Stationery",
+    "subcategory": "Small",
+    "price": 75.0,
+    "unit": "",
+    "image": "assets/images/pocket-journal.jpg",
+    "mapX": 0.88,
+    "mapY": 0.20
+  }
+]

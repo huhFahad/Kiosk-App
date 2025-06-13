@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Groceries",
+    "imagePath": "assets/images/category_groceries.jpg"
+  },
+  {
+    "name": "Stationery",
+    "imagePath": "assets/images/category_stationery.jpg"
+  }
+]

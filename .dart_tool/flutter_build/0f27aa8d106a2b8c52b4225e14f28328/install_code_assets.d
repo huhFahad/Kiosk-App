@@ -1,0 +1,1 @@
+ /home/chewbacca/flutter_projects/kiosk_app/.dart_tool/flutter_build/0f27aa8d106a2b8c52b4225e14f28328/native_assets.json: 
