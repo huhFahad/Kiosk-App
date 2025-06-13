@@ -2,6 +2,9 @@
 /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/data/icudtl.dat
 /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/lib/libflutter_linux_gtk.so
 /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/lib/libfile_selector_linux_plugin.so
+/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/lib/libscreen_retriever_linux_plugin.so
+/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/lib/libwindow_manager_plugin.so
+/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/data/flutter_assets/isolate_snapshot_data
 /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/data/flutter_assets/fonts/MaterialIcons-Regular.otf
 /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/data/flutter_assets/assets/images/placeholder.jpeg
 /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/data/flutter_assets/assets/images/category_groceries.jpg
@@ -20,6 +23,8 @@
 /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/data/flutter_assets/kernel_blob.bin
 /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/data/flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf
 /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/data/flutter_assets/NOTICES.Z
+/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/data/flutter_assets/vm_snapshot_data
+/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/data/flutter_assets/.last_build_id
 /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/data/flutter_assets/version.json
 /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/data/flutter_assets/NativeAssetsManifest.json
 /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/data/flutter_assets/AssetManifest.bin

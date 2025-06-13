@@ -1,7 +1,9 @@
 // lib/main.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'models/cart_model.dart';
 import 'categories_page.dart';
@@ -13,8 +15,13 @@ import 'home_page.dart';
 import 'admin_dashboard_page.dart';
 import 'admin_product_list_page.dart';
 import 'search_results_page.dart';
+import 'theme/kiosk_theme.dart';
 
 void main() {
+   WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+  windowManager.waitUntilReadyToShow(const WindowOptions(fullScreen: true));
   runApp(
     ChangeNotifierProvider(
       create: (context) => CartModel(),
@@ -28,11 +35,12 @@ class KioskApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Retail Kiosk',
-      theme: ThemeData(
-        brightness: Brightness.light,
-        primarySwatch: Colors.green,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+      // theme: ThemeData(
+      //   brightness: Brightness.light,
+      //   primarySwatch: Colors.green,
+      //   visualDensity: VisualDensity.adaptivePlatformDensity,
+      // ),
+      theme: KioskTheme.themeData,
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
