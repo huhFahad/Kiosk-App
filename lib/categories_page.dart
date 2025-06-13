@@ -13,7 +13,10 @@ class CategoriesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(title: 'All Categories'),
+      appBar: CommonAppBar(
+        context: context,
+        title: 'All Categories'
+        ),
       body: FutureBuilder<Map<String, dynamic>>(
         // Use a Future.wait to load both products and categories at once
         future: _loadData(),

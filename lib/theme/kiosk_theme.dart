@@ -6,7 +6,7 @@ class KioskTheme {
   // --- BASE SIZES ---
   // We can tweak these base values to scale the whole app up or down.
   static const double _baseFontSize = 18.0;
-  static const double _scale = 1.2; // A multiplier to make everything bigger
+  static const double _scale = 1.4; // A multiplier to make everything bigger
 
   // --- TEXT THEME ---
   static TextTheme get textTheme {
@@ -76,6 +76,25 @@ class KioskTheme {
     );
   }
 
+  static AppBarTheme get appBarTheme {
+    return AppBarTheme(
+      // Make the AppBar taller to accommodate larger text/icons
+      toolbarHeight: 100.0 * _scale, 
+      centerTitle: true, // Good practice for kiosk consistency
+      elevation: 4.0,
+      titleTextStyle: (
+        textTheme.titleLarge?.copyWith(
+          color: Colors.black,
+          fontSize: 50.0
+          )      
+      ),
+      iconTheme: IconThemeData(
+        size: 80,       // <-- Icon size
+        // color: Colors.black,  // <-- Icon color
+      ),
+    );
+  }
+
   // --- THE MASTER THEME ---
   static ThemeData get themeData {
     return ThemeData(
@@ -84,6 +103,7 @@ class KioskTheme {
       fontFamily: 'Roboto', // Or any other font you prefer
       
       // Apply our custom themes
+      appBarTheme: appBarTheme,
       textTheme: textTheme,
       iconTheme: iconTheme,
       iconButtonTheme: IconButtonThemeData(

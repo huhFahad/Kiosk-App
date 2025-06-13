@@ -8,7 +8,9 @@ class MapPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: AppBar(title: Text('Find Product on Map')),
-      appBar: CommonAppBar(title: 'Find Product on Map'),
+      appBar: CommonAppBar(
+        context: context,
+        title: 'Find Product on Map'),
       body: Center(
         child: Text(
           '🗺️ Store Map Coming Soon!',

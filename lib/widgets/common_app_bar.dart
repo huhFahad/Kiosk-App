@@ -1,48 +1,63 @@
 // lib/widgets/common_app_bar.dart
 import 'package:flutter/material.dart';
 
-class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
-  final bool showBackButton;
-  final bool showCartIcon;
+PreferredSizeWidget CommonAppBar({
+  required BuildContext context, // It now requires the context to be passed in
+  required String title,
+  List<Widget>? extraActions,
+}) {
+  final canPop = Navigator.of(context).canPop();
+  final onCartPage = ModalRoute.of(context)?.settings.name == '/cart';
 
-  const CommonAppBar({
-    Key? key,
-    required this.title,
-    this.showBackButton = true,
-    this.showCartIcon = true,
-  }) : super(key: key);
+  // Get the height directly from the theme using the passed-in context
+  final double appBarHeight = Theme.of(context).appBarTheme.toolbarHeight ?? kToolbarHeight;
 
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      automaticallyImplyLeading: showBackButton,
-      title: Text(title),
-      actions: [
+  return AppBar(
+    // The theme from KioskTheme will control:
+    // - backgroundColor, titleTextStyle, elevation, centerTitle
+    
+    // We explicitly set the height here to ensure it's always correct
+    toolbarHeight: appBarHeight, 
+    
+    // automaticallyImplyLeading: canPop,
+
+    leading: canPop
+      ? Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(40),
+              onTap: () => Navigator.of(context).pop(),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Icon(Icons.arrow_back_ios_new_rounded, size: 60),
+              ),
+            ),
+          ),
+        )
+      : null,
+
+
+    title: Text(title),
+    actions: [
+      IconButton(
+        icon: const Icon(Icons.home_outlined),
+        tooltip: 'Go to Home',
+        onPressed: () {
+          Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+        },
+      ),
+      if (!onCartPage)
         IconButton(
-          icon: Icon(Icons.home_outlined),
-          tooltip: 'Go to Home',
+          icon: const Icon(Icons.shopping_cart_outlined),
+          tooltip: 'View Cart',
           onPressed: () {
-            Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+            Navigator.of(context).pushNamed('/cart');
           },
         ),
-
-        if (showCartIcon)
-          IconButton(
-            icon: Icon(Icons.shopping_cart_outlined),
-            tooltip: 'View Cart',
-            onPressed: () {
-              // Avoid pushing a new cart page if we are already on it.
-              // This is a good defensive check.
-              if (ModalRoute.of(context)?.settings.name != '/cart') {
-                Navigator.of(context).pushNamed('/cart');
-              }
-            },
-          ),
-      ],
-    );
-  }
-
-  @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+      if (extraActions != null) ...extraActions!,
+      SizedBox(width: 30,)
+    ],
+  );
 }

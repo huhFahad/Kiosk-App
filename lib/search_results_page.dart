@@ -7,6 +7,7 @@ import 'models/product_model.dart';
 import 'admin_product_list_page.dart';
 import 'widgets/common_app_bar.dart';
 import 'widgets/quantity_control_widget.dart';
+import 'widgets/product_list_item.dart';
 
 class SearchResultsPage extends StatelessWidget {
   @override
@@ -32,7 +33,9 @@ class SearchResultsPage extends StatelessWidget {
 
     // --- STEP 3: Build the UI with the results ---
     return Scaffold(
-      appBar: CommonAppBar(title: 'Search Results for "$searchQuery"'),
+      appBar: CommonAppBar(
+        context: context,
+        title: 'Search Results for "$searchQuery"'),
       body: searchResults.isEmpty
           ? Center(
               child: Text(
@@ -46,32 +49,7 @@ class SearchResultsPage extends StatelessWidget {
               itemCount: searchResults.length,
               itemBuilder: (context, index) {
                 final product = searchResults[index];
-                return Card(
-                  margin: EdgeInsets.symmetric(vertical: 8),
-                  elevation: 4,
-                  child: ListTile(
-                    contentPadding: EdgeInsets.all(12),
-                    leading: ProductImageView(imagePath: product.image),
-                    title: Text(product.name, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                    subtitle: Text('₹${product.price.toStringAsFixed(2)} ${product.unit}', style: TextStyle(fontSize: 16)),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.map_outlined),
-                          tooltip: 'Find on Map',
-                          onPressed: () {
-                            // Navigate to the map page, passing the product.
-                            // The map page will then know which product to highlight.
-                            Navigator.pushNamed(context, '/map', arguments: product);
-                          },
-                        ),
-                        SizedBox(width: 8),
-                        QuantityControlWidget(product: product),
-                      ],
-                    ),
-                  ),
-                );
+                return ProductListItem(product: product);
               },
             ),
     );

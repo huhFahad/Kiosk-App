@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 import 'models/product_model.dart';
 // import 'models/cart_model.dart';
 import 'widgets/common_app_bar.dart';
-import 'widgets/quantity_control_widget.dart';
-import 'admin_product_list_page.dart'; // For ProductImageView
+// import 'widgets/quantity_control_widget.dart';
+// import 'admin_product_list_page.dart'; // For ProductImageView
+import 'widgets/product_list_item.dart';
 
 // An enum to define our sorting options cleanly
 enum ProductSortOption { Default, PriceHighToLow, PriceLowToHigh }
@@ -26,6 +27,8 @@ class _ProductsListPageState extends State<ProductsListPage> {
     final arguments = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     final String categoryName = arguments['category'];
     final List<Product> allProducts = arguments['products'];
+    
+    final double defaultFontSize = Theme.of(context).textTheme.bodyLarge?.fontSize ?? 24.0;
 
     final productsInMainCategory = allProducts.where((p) => p.category == categoryName).toList();
     final subcategories = ['All', ...productsInMainCategory.map((p) => p.subcategory).toSet().toList()];
@@ -51,14 +54,18 @@ class _ProductsListPageState extends State<ProductsListPage> {
     }
 
     return Scaffold(
-      appBar: CommonAppBar(title: categoryName),
+      appBar: CommonAppBar(
+        context: context,
+        title: categoryName),
+      // appBar: AppBar(title: Text(categoryName),),
       body: Column(
         children: [
           // --- Sub-category Filter Bar ---
           Container(
             padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
             child: SizedBox(
-              height: 40.0,
+              // height: 40.0,
+              height: defaultFontSize * 2.5,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: subcategories.length,
@@ -112,28 +119,7 @@ class _ProductsListPageState extends State<ProductsListPage> {
               itemCount: sortedProducts.length, // Use the sorted list
               itemBuilder: (context, index) {
                 final product = sortedProducts[index]; // Use the sorted list
-                return Card(
-                  margin: EdgeInsets.symmetric(vertical: 8),
-                  elevation: 4,
-                  child: ListTile(
-                    contentPadding: EdgeInsets.all(12),
-                    leading: ProductImageView(imagePath: product.image),
-                    title: Text(product.name, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                    subtitle: Text('₹${product.price.toStringAsFixed(2)} ${product.unit}', style: TextStyle(fontSize: 16)),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.map_outlined),
-                          tooltip: 'Find on Map',
-                          onPressed: () { /* Map navigation */ },
-                        ),
-SizedBox(width: 8),
-                        QuantityControlWidget(product: product),
-                      ],
-                    ),
-                  ),
-                );
+                return ProductListItem(product: product);
               },
             ),
           ),

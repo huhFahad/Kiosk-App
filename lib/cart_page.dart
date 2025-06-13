@@ -11,8 +11,8 @@ class CartPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonAppBar(
+        context: context,
         title: 'Your Cart',
-        showCartIcon: false,
         ), 
       body: Consumer<CartModel>(
         builder: (context, cart, child) {
@@ -46,17 +46,20 @@ class CartPage extends StatelessWidget {
                               onPressed: () => cart.decreaseQuantity(cartItem),
                             ),
                             Text(cartItem.quantity.toString(), style: TextStyle(fontSize: 18)),
+                            SizedBox(width: 8,),
                             IconButton(
-                              icon: Icon(Icons.add),
+                              icon: Icon(Icons.add, size: 40,),
                               onPressed: () => cart.add(cartItem.product),
                             ),
+
+                            SizedBox(width: 15,),
 
                             // A divider for visual separation
                             VerticalDivider(), 
 
                             // --- THE NEW DELETE BUTTON ---
                             IconButton(
-                              icon: Icon(Icons.delete_outline, color: Colors.red.shade700),
+                              icon: Icon(Icons.delete_outline, color: Colors.red.shade700, size: 40,),
                               tooltip: 'Remove from cart',
                               onPressed: () {
                                 // Show a confirmation dialog before deleting

@@ -1,7 +1,7 @@
 // lib/main.dart
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+// import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -18,9 +18,7 @@ import 'search_results_page.dart';
 import 'theme/kiosk_theme.dart';
 
 void main() {
-   WidgetsFlutterBinding.ensureInitialized();
-  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+  WidgetsFlutterBinding.ensureInitialized();
   windowManager.waitUntilReadyToShow(const WindowOptions(fullScreen: true));
   runApp(
     ChangeNotifierProvider(
