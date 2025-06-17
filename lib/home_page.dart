@@ -97,21 +97,25 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.store, size: 100, color: Colors.green),
+                    Icon(Icons.store, size: 350, color: Colors.green),
                     SizedBox(height: 20),
                     Text(
                       'Welcome to Our Store',
-                      // style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-                      style: Theme.of(context).textTheme.displayLarge,
+                      style: TextStyle(color: Colors.black, fontSize: 80, fontWeight: FontWeight.normal, fontFamily: 'Times New Roman'),
+                      // style: Theme.of(context).textTheme.displayLarge,
                     ),
                     SizedBox(height: 40),
 
-                    // --- THE NEW SEARCH BAR ---
+                    // --- THE SEARCH BAR ---
                     SizedBox(
-                      width: 600,
+                      width: 900,
                       child: TextField(
                         controller: _searchController,
+                        textAlign: TextAlign.center,
                         decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          // labelText: 'Search Products',
                           hintText: 'Search for products (e.g., milk, apples)',
                           prefixIcon: Icon(Icons.search),
                           border: OutlineInputBorder(
@@ -122,15 +126,18 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     SizedBox(height: 20),
-                    Text("or", style: TextStyle(color: Colors.grey.shade600)),
+                    Text("or", style: TextStyle(color: Colors.grey.shade600, fontSize: 30), ),
                     // --- END OF SEARCH BAR ---
                     SizedBox(height:20),
                     SizedBox(
-                      width: 350,
+                      width: 700,
                       child: ElevatedButton.icon(
-                        icon: Icon(Icons.grid_view_rounded),
+                        icon: Icon(Icons.grid_view_rounded, size: 60,),
                         onPressed: () => _goTo(context, '/categories'),
-                        label: Text('Browse All Products'),
+                        label: Text(
+                          'Browse All Products',
+                          style: TextStyle(fontSize: 50),
+                        ),
                         // style:
                         //   ElevatedButton.styleFrom(
                         //     minimumSize: Size(double.infinity, 60),
@@ -140,11 +147,14 @@ class _HomePageState extends State<HomePage> {
                     ),
                     SizedBox(height:20),
                     SizedBox(
-                      width: 350,
+                      width: 700,
                       child: ElevatedButton.icon(
-                        icon: Icon(Icons.map_rounded),
+                        icon: Icon(Icons.map_rounded, size: 60,),
                         onPressed: () => _goTo(context, '/map'),
-                        label: Text('Find Product on Map'),
+                        label: Text(
+                          'Find Product on Map',
+                          style: TextStyle(fontSize: 50),
+                        ),
                         // style: ElevatedButton.styleFrom(
                         //   minimumSize: Size(double.infinity, 60),
                         //   textStyle: TextStyle(fontSize: 20),
@@ -153,11 +163,14 @@ class _HomePageState extends State<HomePage> {
                     ),  
                     SizedBox(height:20),
                     SizedBox(
-                      width: 350,
+                      width: 700,
                       child: ElevatedButton.icon(
-                        icon: Icon(Icons.shopping_cart_rounded),
+                        icon: Icon(Icons.shopping_cart_rounded, size: 60,),
                         onPressed: () => _goTo(context, '/cart'),
-                        label: Text('View Your Cart'),
+                        label: Text(
+                          'View Your Cart',
+                          style: TextStyle(fontSize: 50),
+                        ),
                         // style: ElevatedButton.styleFrom(
                         //   minimumSize: Size(double.infinity, 60),
                         //   textStyle: TextStyle(fontSize: 20),

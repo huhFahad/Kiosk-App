@@ -2,6 +2,8 @@
 /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/data/icudtl.dat
 /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/lib/libflutter_linux_gtk.so
 /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/lib/libfile_selector_linux_plugin.so
+/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/lib/libprinting_plugin.so
+/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/lib/libpdfium.so
 /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/lib/libscreen_retriever_linux_plugin.so
 /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/lib/libwindow_manager_plugin.so
 /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/data/flutter_assets/isolate_snapshot_data
@@ -15,8 +17,11 @@
 /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/data/flutter_assets/assets/images/spiral-notebook.jpg
 /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/data/flutter_assets/assets/images/bananas.jpg
 /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/data/flutter_assets/assets/images/pocket-journal.jpg
+/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/data/flutter_assets/assets/images/frames/frame_wood.png
+/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/data/flutter_assets/assets/images/frames/frame_black.png
 /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/data/flutter_assets/assets/images/apples.jpg
 /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/data/flutter_assets/assets/data/categories.json
+/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/data/flutter_assets/assets/data/frames.json
 /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/data/flutter_assets/assets/data/products.json
 /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/data/flutter_assets/FontManifest.json
 /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/bundle/data/flutter_assets/AssetManifest.json

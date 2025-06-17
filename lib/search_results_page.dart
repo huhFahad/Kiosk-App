@@ -4,21 +4,20 @@ import 'package:flutter/material.dart';
 // import 'package:provider/provider.dart';
 import 'models/product_model.dart';
 // import 'models/cart_model.dart';
-import 'admin_product_list_page.dart';
+// import 'admin_product_list_page.dart';
 import 'widgets/common_app_bar.dart';
-import 'widgets/quantity_control_widget.dart';
+// import 'widgets/quantity_control_widget.dart';
 import 'widgets/product_list_item.dart';
 
 class SearchResultsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // --- STEP 1: Get arguments from the route FIRST ---
+    
     final arguments = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     final String searchQuery = arguments['query'];
     final List<Product> allProducts = arguments['products'];
 
-    // --- STEP 2: NOW, perform the filtering and search logic ---
-    final String query = searchQuery.toLowerCase(); // Search query in lowercase once
+    final String query = searchQuery.toLowerCase();
     
     final List<Product> searchResults = allProducts.where((product) {
       // Check against name, category, and subcategory
@@ -28,14 +27,15 @@ class SearchResultsPage extends StatelessWidget {
       final tagsMatch = product.tags.any((tag) => tag.toLowerCase().contains(query));
 
       // Return true if any of the matches are found
-      return nameMatch || categoryMatch || subcategoryMatch || tagsMatch; // <-- Make sure tagsMatch is used here
+      return nameMatch || categoryMatch || subcategoryMatch || tagsMatch;
     }).toList();
-
-    // --- STEP 3: Build the UI with the results ---
+    
     return Scaffold(
-      appBar: CommonAppBar(
-        context: context,
-        title: 'Search Results for "$searchQuery"'),
+      // appBar: PreferredSize(
+      //   preferredSize: Size.fromHeight(Theme.of(context).appBarTheme.toolbarHeight ?? kToolbarHeight),
+      //   child: buildCommonAppBar(context: context, title: 'Search Results for "$searchQuery"'),
+      // ),
+      appBar: CommonAppBar(context: context, title: 'Search Results for "$searchQuery"'),
       body: searchResults.isEmpty
           ? Center(
               child: Text(

@@ -54,10 +54,11 @@ class _ProductsListPageState extends State<ProductsListPage> {
     }
 
     return Scaffold(
-      appBar: CommonAppBar(
-        context: context,
-        title: categoryName),
-      // appBar: AppBar(title: Text(categoryName),),
+      // appBar: PreferredSize(
+      //   preferredSize: Size.fromHeight(Theme.of(context).appBarTheme.toolbarHeight ?? kToolbarHeight),
+      //   child: buildCommonAppBar(context: context, title: categoryName),
+      // ),
+      appBar: CommonAppBar(context: context, title: categoryName,),
       body: Column(
         children: [
           // --- Sub-category Filter Bar ---

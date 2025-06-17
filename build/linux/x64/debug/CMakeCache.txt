@@ -181,6 +181,18 @@ CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 //No help, variable specified on the command line.
 FLUTTER_TARGET_PLATFORM:UNINITIALIZED=linux-x64
 
+//Architecture of pdfium used
+PDFIUM_ARCH:STRING=x64
+
+//Version of pdfium used
+PDFIUM_VERSION:STRING=5200
+
+//Path to a file.
+PDFium_INCLUDE_DIR:PATH=/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/pdfium-src/include
+
+//Path to a library.
+PDFium_LIBRARY:FILEPATH=/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/pdfium-src/lib/libpdfium.so
+
 //Arguments to supply to pkg-config
 PKG_CONFIG_ARGN:STRING=
 
@@ -207,6 +219,42 @@ pkgcfg_lib_GIO_gobject-2.0:FILEPATH=/usr/lib/x86_64-linux-gnu/libgobject-2.0.so
 
 //Path to a library.
 pkgcfg_lib_GLIB_glib-2.0:FILEPATH=/usr/lib/x86_64-linux-gnu/libglib-2.0.so
+
+//Path to a library.
+pkgcfg_lib_GTKUnixPrint_atk-1.0:FILEPATH=/usr/lib/x86_64-linux-gnu/libatk-1.0.so
+
+//Path to a library.
+pkgcfg_lib_GTKUnixPrint_cairo:FILEPATH=/usr/lib/x86_64-linux-gnu/libcairo.so
+
+//Path to a library.
+pkgcfg_lib_GTKUnixPrint_cairo-gobject:FILEPATH=/usr/lib/x86_64-linux-gnu/libcairo-gobject.so
+
+//Path to a library.
+pkgcfg_lib_GTKUnixPrint_gdk-3:FILEPATH=/usr/lib/x86_64-linux-gnu/libgdk-3.so
+
+//Path to a library.
+pkgcfg_lib_GTKUnixPrint_gdk_pixbuf-2.0:FILEPATH=/usr/lib/x86_64-linux-gnu/libgdk_pixbuf-2.0.so
+
+//Path to a library.
+pkgcfg_lib_GTKUnixPrint_gio-2.0:FILEPATH=/usr/lib/x86_64-linux-gnu/libgio-2.0.so
+
+//Path to a library.
+pkgcfg_lib_GTKUnixPrint_glib-2.0:FILEPATH=/usr/lib/x86_64-linux-gnu/libglib-2.0.so
+
+//Path to a library.
+pkgcfg_lib_GTKUnixPrint_gobject-2.0:FILEPATH=/usr/lib/x86_64-linux-gnu/libgobject-2.0.so
+
+//Path to a library.
+pkgcfg_lib_GTKUnixPrint_gtk-3:FILEPATH=/usr/lib/x86_64-linux-gnu/libgtk-3.so
+
+//Path to a library.
+pkgcfg_lib_GTKUnixPrint_harfbuzz:FILEPATH=/usr/lib/x86_64-linux-gnu/libharfbuzz.so
+
+//Path to a library.
+pkgcfg_lib_GTKUnixPrint_pango-1.0:FILEPATH=/usr/lib/x86_64-linux-gnu/libpango-1.0.so
+
+//Path to a library.
+pkgcfg_lib_GTKUnixPrint_pangocairo-1.0:FILEPATH=/usr/lib/x86_64-linux-gnu/libpangocairo-1.0.so
 
 //Path to a library.
 pkgcfg_lib_GTK_atk-1.0:FILEPATH=/usr/lib/x86_64-linux-gnu/libatk-1.0.so
@@ -243,6 +291,18 @@ pkgcfg_lib_GTK_pango-1.0:FILEPATH=/usr/lib/x86_64-linux-gnu/libpango-1.0.so
 
 //Path to a library.
 pkgcfg_lib_GTK_pangocairo-1.0:FILEPATH=/usr/lib/x86_64-linux-gnu/libpangocairo-1.0.so
+
+//Value Computed by CMake
+printing_BINARY_DIR:STATIC=/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/plugins/printing
+
+//Value Computed by CMake
+printing_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+printing_SOURCE_DIR:STATIC=/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/printing/linux
+
+//Dependencies for the target
+printing_plugin_LIB_DEPENDS:STATIC=general;pdfium;
 
 //Value Computed by CMake
 runner_BINARY_DIR:STATIC=/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/runner
@@ -358,7 +418,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=6
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=7
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
@@ -401,6 +461,8 @@ CMAKE_STRIP-ADVANCED:INTERNAL=1
 CMAKE_UNAME:INTERNAL=/usr/bin/uname
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
+//Details about finding PDFium
+FIND_PACKAGE_MESSAGE_DETAILS_PDFium:INTERNAL=[/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/pdfium-src/lib/libpdfium.so][/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/pdfium-src/include][v106.0.5200.0()]
 //Details about finding PkgConfig
 FIND_PACKAGE_MESSAGE_DETAILS_PkgConfig:INTERNAL=[/usr/bin/pkg-config][v0.29.2()]
 GIO_CFLAGS:INTERNAL=-pthread;-I/usr/include/libmount;-I/usr/include/blkid;-I/usr/include/glib-2.0;-I/usr/lib/x86_64-linux-gnu/glib-2.0/include
@@ -473,6 +535,41 @@ GLIB_glib-2.0_INCLUDEDIR:INTERNAL=
 GLIB_glib-2.0_LIBDIR:INTERNAL=
 GLIB_glib-2.0_PREFIX:INTERNAL=
 GLIB_glib-2.0_VERSION:INTERNAL=
+GTKUnixPrint_CFLAGS:INTERNAL=-pthread;-I/usr/include/gtk-3.0/unix-print;-I/usr/include/gtk-3.0;-I/usr/include/at-spi2-atk/2.0;-I/usr/include/at-spi-2.0;-I/usr/include/dbus-1.0;-I/usr/lib/x86_64-linux-gnu/dbus-1.0/include;-I/usr/include/gtk-3.0;-I/usr/include/gio-unix-2.0;-I/usr/include/cairo;-I/usr/include/pango-1.0;-I/usr/include/harfbuzz;-I/usr/include/pango-1.0;-I/usr/include/fribidi;-I/usr/include/harfbuzz;-I/usr/include/atk-1.0;-I/usr/include/cairo;-I/usr/include/pixman-1;-I/usr/include/uuid;-I/usr/include/freetype2;-I/usr/include/gdk-pixbuf-2.0;-I/usr/include/libpng16;-I/usr/include/x86_64-linux-gnu;-I/usr/include/libmount;-I/usr/include/blkid;-I/usr/include/glib-2.0;-I/usr/lib/x86_64-linux-gnu/glib-2.0/include
+GTKUnixPrint_CFLAGS_I:INTERNAL=
+GTKUnixPrint_CFLAGS_OTHER:INTERNAL=-pthread
+GTKUnixPrint_FOUND:INTERNAL=1
+GTKUnixPrint_INCLUDEDIR:INTERNAL=/usr/include
+GTKUnixPrint_INCLUDE_DIRS:INTERNAL=/usr/include/gtk-3.0/unix-print;/usr/include/gtk-3.0;/usr/include/at-spi2-atk/2.0;/usr/include/at-spi-2.0;/usr/include/dbus-1.0;/usr/lib/x86_64-linux-gnu/dbus-1.0/include;/usr/include/gtk-3.0;/usr/include/gio-unix-2.0;/usr/include/cairo;/usr/include/pango-1.0;/usr/include/harfbuzz;/usr/include/pango-1.0;/usr/include/fribidi;/usr/include/harfbuzz;/usr/include/atk-1.0;/usr/include/cairo;/usr/include/pixman-1;/usr/include/uuid;/usr/include/freetype2;/usr/include/gdk-pixbuf-2.0;/usr/include/libpng16;/usr/include/x86_64-linux-gnu;/usr/include/libmount;/usr/include/blkid;/usr/include/glib-2.0;/usr/lib/x86_64-linux-gnu/glib-2.0/include
+GTKUnixPrint_LDFLAGS:INTERNAL=-L/usr/lib/x86_64-linux-gnu;-lgtk-3;-lgdk-3;-lpangocairo-1.0;-lpango-1.0;-lharfbuzz;-latk-1.0;-lcairo-gobject;-lcairo;-lgdk_pixbuf-2.0;-lgio-2.0;-lgobject-2.0;-lglib-2.0
+GTKUnixPrint_LDFLAGS_OTHER:INTERNAL=
+GTKUnixPrint_LIBDIR:INTERNAL=/usr/lib/x86_64-linux-gnu
+GTKUnixPrint_LIBRARIES:INTERNAL=gtk-3;gdk-3;pangocairo-1.0;pango-1.0;harfbuzz;atk-1.0;cairo-gobject;cairo;gdk_pixbuf-2.0;gio-2.0;gobject-2.0;glib-2.0
+GTKUnixPrint_LIBRARY_DIRS:INTERNAL=/usr/lib/x86_64-linux-gnu
+GTKUnixPrint_LIBS:INTERNAL=
+GTKUnixPrint_LIBS_L:INTERNAL=
+GTKUnixPrint_LIBS_OTHER:INTERNAL=
+GTKUnixPrint_LIBS_PATHS:INTERNAL=
+GTKUnixPrint_MODULE_NAME:INTERNAL=gtk+-unix-print-3.0
+GTKUnixPrint_PREFIX:INTERNAL=/usr
+GTKUnixPrint_STATIC_CFLAGS:INTERNAL=-pthread;-I/usr/include/gtk-3.0/unix-print;-I/usr/include/gtk-3.0;-I/usr/include/at-spi2-atk/2.0;-I/usr/include/at-spi-2.0;-I/usr/include/dbus-1.0;-I/usr/lib/x86_64-linux-gnu/dbus-1.0/include;-I/usr/include/gtk-3.0;-I/usr/include/gio-unix-2.0;-I/usr/include/cairo;-I/usr/include/pango-1.0;-I/usr/include/harfbuzz;-I/usr/include/pango-1.0;-I/usr/include/fribidi;-I/usr/include/harfbuzz;-I/usr/include/atk-1.0;-I/usr/include/cairo;-I/usr/include/pixman-1;-I/usr/include/uuid;-I/usr/include/freetype2;-I/usr/include/gdk-pixbuf-2.0;-I/usr/include/libpng16;-I/usr/include/x86_64-linux-gnu;-I/usr/include/libmount;-I/usr/include/blkid;-I/usr/include/glib-2.0;-I/usr/lib/x86_64-linux-gnu/glib-2.0/include
+GTKUnixPrint_STATIC_CFLAGS_I:INTERNAL=
+GTKUnixPrint_STATIC_CFLAGS_OTHER:INTERNAL=-pthread
+GTKUnixPrint_STATIC_INCLUDE_DIRS:INTERNAL=/usr/include/gtk-3.0/unix-print;/usr/include/gtk-3.0;/usr/include/at-spi2-atk/2.0;/usr/include/at-spi-2.0;/usr/include/dbus-1.0;/usr/lib/x86_64-linux-gnu/dbus-1.0/include;/usr/include/gtk-3.0;/usr/include/gio-unix-2.0;/usr/include/cairo;/usr/include/pango-1.0;/usr/include/harfbuzz;/usr/include/pango-1.0;/usr/include/fribidi;/usr/include/harfbuzz;/usr/include/atk-1.0;/usr/include/cairo;/usr/include/pixman-1;/usr/include/uuid;/usr/include/freetype2;/usr/include/gdk-pixbuf-2.0;/usr/include/libpng16;/usr/include/x86_64-linux-gnu;/usr/include/libmount;/usr/include/blkid;/usr/include/glib-2.0;/usr/lib/x86_64-linux-gnu/glib-2.0/include
+GTKUnixPrint_STATIC_LDFLAGS:INTERNAL=-L/usr/lib/x86_64-linux-gnu;-L/usr/lib;-L/usr/lib/x86_64-linux-gnu;-lgtk-3;-latk-bridge-2.0;-latspi;-lXtst;-ldbus-1;-lsystemd;-Wl,--export-dynamic;-lgdk-3;-lXinerama;-lXi;-lXrandr;-lXcursor;-lXcomposite;-lXdamage;-lXfixes;-lxkbcommon;-lwayland-cursor;-lwayland-egl;-lwayland-client;-lm;-pthread;-lepoxy;-ldl;-lGL;-lEGL;-lpangocairo-1.0;-lm;-lpangoft2-1.0;-lm;-lharfbuzz-gobject;-lpango-1.0;-lm;-lfribidi;-lthai;-ldatrie;-lXft;-lharfbuzz;-lm;-lgraphite2;-latk-1.0;-lcairo-gobject;-lcairo;-lz;-lpixman-1;-lfontconfig;-luuid;-lexpat;-lm;-lfreetype;-lbrotlidec;-lbrotlicommon;-lxcb-shm;-lxcb-render;-lXrender;-lXext;-lX11;-lpthread;-lxcb;-lXau;-lXdmcp;-lgdk_pixbuf-2.0;-lm;-lpng16;-lm;-lz;-lm;-ljpeg;-ltiff;-lwebp;-lzstd;-llzma;-ljbig;-ljpeg;-ldeflate;-lz;-lm;-lgio-2.0;-lgmodule-2.0;-pthread;-lz;-lmount;-ldl;-lblkid;-lselinux;-lsepol;-lpcre2-8;-lgobject-2.0;-lffi;-lglib-2.0;-pthread;-lm;-lpcre
+GTKUnixPrint_STATIC_LDFLAGS_OTHER:INTERNAL=-Wl,--export-dynamic;-pthread
+GTKUnixPrint_STATIC_LIBDIR:INTERNAL=
+GTKUnixPrint_STATIC_LIBRARIES:INTERNAL=gtk-3;atk-bridge-2.0;atspi;Xtst;dbus-1;systemd;gdk-3;Xinerama;Xi;Xrandr;Xcursor;Xcomposite;Xdamage;Xfixes;xkbcommon;wayland-cursor;wayland-egl;wayland-client;m;epoxy;dl;GL;EGL;pangocairo-1.0;m;pangoft2-1.0;m;harfbuzz-gobject;pango-1.0;m;fribidi;thai;datrie;Xft;harfbuzz;m;graphite2;atk-1.0;cairo-gobject;cairo;z;pixman-1;fontconfig;uuid;expat;m;freetype;brotlidec;brotlicommon;xcb-shm;xcb-render;Xrender;Xext;X11;pthread;xcb;Xau;Xdmcp;gdk_pixbuf-2.0;m;png16;m;z;m;jpeg;tiff;webp;zstd;lzma;jbig;jpeg;deflate;z;m;gio-2.0;gmodule-2.0;z;mount;dl;blkid;selinux;sepol;pcre2-8;gobject-2.0;ffi;glib-2.0;m;pcre
+GTKUnixPrint_STATIC_LIBRARY_DIRS:INTERNAL=/usr/lib/x86_64-linux-gnu;/usr/lib;/usr/lib/x86_64-linux-gnu
+GTKUnixPrint_STATIC_LIBS:INTERNAL=
+GTKUnixPrint_STATIC_LIBS_L:INTERNAL=
+GTKUnixPrint_STATIC_LIBS_OTHER:INTERNAL=
+GTKUnixPrint_STATIC_LIBS_PATHS:INTERNAL=
+GTKUnixPrint_VERSION:INTERNAL=3.24.33
+GTKUnixPrint_gtk+-unix-print-3.0_INCLUDEDIR:INTERNAL=
+GTKUnixPrint_gtk+-unix-print-3.0_LIBDIR:INTERNAL=
+GTKUnixPrint_gtk+-unix-print-3.0_PREFIX:INTERNAL=
+GTKUnixPrint_gtk+-unix-print-3.0_VERSION:INTERNAL=
 GTK_CFLAGS:INTERNAL=-pthread;-I/usr/include/gtk-3.0;-I/usr/include/at-spi2-atk/2.0;-I/usr/include/at-spi-2.0;-I/usr/include/dbus-1.0;-I/usr/lib/x86_64-linux-gnu/dbus-1.0/include;-I/usr/include/gtk-3.0;-I/usr/include/gio-unix-2.0;-I/usr/include/cairo;-I/usr/include/pango-1.0;-I/usr/include/harfbuzz;-I/usr/include/pango-1.0;-I/usr/include/fribidi;-I/usr/include/harfbuzz;-I/usr/include/atk-1.0;-I/usr/include/cairo;-I/usr/include/pixman-1;-I/usr/include/uuid;-I/usr/include/freetype2;-I/usr/include/gdk-pixbuf-2.0;-I/usr/include/libpng16;-I/usr/include/x86_64-linux-gnu;-I/usr/include/libmount;-I/usr/include/blkid;-I/usr/include/glib-2.0;-I/usr/lib/x86_64-linux-gnu/glib-2.0/include
 GTK_CFLAGS_I:INTERNAL=
 GTK_CFLAGS_OTHER:INTERNAL=-pthread
@@ -515,9 +612,11 @@ PKG_CONFIG_EXECUTABLE-ADVANCED:INTERNAL=1
 __pkg_config_arguments_GIO:INTERNAL=REQUIRED;IMPORTED_TARGET;gio-2.0
 __pkg_config_arguments_GLIB:INTERNAL=REQUIRED;IMPORTED_TARGET;glib-2.0
 __pkg_config_arguments_GTK:INTERNAL=REQUIRED;IMPORTED_TARGET;gtk+-3.0
+__pkg_config_arguments_GTKUnixPrint:INTERNAL=REQUIRED;IMPORTED_TARGET;gtk+-unix-print-3.0
 __pkg_config_checked_GIO:INTERNAL=1
 __pkg_config_checked_GLIB:INTERNAL=1
 __pkg_config_checked_GTK:INTERNAL=1
+__pkg_config_checked_GTKUnixPrint:INTERNAL=1
 //ADVANCED property for variable: pkgcfg_lib_GIO_gio-2.0
 pkgcfg_lib_GIO_gio-2.0-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: pkgcfg_lib_GIO_glib-2.0
@@ -526,6 +625,30 @@ pkgcfg_lib_GIO_glib-2.0-ADVANCED:INTERNAL=1
 pkgcfg_lib_GIO_gobject-2.0-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: pkgcfg_lib_GLIB_glib-2.0
 pkgcfg_lib_GLIB_glib-2.0-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GTKUnixPrint_atk-1.0
+pkgcfg_lib_GTKUnixPrint_atk-1.0-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GTKUnixPrint_cairo
+pkgcfg_lib_GTKUnixPrint_cairo-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GTKUnixPrint_cairo-gobject
+pkgcfg_lib_GTKUnixPrint_cairo-gobject-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GTKUnixPrint_gdk-3
+pkgcfg_lib_GTKUnixPrint_gdk-3-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GTKUnixPrint_gdk_pixbuf-2.0
+pkgcfg_lib_GTKUnixPrint_gdk_pixbuf-2.0-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GTKUnixPrint_gio-2.0
+pkgcfg_lib_GTKUnixPrint_gio-2.0-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GTKUnixPrint_glib-2.0
+pkgcfg_lib_GTKUnixPrint_glib-2.0-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GTKUnixPrint_gobject-2.0
+pkgcfg_lib_GTKUnixPrint_gobject-2.0-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GTKUnixPrint_gtk-3
+pkgcfg_lib_GTKUnixPrint_gtk-3-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GTKUnixPrint_harfbuzz
+pkgcfg_lib_GTKUnixPrint_harfbuzz-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GTKUnixPrint_pango-1.0
+pkgcfg_lib_GTKUnixPrint_pango-1.0-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GTKUnixPrint_pangocairo-1.0
+pkgcfg_lib_GTKUnixPrint_pangocairo-1.0-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: pkgcfg_lib_GTK_atk-1.0
 pkgcfg_lib_GTK_atk-1.0-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: pkgcfg_lib_GTK_cairo

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'models/product_model.dart';
 import 'services/data_service.dart';
+import 'widgets/common_app_bar.dart';
 
 class AdminProductEditPage extends StatefulWidget {
   final Product? product;
@@ -175,7 +176,6 @@ class _AdminProductEditPageState extends State<AdminProductEditPage> {
       decoration: InputDecoration(labelText: label),
       items: dropdownItems.map((item) {
         if (item == _addNewValue) {
-          // If it's our special value, style it differently
           return DropdownMenuItem(
             value: item,
             child: Text(
@@ -332,10 +332,15 @@ class _AdminProductEditPageState extends State<AdminProductEditPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_isEditing ? 'Edit Product' : 'Add Product'),
-        actions: [IconButton(icon: Icon(Icons.save), onPressed: _saveForm)],
-      ),
+      appBar: CommonAppBar(
+            context: context, 
+            title: _isEditing ? 'Edit Product' : 'Add Product',
+            showCartButton: false,
+            showHomeButton: false,
+            showSaveButton: true,
+            onSavePressed: _saveForm,
+            
+            ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -353,7 +358,6 @@ class _AdminProductEditPageState extends State<AdminProductEditPage> {
                   (value) { // This is the onChanged callback
                     setState(() {
                       _category = value;
-                      // --- NEW LOGIC FOR CASCADING ---
                       // 1. When the category changes, reset the sub-category
                       _subcategory = null; 
                       // 2. Update the list of available sub-categories

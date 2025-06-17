@@ -31,6 +31,9 @@ class AdminDashboardPage extends StatelessWidget {
             Navigator.pushNamed(context, '/admin/products');
             // print('Go to product management');
           }),
+          _buildDashboardCard(context, 'Manage Frames', Icons.photo_library, () {
+            Navigator.pushNamed(context, '/admin/frames');
+          }),
           _buildDashboardCard(context, 'View Orders', Icons.receipt_long, () {
             print('Go to order history');
           }),
@@ -53,9 +56,9 @@ class AdminDashboardPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 50, color: Colors.green),
+            Icon(icon, size: 200, color: Colors.green),
             SizedBox(height: 10),
-            Text(title, textAlign: TextAlign.center, style: TextStyle(fontSize: 18)),
+            Text(title, textAlign: TextAlign.center, style: TextStyle(fontSize: 40)),
           ],
         ),
       ),

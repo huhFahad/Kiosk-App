@@ -46,8 +46,6 @@ class QuantityControlWidget extends StatelessWidget {
               IconButton(
                 icon: Icon(Icons.remove, color: Colors.green),
                 onPressed: () {
-                  // The decreaseQuantity method in CartModel will handle
-                  // removing the item if the quantity becomes 0.
                   if (cartItem != null) {
                     cart.decreaseQuantity(cartItem);
                   }
@@ -57,7 +55,7 @@ class QuantityControlWidget extends StatelessWidget {
               // The quantity display
               Text(
                 quantity.toString(),
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
               ),
               // Increase quantity button
               IconButton(

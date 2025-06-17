@@ -1,63 +1,82 @@
 // lib/widgets/common_app_bar.dart
 import 'package:flutter/material.dart';
 
+typedef VoidCallback = void Function();
+
 PreferredSizeWidget CommonAppBar({
-  required BuildContext context, // It now requires the context to be passed in
+  required BuildContext context,
   required String title,
+  bool showHomeButton = true, 
+  bool showCartButton = true, 
+  bool showSaveButton = false,
+  VoidCallback? onSavePressed,
   List<Widget>? extraActions,
 }) {
   final canPop = Navigator.of(context).canPop();
-  final onCartPage = ModalRoute.of(context)?.settings.name == '/cart';
-
-  // Get the height directly from the theme using the passed-in context
-  final double appBarHeight = Theme.of(context).appBarTheme.toolbarHeight ?? kToolbarHeight;
+  
+  const double actionZoneWidth = 400.0;
 
   return AppBar(
-    // The theme from KioskTheme will control:
-    // - backgroundColor, titleTextStyle, elevation, centerTitle
-    
-    // We explicitly set the height here to ensure it's always correct
-    toolbarHeight: appBarHeight, 
-    
-    // automaticallyImplyLeading: canPop,
-
+    leadingWidth: actionZoneWidth, 
+    automaticallyImplyLeading: false,
     leading: canPop
-      ? Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(40),
-              onTap: () => Navigator.of(context).pop(),
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Icon(Icons.arrow_back_ios_new_rounded, size: 60),
-              ),
+        ? Align(
+            alignment: Alignment.centerLeft,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back_ios_rounded),
+              iconSize: 70, 
+              onPressed: () => Navigator.of(context).pop(),
+              tooltip: 'Back',
             ),
-          ),
-        )
-      : null,
+          )
+        : const SizedBox.shrink(),
 
+    centerTitle: true,
+    title: Text(
+      title,
+      overflow: TextOverflow.ellipsis,
+    ),
 
-    title: Text(title),
     actions: [
-      IconButton(
-        icon: const Icon(Icons.home_outlined),
-        tooltip: 'Go to Home',
-        onPressed: () {
-          Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
-        },
-      ),
-      if (!onCartPage)
-        IconButton(
-          icon: const Icon(Icons.shopping_cart_outlined),
-          tooltip: 'View Cart',
-          onPressed: () {
-            Navigator.of(context).pushNamed('/cart');
-          },
+      Container(
+        width: actionZoneWidth,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            if (showCartButton)
+              IconButton(
+                icon: const Icon(Icons.shopping_cart_outlined),
+                iconSize: 70,
+                tooltip: 'View Cart',
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/cart');
+                },
+              ),
+            
+            if (showHomeButton)
+              IconButton(
+                icon: const Icon(Icons.home_outlined),
+                iconSize: 70,
+                tooltip: 'Go to Home',
+                onPressed: () {
+                  Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+                },
+              ),
+
+              if (showSaveButton)
+              IconButton(
+                icon: const Icon(Icons.save_outlined),
+                iconSize: 70,
+                tooltip: 'Save',
+                onPressed: onSavePressed,
+              ),
+            
+            if (extraActions != null) ...extraActions!,
+
+            const SizedBox(width: 30),
+          ],
         ),
-      if (extraActions != null) ...extraActions!,
-      SizedBox(width: 30,)
+      ),
     ],
   );
 }

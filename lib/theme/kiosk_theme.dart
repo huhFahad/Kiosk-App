@@ -78,9 +78,8 @@ class KioskTheme {
 
   static AppBarTheme get appBarTheme {
     return AppBarTheme(
-      // Make the AppBar taller to accommodate larger text/icons
       toolbarHeight: 100.0 * _scale, 
-      centerTitle: true, // Good practice for kiosk consistency
+      centerTitle: true,
       elevation: 4.0,
       titleTextStyle: (
         textTheme.titleLarge?.copyWith(
@@ -100,17 +99,16 @@ class KioskTheme {
     return ThemeData(
       brightness: Brightness.light,
       primarySwatch: Colors.green,
-      fontFamily: 'Roboto', // Or any other font you prefer
+      fontFamily: 'Roboto',
       
-      // Apply our custom themes
       appBarTheme: appBarTheme,
       textTheme: textTheme,
       iconTheme: iconTheme,
       iconButtonTheme: IconButtonThemeData(
         style: IconButton.styleFrom(
           padding: const EdgeInsets.all(12.0 * _scale),
-          iconSize: 28.0 * _scale, // Scale the icon size
-          foregroundColor: Colors.green.shade700, // Use the same color as iconTheme
+          iconSize: 28.0 * _scale,
+          foregroundColor: Colors.green.shade700,
         ),
       ),
       elevatedButtonTheme: elevatedButtonTheme,

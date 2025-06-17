@@ -1,0 +1,20 @@
+[
+  {
+    "id": "frame_classic_wood",
+    "name": "Classic Wood",
+    "imagePath": "assets/images/frames/frame_wood.png",
+    "photoX": 0.11,
+    "photoY": 0.14,
+    "photoWidth": 0.78,
+    "photoHeight": 0.72
+  },
+  {
+    "id": "frame_modern_black",
+    "name": "Modern Black",
+    "imagePath": "assets/images/frames/frame_black.png",
+    "photoX": 0.08,
+    "photoY": 0.08,
+    "photoWidth": 0.84,
+    "photoHeight": 0.84
+  }
+]

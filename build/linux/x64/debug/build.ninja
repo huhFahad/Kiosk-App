@@ -208,13 +208,13 @@ build /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/libflut
 #############################################
 # Order-only phony target for kiosk_app
 
-build cmake_object_order_depends_target_kiosk_app: phony || cmake_object_order_depends_target_file_selector_linux_plugin cmake_object_order_depends_target_screen_retriever_linux_plugin cmake_object_order_depends_target_window_manager_plugin flutter/flutter_assemble
+build cmake_object_order_depends_target_kiosk_app: phony || cmake_object_order_depends_target_file_selector_linux_plugin cmake_object_order_depends_target_printing_plugin cmake_object_order_depends_target_screen_retriever_linux_plugin cmake_object_order_depends_target_window_manager_plugin flutter/flutter_assemble
 
 build runner/CMakeFiles/kiosk_app.dir/main.cc.o: CXX_COMPILER__kiosk_app_Debug /home/chewbacca/flutter_projects/kiosk_app/linux/runner/main.cc || cmake_object_order_depends_target_kiosk_app
   DEFINES = -DAPPLICATION_ID=\"com.example.kiosk_app\"
   DEP_FILE = runner/CMakeFiles/kiosk_app.dir/main.cc.o.d
   FLAGS = -g -Wall -Werror -pthread
-  INCLUDES = -I/home/chewbacca/flutter_projects/kiosk_app/linux -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/file_selector_linux/linux/include -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/screen_retriever_linux/linux/include -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/window_manager/linux/include -isystem /usr/include/gtk-3.0 -isystem /usr/include/at-spi2-atk/2.0 -isystem /usr/include/at-spi-2.0 -isystem /usr/include/dbus-1.0 -isystem /usr/lib/x86_64-linux-gnu/dbus-1.0/include -isystem /usr/include/gio-unix-2.0 -isystem /usr/include/cairo -isystem /usr/include/pango-1.0 -isystem /usr/include/harfbuzz -isystem /usr/include/fribidi -isystem /usr/include/atk-1.0 -isystem /usr/include/pixman-1 -isystem /usr/include/uuid -isystem /usr/include/freetype2 -isystem /usr/include/gdk-pixbuf-2.0 -isystem /usr/include/libpng16 -isystem /usr/include/libmount -isystem /usr/include/blkid -isystem /usr/include/glib-2.0 -isystem /usr/lib/x86_64-linux-gnu/glib-2.0/include
+  INCLUDES = -I/home/chewbacca/flutter_projects/kiosk_app/linux -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/file_selector_linux/linux/include -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/printing/linux/include -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/screen_retriever_linux/linux/include -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/window_manager/linux/include -isystem /usr/include/gtk-3.0 -isystem /usr/include/at-spi2-atk/2.0 -isystem /usr/include/at-spi-2.0 -isystem /usr/include/dbus-1.0 -isystem /usr/lib/x86_64-linux-gnu/dbus-1.0/include -isystem /usr/include/gio-unix-2.0 -isystem /usr/include/cairo -isystem /usr/include/pango-1.0 -isystem /usr/include/harfbuzz -isystem /usr/include/fribidi -isystem /usr/include/atk-1.0 -isystem /usr/include/pixman-1 -isystem /usr/include/uuid -isystem /usr/include/freetype2 -isystem /usr/include/gdk-pixbuf-2.0 -isystem /usr/include/libpng16 -isystem /usr/include/libmount -isystem /usr/include/blkid -isystem /usr/include/glib-2.0 -isystem /usr/lib/x86_64-linux-gnu/glib-2.0/include
   OBJECT_DIR = runner/CMakeFiles/kiosk_app.dir
   OBJECT_FILE_DIR = runner/CMakeFiles/kiosk_app.dir
 
@@ -222,7 +222,7 @@ build runner/CMakeFiles/kiosk_app.dir/my_application.cc.o: CXX_COMPILER__kiosk_a
   DEFINES = -DAPPLICATION_ID=\"com.example.kiosk_app\"
   DEP_FILE = runner/CMakeFiles/kiosk_app.dir/my_application.cc.o.d
   FLAGS = -g -Wall -Werror -pthread
-  INCLUDES = -I/home/chewbacca/flutter_projects/kiosk_app/linux -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/file_selector_linux/linux/include -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/screen_retriever_linux/linux/include -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/window_manager/linux/include -isystem /usr/include/gtk-3.0 -isystem /usr/include/at-spi2-atk/2.0 -isystem /usr/include/at-spi-2.0 -isystem /usr/include/dbus-1.0 -isystem /usr/lib/x86_64-linux-gnu/dbus-1.0/include -isystem /usr/include/gio-unix-2.0 -isystem /usr/include/cairo -isystem /usr/include/pango-1.0 -isystem /usr/include/harfbuzz -isystem /usr/include/fribidi -isystem /usr/include/atk-1.0 -isystem /usr/include/pixman-1 -isystem /usr/include/uuid -isystem /usr/include/freetype2 -isystem /usr/include/gdk-pixbuf-2.0 -isystem /usr/include/libpng16 -isystem /usr/include/libmount -isystem /usr/include/blkid -isystem /usr/include/glib-2.0 -isystem /usr/lib/x86_64-linux-gnu/glib-2.0/include
+  INCLUDES = -I/home/chewbacca/flutter_projects/kiosk_app/linux -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/file_selector_linux/linux/include -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/printing/linux/include -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/screen_retriever_linux/linux/include -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/window_manager/linux/include -isystem /usr/include/gtk-3.0 -isystem /usr/include/at-spi2-atk/2.0 -isystem /usr/include/at-spi-2.0 -isystem /usr/include/dbus-1.0 -isystem /usr/lib/x86_64-linux-gnu/dbus-1.0/include -isystem /usr/include/gio-unix-2.0 -isystem /usr/include/cairo -isystem /usr/include/pango-1.0 -isystem /usr/include/harfbuzz -isystem /usr/include/fribidi -isystem /usr/include/atk-1.0 -isystem /usr/include/pixman-1 -isystem /usr/include/uuid -isystem /usr/include/freetype2 -isystem /usr/include/gdk-pixbuf-2.0 -isystem /usr/include/libpng16 -isystem /usr/include/libmount -isystem /usr/include/blkid -isystem /usr/include/glib-2.0 -isystem /usr/lib/x86_64-linux-gnu/glib-2.0/include
   OBJECT_DIR = runner/CMakeFiles/kiosk_app.dir
   OBJECT_FILE_DIR = runner/CMakeFiles/kiosk_app.dir
 
@@ -230,7 +230,7 @@ build runner/CMakeFiles/kiosk_app.dir/__/flutter/generated_plugin_registrant.cc.
   DEFINES = -DAPPLICATION_ID=\"com.example.kiosk_app\"
   DEP_FILE = runner/CMakeFiles/kiosk_app.dir/__/flutter/generated_plugin_registrant.cc.o.d
   FLAGS = -g -Wall -Werror -pthread
-  INCLUDES = -I/home/chewbacca/flutter_projects/kiosk_app/linux -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/file_selector_linux/linux/include -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/screen_retriever_linux/linux/include -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/window_manager/linux/include -isystem /usr/include/gtk-3.0 -isystem /usr/include/at-spi2-atk/2.0 -isystem /usr/include/at-spi-2.0 -isystem /usr/include/dbus-1.0 -isystem /usr/lib/x86_64-linux-gnu/dbus-1.0/include -isystem /usr/include/gio-unix-2.0 -isystem /usr/include/cairo -isystem /usr/include/pango-1.0 -isystem /usr/include/harfbuzz -isystem /usr/include/fribidi -isystem /usr/include/atk-1.0 -isystem /usr/include/pixman-1 -isystem /usr/include/uuid -isystem /usr/include/freetype2 -isystem /usr/include/gdk-pixbuf-2.0 -isystem /usr/include/libpng16 -isystem /usr/include/libmount -isystem /usr/include/blkid -isystem /usr/include/glib-2.0 -isystem /usr/lib/x86_64-linux-gnu/glib-2.0/include
+  INCLUDES = -I/home/chewbacca/flutter_projects/kiosk_app/linux -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/file_selector_linux/linux/include -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/printing/linux/include -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/screen_retriever_linux/linux/include -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/window_manager/linux/include -isystem /usr/include/gtk-3.0 -isystem /usr/include/at-spi2-atk/2.0 -isystem /usr/include/at-spi-2.0 -isystem /usr/include/dbus-1.0 -isystem /usr/lib/x86_64-linux-gnu/dbus-1.0/include -isystem /usr/include/gio-unix-2.0 -isystem /usr/include/cairo -isystem /usr/include/pango-1.0 -isystem /usr/include/harfbuzz -isystem /usr/include/fribidi -isystem /usr/include/atk-1.0 -isystem /usr/include/pixman-1 -isystem /usr/include/uuid -isystem /usr/include/freetype2 -isystem /usr/include/gdk-pixbuf-2.0 -isystem /usr/include/libpng16 -isystem /usr/include/libmount -isystem /usr/include/blkid -isystem /usr/include/glib-2.0 -isystem /usr/lib/x86_64-linux-gnu/glib-2.0/include
   OBJECT_DIR = runner/CMakeFiles/kiosk_app.dir
   OBJECT_FILE_DIR = runner/CMakeFiles/kiosk_app.dir/__/flutter
 
@@ -242,9 +242,9 @@ build runner/CMakeFiles/kiosk_app.dir/__/flutter/generated_plugin_registrant.cc.
 #############################################
 # Link the executable intermediates_do_not_run/kiosk_app
 
-build intermediates_do_not_run/kiosk_app: CXX_EXECUTABLE_LINKER__kiosk_app_Debug runner/CMakeFiles/kiosk_app.dir/main.cc.o runner/CMakeFiles/kiosk_app.dir/my_application.cc.o runner/CMakeFiles/kiosk_app.dir/__/flutter/generated_plugin_registrant.cc.o | plugins/file_selector_linux/libfile_selector_linux_plugin.so plugins/screen_retriever_linux/libscreen_retriever_linux_plugin.so plugins/window_manager/libwindow_manager_plugin.so /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/libflutter_linux_gtk.so /usr/lib/x86_64-linux-gnu/libgtk-3.so /usr/lib/x86_64-linux-gnu/libgdk-3.so /usr/lib/x86_64-linux-gnu/libpangocairo-1.0.so /usr/lib/x86_64-linux-gnu/libpango-1.0.so /usr/lib/x86_64-linux-gnu/libharfbuzz.so /usr/lib/x86_64-linux-gnu/libatk-1.0.so /usr/lib/x86_64-linux-gnu/libcairo-gobject.so /usr/lib/x86_64-linux-gnu/libcairo.so /usr/lib/x86_64-linux-gnu/libgdk_pixbuf-2.0.so /usr/lib/x86_64-linux-gnu/libgio-2.0.so /usr/lib/x86_64-linux-gnu/libgobject-2.0.so /usr/lib/x86_64-linux-gnu/libglib-2.0.so || flutter/flutter_assemble plugins/file_selector_linux/libfile_selector_linux_plugin.so plugins/screen_retriever_linux/libscreen_retriever_linux_plugin.so plugins/window_manager/libwindow_manager_plugin.so
+build intermediates_do_not_run/kiosk_app: CXX_EXECUTABLE_LINKER__kiosk_app_Debug runner/CMakeFiles/kiosk_app.dir/main.cc.o runner/CMakeFiles/kiosk_app.dir/my_application.cc.o runner/CMakeFiles/kiosk_app.dir/__/flutter/generated_plugin_registrant.cc.o | plugins/file_selector_linux/libfile_selector_linux_plugin.so plugins/printing/libprinting_plugin.so plugins/screen_retriever_linux/libscreen_retriever_linux_plugin.so plugins/window_manager/libwindow_manager_plugin.so /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/libflutter_linux_gtk.so /usr/lib/x86_64-linux-gnu/libgtk-3.so /usr/lib/x86_64-linux-gnu/libgdk-3.so /usr/lib/x86_64-linux-gnu/libpangocairo-1.0.so /usr/lib/x86_64-linux-gnu/libpango-1.0.so /usr/lib/x86_64-linux-gnu/libharfbuzz.so /usr/lib/x86_64-linux-gnu/libatk-1.0.so /usr/lib/x86_64-linux-gnu/libcairo-gobject.so /usr/lib/x86_64-linux-gnu/libcairo.so /usr/lib/x86_64-linux-gnu/libgdk_pixbuf-2.0.so /usr/lib/x86_64-linux-gnu/libgio-2.0.so /usr/lib/x86_64-linux-gnu/libgobject-2.0.so /usr/lib/x86_64-linux-gnu/libglib-2.0.so || flutter/flutter_assemble plugins/file_selector_linux/libfile_selector_linux_plugin.so plugins/printing/libprinting_plugin.so plugins/screen_retriever_linux/libscreen_retriever_linux_plugin.so plugins/window_manager/libwindow_manager_plugin.so
   FLAGS = -g
-  LINK_LIBRARIES = -Wl,-rpath,/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/plugins/file_selector_linux:/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/plugins/screen_retriever_linux:/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/plugins/window_manager:/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral:  plugins/file_selector_linux/libfile_selector_linux_plugin.so  plugins/screen_retriever_linux/libscreen_retriever_linux_plugin.so  plugins/window_manager/libwindow_manager_plugin.so  /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/libflutter_linux_gtk.so  /usr/lib/x86_64-linux-gnu/libgtk-3.so  /usr/lib/x86_64-linux-gnu/libgdk-3.so  /usr/lib/x86_64-linux-gnu/libpangocairo-1.0.so  /usr/lib/x86_64-linux-gnu/libpango-1.0.so  /usr/lib/x86_64-linux-gnu/libharfbuzz.so  /usr/lib/x86_64-linux-gnu/libatk-1.0.so  /usr/lib/x86_64-linux-gnu/libcairo-gobject.so  /usr/lib/x86_64-linux-gnu/libcairo.so  /usr/lib/x86_64-linux-gnu/libgdk_pixbuf-2.0.so  /usr/lib/x86_64-linux-gnu/libgio-2.0.so  /usr/lib/x86_64-linux-gnu/libgobject-2.0.so  /usr/lib/x86_64-linux-gnu/libglib-2.0.so
+  LINK_LIBRARIES = -Wl,-rpath,/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/plugins/file_selector_linux:/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/plugins/printing:/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/plugins/screen_retriever_linux:/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/plugins/window_manager:/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral:/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/pdfium-src/lib:  plugins/file_selector_linux/libfile_selector_linux_plugin.so  plugins/printing/libprinting_plugin.so  plugins/screen_retriever_linux/libscreen_retriever_linux_plugin.so  plugins/window_manager/libwindow_manager_plugin.so  /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/libflutter_linux_gtk.so  /usr/lib/x86_64-linux-gnu/libgtk-3.so  /usr/lib/x86_64-linux-gnu/libgdk-3.so  /usr/lib/x86_64-linux-gnu/libpangocairo-1.0.so  /usr/lib/x86_64-linux-gnu/libpango-1.0.so  /usr/lib/x86_64-linux-gnu/libharfbuzz.so  /usr/lib/x86_64-linux-gnu/libatk-1.0.so  /usr/lib/x86_64-linux-gnu/libcairo-gobject.so  /usr/lib/x86_64-linux-gnu/libcairo.so  /usr/lib/x86_64-linux-gnu/libgdk_pixbuf-2.0.so  /usr/lib/x86_64-linux-gnu/libgio-2.0.so  /usr/lib/x86_64-linux-gnu/libgobject-2.0.so  /usr/lib/x86_64-linux-gnu/libglib-2.0.so  -Wl,-rpath-link,/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/pdfium-src/lib
   OBJECT_DIR = runner/CMakeFiles/kiosk_app.dir
   POST_BUILD = :
   PRE_LINK = :
@@ -429,6 +429,120 @@ build plugins/file_selector_linux/CMakeFiles/install/strip.util: CUSTOM_COMMAND 
   restat = 1
 
 build plugins/file_selector_linux/install/strip: phony plugins/file_selector_linux/CMakeFiles/install/strip.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/generated_plugins.cmake
+# =============================================================================
+
+# =============================================================================
+# Object build statements for SHARED_LIBRARY target printing_plugin
+
+
+#############################################
+# Order-only phony target for printing_plugin
+
+build cmake_object_order_depends_target_printing_plugin: phony || flutter/flutter_assemble
+
+build plugins/printing/CMakeFiles/printing_plugin.dir/printing_plugin.cc.o: CXX_COMPILER__printing_plugin_Debug /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/printing/linux/printing_plugin.cc || cmake_object_order_depends_target_printing_plugin
+  DEFINES = -DFLUTTER_PLUGIN_IMPL -Dprinting_plugin_EXPORTS
+  DEP_FILE = plugins/printing/CMakeFiles/printing_plugin.dir/printing_plugin.cc.o.d
+  FLAGS = -g -fPIC -fvisibility=hidden -Wall -Werror -pthread
+  INCLUDES = -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral -isystem /usr/include/gtk-3.0 -isystem /usr/include/at-spi2-atk/2.0 -isystem /usr/include/at-spi-2.0 -isystem /usr/include/dbus-1.0 -isystem /usr/lib/x86_64-linux-gnu/dbus-1.0/include -isystem /usr/include/gio-unix-2.0 -isystem /usr/include/cairo -isystem /usr/include/pango-1.0 -isystem /usr/include/harfbuzz -isystem /usr/include/fribidi -isystem /usr/include/atk-1.0 -isystem /usr/include/pixman-1 -isystem /usr/include/uuid -isystem /usr/include/freetype2 -isystem /usr/include/gdk-pixbuf-2.0 -isystem /usr/include/libpng16 -isystem /usr/include/libmount -isystem /usr/include/blkid -isystem /usr/include/glib-2.0 -isystem /usr/lib/x86_64-linux-gnu/glib-2.0/include -isystem /usr/include/gtk-3.0/unix-print -isystem /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/pdfium-src/include -isystem /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/pdfium-src/include/cpp
+  OBJECT_DIR = plugins/printing/CMakeFiles/printing_plugin.dir
+  OBJECT_FILE_DIR = plugins/printing/CMakeFiles/printing_plugin.dir
+
+build plugins/printing/CMakeFiles/printing_plugin.dir/print_job.cc.o: CXX_COMPILER__printing_plugin_Debug /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/printing/linux/print_job.cc || cmake_object_order_depends_target_printing_plugin
+  DEFINES = -DFLUTTER_PLUGIN_IMPL -Dprinting_plugin_EXPORTS
+  DEP_FILE = plugins/printing/CMakeFiles/printing_plugin.dir/print_job.cc.o.d
+  FLAGS = -g -fPIC -fvisibility=hidden -Wall -Werror -pthread
+  INCLUDES = -I/home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral -isystem /usr/include/gtk-3.0 -isystem /usr/include/at-spi2-atk/2.0 -isystem /usr/include/at-spi-2.0 -isystem /usr/include/dbus-1.0 -isystem /usr/lib/x86_64-linux-gnu/dbus-1.0/include -isystem /usr/include/gio-unix-2.0 -isystem /usr/include/cairo -isystem /usr/include/pango-1.0 -isystem /usr/include/harfbuzz -isystem /usr/include/fribidi -isystem /usr/include/atk-1.0 -isystem /usr/include/pixman-1 -isystem /usr/include/uuid -isystem /usr/include/freetype2 -isystem /usr/include/gdk-pixbuf-2.0 -isystem /usr/include/libpng16 -isystem /usr/include/libmount -isystem /usr/include/blkid -isystem /usr/include/glib-2.0 -isystem /usr/lib/x86_64-linux-gnu/glib-2.0/include -isystem /usr/include/gtk-3.0/unix-print -isystem /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/pdfium-src/include -isystem /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/pdfium-src/include/cpp
+  OBJECT_DIR = plugins/printing/CMakeFiles/printing_plugin.dir
+  OBJECT_FILE_DIR = plugins/printing/CMakeFiles/printing_plugin.dir
+
+
+# =============================================================================
+# Link build statements for SHARED_LIBRARY target printing_plugin
+
+
+#############################################
+# Link the shared library plugins/printing/libprinting_plugin.so
+
+build plugins/printing/libprinting_plugin.so: CXX_SHARED_LIBRARY_LINKER__printing_plugin_Debug plugins/printing/CMakeFiles/printing_plugin.dir/printing_plugin.cc.o plugins/printing/CMakeFiles/printing_plugin.dir/print_job.cc.o | pdfium-src/lib/libpdfium.so /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/libflutter_linux_gtk.so /usr/lib/x86_64-linux-gnu/libgtk-3.so /usr/lib/x86_64-linux-gnu/libgdk-3.so /usr/lib/x86_64-linux-gnu/libpangocairo-1.0.so /usr/lib/x86_64-linux-gnu/libpango-1.0.so /usr/lib/x86_64-linux-gnu/libharfbuzz.so /usr/lib/x86_64-linux-gnu/libatk-1.0.so /usr/lib/x86_64-linux-gnu/libcairo-gobject.so /usr/lib/x86_64-linux-gnu/libcairo.so /usr/lib/x86_64-linux-gnu/libgdk_pixbuf-2.0.so /usr/lib/x86_64-linux-gnu/libgio-2.0.so /usr/lib/x86_64-linux-gnu/libgobject-2.0.so /usr/lib/x86_64-linux-gnu/libglib-2.0.so || flutter/flutter_assemble
+  LANGUAGE_COMPILE_FLAGS = -g
+  LINK_LIBRARIES = -Wl,-rpath,"\$$ORIGIN:/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/pdfium-src/lib"  pdfium-src/lib/libpdfium.so  /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/libflutter_linux_gtk.so  /usr/lib/x86_64-linux-gnu/libgtk-3.so  /usr/lib/x86_64-linux-gnu/libgdk-3.so  /usr/lib/x86_64-linux-gnu/libpangocairo-1.0.so  /usr/lib/x86_64-linux-gnu/libpango-1.0.so  /usr/lib/x86_64-linux-gnu/libharfbuzz.so  /usr/lib/x86_64-linux-gnu/libatk-1.0.so  /usr/lib/x86_64-linux-gnu/libcairo-gobject.so  /usr/lib/x86_64-linux-gnu/libcairo.so  /usr/lib/x86_64-linux-gnu/libgdk_pixbuf-2.0.so  /usr/lib/x86_64-linux-gnu/libgio-2.0.so  /usr/lib/x86_64-linux-gnu/libgobject-2.0.so  /usr/lib/x86_64-linux-gnu/libglib-2.0.so
+  OBJECT_DIR = plugins/printing/CMakeFiles/printing_plugin.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  SONAME = libprinting_plugin.so
+  SONAME_FLAG = -Wl,-soname,
+  TARGET_FILE = plugins/printing/libprinting_plugin.so
+  TARGET_PDB = printing_plugin.so.dbg
+
+
+#############################################
+# Utility command for edit_cache
+
+build plugins/printing/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/plugins/printing && /usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build plugins/printing/edit_cache: phony plugins/printing/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build plugins/printing/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/plugins/printing && /usr/bin/cmake --regenerate-during-build -S/home/chewbacca/flutter_projects/kiosk_app/linux -B/home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build plugins/printing/rebuild_cache: phony plugins/printing/CMakeFiles/rebuild_cache.util
+
+
+#############################################
+# Utility command for list_install_components
+
+build plugins/printing/list_install_components: phony
+
+
+#############################################
+# Utility command for install
+
+build plugins/printing/CMakeFiles/install.util: CUSTOM_COMMAND plugins/printing/all
+  COMMAND = cd /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/plugins/printing && /usr/bin/cmake -P cmake_install.cmake
+  DESC = Install the project...
+  pool = console
+  restat = 1
+
+build plugins/printing/install: phony plugins/printing/CMakeFiles/install.util
+
+
+#############################################
+# Utility command for install/local
+
+build plugins/printing/CMakeFiles/install/local.util: CUSTOM_COMMAND plugins/printing/all
+  COMMAND = cd /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/plugins/printing && /usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+  DESC = Installing only the local directory...
+  pool = console
+  restat = 1
+
+build plugins/printing/install/local: phony plugins/printing/CMakeFiles/install/local.util
+
+
+#############################################
+# Utility command for install/strip
+
+build plugins/printing/CMakeFiles/install/strip.util: CUSTOM_COMMAND plugins/printing/all
+  COMMAND = cd /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/plugins/printing && /usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+  DESC = Installing the project stripped...
+  pool = console
+  restat = 1
+
+build plugins/printing/install/strip: phony plugins/printing/CMakeFiles/install/strip.util
 
 # =============================================================================
 # Write statements declared in CMakeLists.txt:
@@ -653,9 +767,13 @@ build kiosk_app: phony intermediates_do_not_run/kiosk_app
 
 build libfile_selector_linux_plugin.so: phony plugins/file_selector_linux/libfile_selector_linux_plugin.so
 
+build libprinting_plugin.so: phony plugins/printing/libprinting_plugin.so
+
 build libscreen_retriever_linux_plugin.so: phony plugins/screen_retriever_linux/libscreen_retriever_linux_plugin.so
 
 build libwindow_manager_plugin.so: phony plugins/window_manager/libwindow_manager_plugin.so
+
+build printing_plugin: phony plugins/printing/libprinting_plugin.so
 
 build screen_retriever_linux_plugin: phony plugins/screen_retriever_linux/libscreen_retriever_linux_plugin.so
 
@@ -669,7 +787,7 @@ build window_manager_plugin: phony plugins/window_manager/libwindow_manager_plug
 #############################################
 # Folder: /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug
 
-build all: phony flutter/all runner/all plugins/file_selector_linux/all plugins/screen_retriever_linux/all plugins/window_manager/all
+build all: phony flutter/all runner/all plugins/file_selector_linux/all plugins/printing/all plugins/screen_retriever_linux/all plugins/window_manager/all
 
 # =============================================================================
 
@@ -684,6 +802,13 @@ build flutter/all: phony
 # Folder: /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/plugins/file_selector_linux
 
 build plugins/file_selector_linux/all: phony plugins/file_selector_linux/libfile_selector_linux_plugin.so
+
+# =============================================================================
+
+#############################################
+# Folder: /home/chewbacca/flutter_projects/kiosk_app/build/linux/x64/debug/plugins/printing
+
+build plugins/printing/all: phony plugins/printing/libprinting_plugin.so
 
 # =============================================================================
 
@@ -713,14 +838,14 @@ build runner/all: phony intermediates_do_not_run/kiosk_app
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | /home/chewbacca/flutter_projects/kiosk_app/linux/CMakeLists.txt /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/CMakeLists.txt /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/file_selector_linux/linux/CMakeLists.txt /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/screen_retriever_linux/linux/CMakeLists.txt /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/window_manager/linux/CMakeLists.txt /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/generated_config.cmake /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/generated_plugins.cmake /home/chewbacca/flutter_projects/kiosk_app/linux/runner/CMakeLists.txt /usr/share/cmake-3.22/Modules/CMakeCXXInformation.cmake /usr/share/cmake-3.22/Modules/CMakeCommonLanguageInclude.cmake /usr/share/cmake-3.22/Modules/CMakeGenericSystem.cmake /usr/share/cmake-3.22/Modules/CMakeInitializeConfigs.cmake /usr/share/cmake-3.22/Modules/CMakeLanguageInformation.cmake /usr/share/cmake-3.22/Modules/CMakeSystemSpecificInformation.cmake /usr/share/cmake-3.22/Modules/CMakeSystemSpecificInitialize.cmake /usr/share/cmake-3.22/Modules/Compiler/CMakeCommonCompilerMacros.cmake /usr/share/cmake-3.22/Modules/Compiler/Clang-CXX.cmake /usr/share/cmake-3.22/Modules/Compiler/Clang.cmake /usr/share/cmake-3.22/Modules/Compiler/GNU.cmake /usr/share/cmake-3.22/Modules/FindPackageHandleStandardArgs.cmake /usr/share/cmake-3.22/Modules/FindPackageMessage.cmake /usr/share/cmake-3.22/Modules/FindPkgConfig.cmake /usr/share/cmake-3.22/Modules/Platform/Linux-Clang-CXX.cmake /usr/share/cmake-3.22/Modules/Platform/Linux-GNU-CXX.cmake /usr/share/cmake-3.22/Modules/Platform/Linux-GNU.cmake /usr/share/cmake-3.22/Modules/Platform/Linux.cmake /usr/share/cmake-3.22/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.22.1/CMakeCXXCompiler.cmake CMakeFiles/3.22.1/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | /home/chewbacca/flutter_projects/kiosk_app/linux/CMakeLists.txt /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/CMakeLists.txt /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/file_selector_linux/linux/CMakeLists.txt /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/printing/linux/CMakeLists.txt /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/printing/windows/DownloadProject.CMakeLists.cmake.in /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/printing/windows/DownloadProject.cmake /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/screen_retriever_linux/linux/CMakeLists.txt /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/window_manager/linux/CMakeLists.txt /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/generated_config.cmake /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/generated_plugins.cmake /home/chewbacca/flutter_projects/kiosk_app/linux/runner/CMakeLists.txt /usr/share/cmake-3.22/Modules/CMakeCXXInformation.cmake /usr/share/cmake-3.22/Modules/CMakeCommonLanguageInclude.cmake /usr/share/cmake-3.22/Modules/CMakeGenericSystem.cmake /usr/share/cmake-3.22/Modules/CMakeInitializeConfigs.cmake /usr/share/cmake-3.22/Modules/CMakeLanguageInformation.cmake /usr/share/cmake-3.22/Modules/CMakeParseArguments.cmake /usr/share/cmake-3.22/Modules/CMakeSystemSpecificInformation.cmake /usr/share/cmake-3.22/Modules/CMakeSystemSpecificInitialize.cmake /usr/share/cmake-3.22/Modules/Compiler/CMakeCommonCompilerMacros.cmake /usr/share/cmake-3.22/Modules/Compiler/Clang-CXX.cmake /usr/share/cmake-3.22/Modules/Compiler/Clang.cmake /usr/share/cmake-3.22/Modules/Compiler/GNU.cmake /usr/share/cmake-3.22/Modules/FindPackageHandleStandardArgs.cmake /usr/share/cmake-3.22/Modules/FindPackageMessage.cmake /usr/share/cmake-3.22/Modules/FindPkgConfig.cmake /usr/share/cmake-3.22/Modules/Platform/Linux-Clang-CXX.cmake /usr/share/cmake-3.22/Modules/Platform/Linux-GNU-CXX.cmake /usr/share/cmake-3.22/Modules/Platform/Linux-GNU.cmake /usr/share/cmake-3.22/Modules/Platform/Linux.cmake /usr/share/cmake-3.22/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.22.1/CMakeCXXCompiler.cmake CMakeFiles/3.22.1/CMakeSystem.cmake pdfium-src/PDFiumConfig.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build /home/chewbacca/flutter_projects/kiosk_app/linux/CMakeLists.txt /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/CMakeLists.txt /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/file_selector_linux/linux/CMakeLists.txt /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/screen_retriever_linux/linux/CMakeLists.txt /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/window_manager/linux/CMakeLists.txt /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/generated_config.cmake /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/generated_plugins.cmake /home/chewbacca/flutter_projects/kiosk_app/linux/runner/CMakeLists.txt /usr/share/cmake-3.22/Modules/CMakeCXXInformation.cmake /usr/share/cmake-3.22/Modules/CMakeCommonLanguageInclude.cmake /usr/share/cmake-3.22/Modules/CMakeGenericSystem.cmake /usr/share/cmake-3.22/Modules/CMakeInitializeConfigs.cmake /usr/share/cmake-3.22/Modules/CMakeLanguageInformation.cmake /usr/share/cmake-3.22/Modules/CMakeSystemSpecificInformation.cmake /usr/share/cmake-3.22/Modules/CMakeSystemSpecificInitialize.cmake /usr/share/cmake-3.22/Modules/Compiler/CMakeCommonCompilerMacros.cmake /usr/share/cmake-3.22/Modules/Compiler/Clang-CXX.cmake /usr/share/cmake-3.22/Modules/Compiler/Clang.cmake /usr/share/cmake-3.22/Modules/Compiler/GNU.cmake /usr/share/cmake-3.22/Modules/FindPackageHandleStandardArgs.cmake /usr/share/cmake-3.22/Modules/FindPackageMessage.cmake /usr/share/cmake-3.22/Modules/FindPkgConfig.cmake /usr/share/cmake-3.22/Modules/Platform/Linux-Clang-CXX.cmake /usr/share/cmake-3.22/Modules/Platform/Linux-GNU-CXX.cmake /usr/share/cmake-3.22/Modules/Platform/Linux-GNU.cmake /usr/share/cmake-3.22/Modules/Platform/Linux.cmake /usr/share/cmake-3.22/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.22.1/CMakeCXXCompiler.cmake CMakeFiles/3.22.1/CMakeSystem.cmake: phony
+build /home/chewbacca/flutter_projects/kiosk_app/linux/CMakeLists.txt /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/CMakeLists.txt /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/file_selector_linux/linux/CMakeLists.txt /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/printing/linux/CMakeLists.txt /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/printing/windows/DownloadProject.CMakeLists.cmake.in /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/printing/windows/DownloadProject.cmake /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/screen_retriever_linux/linux/CMakeLists.txt /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/.plugin_symlinks/window_manager/linux/CMakeLists.txt /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/ephemeral/generated_config.cmake /home/chewbacca/flutter_projects/kiosk_app/linux/flutter/generated_plugins.cmake /home/chewbacca/flutter_projects/kiosk_app/linux/runner/CMakeLists.txt /usr/share/cmake-3.22/Modules/CMakeCXXInformation.cmake /usr/share/cmake-3.22/Modules/CMakeCommonLanguageInclude.cmake /usr/share/cmake-3.22/Modules/CMakeGenericSystem.cmake /usr/share/cmake-3.22/Modules/CMakeInitializeConfigs.cmake /usr/share/cmake-3.22/Modules/CMakeLanguageInformation.cmake /usr/share/cmake-3.22/Modules/CMakeParseArguments.cmake /usr/share/cmake-3.22/Modules/CMakeSystemSpecificInformation.cmake /usr/share/cmake-3.22/Modules/CMakeSystemSpecificInitialize.cmake /usr/share/cmake-3.22/Modules/Compiler/CMakeCommonCompilerMacros.cmake /usr/share/cmake-3.22/Modules/Compiler/Clang-CXX.cmake /usr/share/cmake-3.22/Modules/Compiler/Clang.cmake /usr/share/cmake-3.22/Modules/Compiler/GNU.cmake /usr/share/cmake-3.22/Modules/FindPackageHandleStandardArgs.cmake /usr/share/cmake-3.22/Modules/FindPackageMessage.cmake /usr/share/cmake-3.22/Modules/FindPkgConfig.cmake /usr/share/cmake-3.22/Modules/Platform/Linux-Clang-CXX.cmake /usr/share/cmake-3.22/Modules/Platform/Linux-GNU-CXX.cmake /usr/share/cmake-3.22/Modules/Platform/Linux-GNU.cmake /usr/share/cmake-3.22/Modules/Platform/Linux.cmake /usr/share/cmake-3.22/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.22.1/CMakeCXXCompiler.cmake CMakeFiles/3.22.1/CMakeSystem.cmake pdfium-src/PDFiumConfig.cmake: phony
 
 
 #############################################

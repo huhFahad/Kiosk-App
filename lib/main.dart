@@ -16,6 +16,7 @@ import 'admin_dashboard_page.dart';
 import 'admin_product_list_page.dart';
 import 'search_results_page.dart';
 import 'theme/kiosk_theme.dart';
+import 'admin_frame_list_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,9 +49,10 @@ class KioskApp extends StatelessWidget {
         '/map': (context) => MapPage(),
         '/cart': (context) => CartPage(),
         '/confirmation': (context) => OrderConfirmationPage(),
+        '/search': (context) => SearchResultsPage(),
         '/admin': (context) => AdminDashboardPage(),
         '/admin/products': (context) => AdminProductListPage(),
-        '/search': (context) => SearchResultsPage(),
+        '/admin/frames': (context) => AdminFrameListPage(),
       },
     );
   }

@@ -11,9 +11,10 @@ class CartPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonAppBar(
-        context: context,
-        title: 'Your Cart',
-        ), 
+        context: context, 
+        title: 'Your Cart', 
+        showCartButton: false
+      ), 
       body: Consumer<CartModel>(
         builder: (context, cart, child) {
           if (cart.items.isEmpty) {
@@ -24,7 +25,6 @@ class CartPage extends StatelessWidget {
 
           return Column(
             children: [
-              // This makes the list take up most of the screen
               Expanded(
                 child: ListView.builder(
                   padding: EdgeInsets.all(8.0),
@@ -34,9 +34,13 @@ class CartPage extends StatelessWidget {
                     return Card(
                       margin: EdgeInsets.symmetric(vertical: 4.0),
                       child: ListTile(
-                        leading: ProductImageView(imagePath: cartItem.product.image),
-                        title: Text(cartItem.product.name, style: TextStyle(fontSize: 18)),
-                        subtitle: Text('₹${cartItem.product.price.toStringAsFixed(2)}'),
+                        leading: ProductImageView(
+                          // width: 80,
+                          // height: 80,
+                          imagePath: cartItem.product.image
+                        ),
+                        title: Text(cartItem.product.name, style: TextStyle(fontSize: 30)),
+                        subtitle: Text('₹${cartItem.product.price.toStringAsFixed(2)}',style: TextStyle(fontSize: 28)),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -45,7 +49,7 @@ class CartPage extends StatelessWidget {
                               icon: Icon(Icons.remove),
                               onPressed: () => cart.decreaseQuantity(cartItem),
                             ),
-                            Text(cartItem.quantity.toString(), style: TextStyle(fontSize: 18)),
+                            Text(cartItem.quantity.toString(), style: TextStyle(fontSize: 25)),
                             SizedBox(width: 8,),
                             IconButton(
                               icon: Icon(Icons.add, size: 40,),
@@ -57,7 +61,6 @@ class CartPage extends StatelessWidget {
                             // A divider for visual separation
                             VerticalDivider(), 
 
-                            // --- THE NEW DELETE BUTTON ---
                             IconButton(
                               icon: Icon(Icons.delete_outline, color: Colors.red.shade700, size: 40,),
                               tooltip: 'Remove from cart',
@@ -108,16 +111,15 @@ class CartPage extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    // The total price row stays the same.
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Total:', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                        Text('₹${cart.totalPrice.toStringAsFixed(2)}', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                        Text('Total:', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
+                        Text('₹${cart.totalPrice.toStringAsFixed(2)}', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
                       ],
                     ),
                     SizedBox(height: 16),
-                    // The new "Place Order" button.
+                    // The "Place Order" button.
                     SizedBox(
                       width: double.infinity, // Makes the button take the full width
                       child: ElevatedButton(
@@ -138,7 +140,7 @@ class CartPage extends StatelessWidget {
                             Navigator.pushNamed(context, '/confirmation', arguments: orderId);
                           }
                         },
-                        child: Text('Place Order', style: TextStyle(fontSize: 20)),
+                        child: Text('Place Order', style: TextStyle(fontSize: 40)),
                       ),
                     ),
                   ],

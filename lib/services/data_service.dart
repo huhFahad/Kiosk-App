@@ -6,6 +6,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
 import '../models/product_model.dart';
 import '../models/category_model.dart';
+import '../models/frame_model.dart';
 import 'package:uuid/uuid.dart';
 import 'package:path/path.dart' as p;
 
@@ -191,5 +192,54 @@ class DataService {
       await writeProducts(updatedProducts);
     }
   }
+
+  // --- FRAME DATA HANDLING ---
+
+  Future<File> get _localFramesFile async {
+    final path = await _localPath;
+    return File('$path/frames.json');
+  }
+
+  Future<List<Frame>> readFrames() async {
+    try {
+      final file = await _localFramesFile;
+      if (await file.exists()) {
+        final contents = await file.readAsString();
+        final List<dynamic> jsonList = jsonDecode(contents);
+        return jsonList.map((e) => Frame.fromJson(e)).toList();
+      }
+    } catch (e) {
+      print("Error reading frames from local file: $e");
+    }
+
+    try {
+      final String jsonString = await rootBundle.loadString('assets/data/frames.json');
+      final List<dynamic> jsonList = jsonDecode(jsonString);
+      return jsonList.map((e) => Frame.fromJson(e)).toList();
+    } catch (e) {
+      print("Error reading frames from asset file: $e");
+      return [];
+    }
+  }
+
+  Future<void> saveFrames(List<Frame> frames) async {
+    final file = await _localFramesFile;
+    final jsonList = frames.map((f) => f.toJson()).toList();
+    await file.writeAsString(jsonEncode(jsonList));
+  }
+
+Future<void> saveFrame(Frame frameToSave) async {
+  final allFrames = await readFrames();
+  final index = allFrames.indexWhere((f) => f.id == frameToSave.id);
+
+  if (index >= 0) {
+    // Update existing
+    allFrames[index] = frameToSave;
+  } else {
+    // Add new
+    allFrames.add(frameToSave);
+  }
+  await saveFrames(allFrames);
+}
 
 }

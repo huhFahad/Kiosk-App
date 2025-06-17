@@ -27,7 +27,11 @@ class ProductListItem extends StatelessWidget {
         child: Row(
           children: [
             // --- Image ---
-            ProductImageView(imagePath: product.image),
+            ProductImageView(
+              imagePath: product.image,
+              width: 240,
+              height: 240,
+            ),
             const SizedBox(width: 16),
             
             // --- Text Details (Name, Price) ---

@@ -6,6 +6,7 @@ import 'models/product_model.dart';
 import 'models/category_model.dart';
 import 'services/data_service.dart';
 import 'admin_product_edit_page.dart';
+import 'widgets/common_app_bar.dart';
 // import 'package:image_picker/image_picker.dart';
 import '../widgets/edit_category_dialog.dart';
 
@@ -139,9 +140,12 @@ class _AdminProductListPageState extends State<AdminProductListPage> {
       future: _productsFuture,
       builder: (context, snapshot) {
         return Scaffold(
-          appBar: AppBar(
-            title: Text('Manage Products'),
-          ),
+          appBar: CommonAppBar(
+            context: context, 
+            title: 'Manage Products',
+            showCartButton: false,
+            showHomeButton: false,
+            ),
           body: _buildBody(snapshot),
           floatingActionButton: snapshot.hasData
               ? FloatingActionButton(
@@ -155,7 +159,6 @@ class _AdminProductListPageState extends State<AdminProductListPage> {
     );
   }
 
-  // --- THE NEW, ORGANIZED BODY ---
   Widget _buildBody(AsyncSnapshot<List<Product>> snapshot) {
     if (snapshot.connectionState == ConnectionState.waiting) {
       return Center(child: CircularProgressIndicator());
@@ -169,27 +172,35 @@ class _AdminProductListPageState extends State<AdminProductListPage> {
 
     final allProducts = snapshot.data!;
 
-    // --- 1. FILTERING LOGIC ---
+    // --- FILTERING LOGIC ---
     final filteredProducts = allProducts.where((product) {
-      return product.name.toLowerCase().contains(_searchQuery.toLowerCase());
+      final nameMatch = product.name.toLowerCase().contains(_searchQuery.toLowerCase());
+      final subcategoryMatch = product.subcategory.toLowerCase().contains(_searchQuery.toLowerCase());
+      return nameMatch || subcategoryMatch;
     }).toList();
 
-    // --- 2. GROUPING LOGIC ---
-    final Map<String, List<Product>> groupedProducts = {};
+    // --- NESTED GROUPING LOGIC ---
+    final Map<String, Map<String, List<Product>>> groupedProducts = {};
     for (var product in filteredProducts) {
+      // Ensure the outer category map exists
       if (groupedProducts[product.category] == null) {
-        groupedProducts[product.category] = [];
+        groupedProducts[product.category] = {};
       }
-      groupedProducts[product.category]!.add(product);
+      // Ensure the inner sub-category list exists
+      if (groupedProducts[product.category]![product.subcategory] == null) {
+        groupedProducts[product.category]![product.subcategory] = [];
+      }
+      // Add the product to the correct nested list
+      groupedProducts[product.category]![product.subcategory]!.add(product);
     }
-    // Sort categories alphabetically
+    
     final sortedCategories = groupedProducts.keys.toList()..sort();
 
     return Column(
       children: [
         // --- THE SEARCH BAR ---
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(16.0),
           child: TextField(
             controller: _searchController,
             decoration: InputDecoration(
@@ -202,57 +213,83 @@ class _AdminProductListPageState extends State<AdminProductListPage> {
                     )
                   : null,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.0),
+                borderRadius: BorderRadius.circular(60.0),
               ),
             ),
           ),
         ),
-        // --- THE EXPANDABLE LIST ---
+                
+        // --- NESTED EXPANDABLE LIST ---
         Expanded(
           child: ListView.builder(
             itemCount: sortedCategories.length,
-            itemBuilder: (context, index) {
-              final category = sortedCategories[index];
-              final productsInCategory = groupedProducts[category]!;
-              // Sort products within the category alphabetically
-              productsInCategory.sort((a, b) => a.name.compareTo(b.name));
+            itemBuilder: (context, categoryIndex) {
+              final categoryName = sortedCategories[categoryIndex];
+              final subCategoryMap = groupedProducts[categoryName]!;
+              final sortedSubCategories = subCategoryMap.keys.toList()..sort();
 
+              // --- OUTER EXPANSION TILE (FOR CATEGORY) ---
               return Card(
                 margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                elevation: 4,
                 child: ExpansionTile(
+                  // Initially expanded if there's a search query, to show results
+                  initiallyExpanded: _searchQuery.isNotEmpty,
                   title: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '$category (${productsInCategory.length})',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                        categoryName, // We can calculate total products if needed
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
                       ),
                       IconButton(
                         icon: Icon(Icons.edit_note, color: Colors.grey.shade700),
-                        tooltip: 'Edit Category Image',
-                        onPressed: () {
-                          _editCategory(context, category);
-                        },
+                        tooltip: 'Edit Category',
+                        onPressed: () => _editCategory(context, categoryName),
                       ),
                     ],
                   ),
-                  children: productsInCategory.map((product) {
-                    return ListTile(
-                      leading: ProductImageView(imagePath: product.image),
-                      title: Text(product.name),
-                      subtitle: Text('Price: ₹${product.price.toStringAsFixed(2)}'),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.edit, color: Colors.blue),
-                            onPressed: () => _navigateAndRefresh(context, allProducts, product: product),
+                  children: sortedSubCategories.map((subCategoryName) {
+                    final productsInSubCategory = subCategoryMap[subCategoryName]!;
+                    productsInSubCategory.sort((a,b) => a.name.compareTo(b.name));
+
+                    // --- INNER EXPANSION TILE (FOR SUB-CATEGORY) ---
+                    return Padding(
+                      padding: const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 16.0),
+                      child: ExpansionTile(
+                        initiallyExpanded: _searchQuery.isNotEmpty,
+                        title: 
+                          Text(
+                            '$subCategoryName (${productsInSubCategory.length})',
+                            style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
                           ),
-                          IconButton(
-                            icon: Icon(Icons.delete, color: Colors.red),
-                            onPressed: () => _showDeleteDialog(context, product, allProducts),
-                          ),
-                        ],
+                        children: productsInSubCategory.map((product) {
+                          // This is the final product list tile
+                          return ListTile(
+                            leading: ProductImageView(imagePath: product.image),
+                            title: Text(product.name,
+                              style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+                              ),
+                            subtitle: 
+                              Text(
+                                'Price: ₹${product.price.toStringAsFixed(2)}',
+                                style: TextStyle(fontSize: 23, fontWeight: FontWeight.w500),
+                              ),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.edit, color: Colors.blue),
+                                  onPressed: () => _navigateAndRefresh(context, allProducts, product: product),
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.delete, color: Colors.red),
+                                  onPressed: () => _showDeleteDialog(context, product, allProducts),
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
                       ),
                     );
                   }).toList(),
@@ -266,19 +303,28 @@ class _AdminProductListPageState extends State<AdminProductListPage> {
   }
 }
 
-// You should already have this helper widget from the previous step.
-// If not, add it here.
+
 class ProductImageView extends StatelessWidget {
   final String imagePath;
-  const ProductImageView({Key? key, required this.imagePath}) : super(key: key);
+
+  final double width;
+  final double height;
+
+  const ProductImageView({
+    Key? key, required this.imagePath,
+    this.width = 60, 
+    this.height = 60,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final isAsset = imagePath.startsWith('assets/');
     return SizedBox(
-      width: 50,
-      height: 50,
-      child: isAsset
+      width: width,
+      height: height,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8.0),   
+        child: isAsset
           ? Image.asset(
               imagePath,
               fit: BoxFit.cover,
@@ -289,6 +335,7 @@ class ProductImageView extends StatelessWidget {
               fit: BoxFit.cover,
               errorBuilder: (ctx, err, st) => Icon(Icons.image_not_supported),
             ),
+      )
     );
   }
 }
