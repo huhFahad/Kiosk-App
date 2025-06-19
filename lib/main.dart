@@ -12,11 +12,17 @@ import 'order_confirmation_page.dart';
 import 'map_page.dart';
 import 'cart_page.dart';
 import 'home_page.dart';
+import 'search_results_page.dart';
+
+// import 'photo_and_frame_editor_page.dart';
+import 'frame_selection_page.dart';
+import 'photo_upload_page.dart';
+import 'photo_editor_page.dart';
+import 'print_confirmation_page.dart';
 import 'admin_dashboard_page.dart';
 import 'admin_product_list_page.dart';
-import 'search_results_page.dart';
-import 'theme/kiosk_theme.dart';
 import 'admin_frame_list_page.dart';
+import 'theme/kiosk_theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,6 +59,12 @@ class KioskApp extends StatelessWidget {
         '/admin': (context) => AdminDashboardPage(),
         '/admin/products': (context) => AdminProductListPage(),
         '/admin/frames': (context) => AdminFrameListPage(),
+        '/frame_selection': (context) => FrameSelectionPage(),
+        '/photo_upload': (context) => PhotoUploadPage(),
+        '/photo_editor': (context) => PhotoEditorPage(),
+        // '/photo_editor': (context) => PhotoAndFrameEditorPage(),
+        '/print_confirmation': (context) => PrintConfirmationPage(),
+
       },
     );
   }

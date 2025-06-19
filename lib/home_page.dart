@@ -1,8 +1,8 @@
 // lib/home_page.dart
 
 import 'package:flutter/material.dart';
-// import 'models/product_model.dart'; // We'll need this for the search
-import 'services/data_service.dart'; // And the service to load products
+import 'package:flutter/services.dart'; 
+import 'package:kiosk_app/services/data_service.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -21,23 +21,15 @@ class _HomePageState extends State<HomePage> {
   
   void _executeSearch(BuildContext context) async {
     final query = _searchController.text;
-    if (query.isEmpty) {
-      // Don't search for nothing
-      return; 
-    }
+    if (query.isEmpty) return; 
     
-    // We must load the full product list to search through it
     final allProducts = await _dataService.readProducts();
     
-    // Use `mounted` check because of the async gap
     if (mounted) {
       Navigator.pushNamed(
         context,
         '/search',
-        arguments: {
-          'query': query,
-          'products': allProducts,
-        },
+        arguments: { 'query': query, 'products': allProducts },
       );
     }
   }
@@ -47,9 +39,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _showAdminPinDialog(BuildContext context) {
-    // ... this method remains exactly the same ...
     final pinController = TextEditingController();
-
     showDialog(
       context: context,
       builder: (context) {
@@ -94,90 +84,79 @@ class _HomePageState extends State<HomePage> {
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.store, size: 350, color: Colors.green),
-                    SizedBox(height: 20),
-                    Text(
-                      'Welcome to Our Store',
-                      style: TextStyle(color: Colors.black, fontSize: 80, fontWeight: FontWeight.normal, fontFamily: 'Times New Roman'),
-                      // style: Theme.of(context).textTheme.displayLarge,
-                    ),
-                    SizedBox(height: 40),
-
-                    // --- THE SEARCH BAR ---
-                    SizedBox(
-                      width: 900,
-                      child: TextField(
-                        controller: _searchController,
-                        textAlign: TextAlign.center,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.white,
-                          // labelText: 'Search Products',
-                          hintText: 'Search for products (e.g., milk, apples)',
-                          prefixIcon: Icon(Icons.search),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.store, size: 350, color: Colors.green),
+                      SizedBox(height: 20),
+                      Text(
+                        'Welcome to Our Store',
+                        style: TextStyle(color: Colors.black, fontSize: 80, fontWeight: FontWeight.normal, fontFamily: 'Times New Roman'),
+                      ),
+                      SizedBox(height: 40),
+                      SizedBox(
+                        width: 900,
+                        child: TextField(
+                          controller: _searchController,
+                          textAlign: TextAlign.center,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            hintText: 'Search for products (e.g., milk, apples)',
+                            prefixIcon: Icon(Icons.search),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
                           ),
+                          onSubmitted: (_) => _executeSearch(context),
                         ),
-                        onSubmitted: (_) => _executeSearch(context),
                       ),
-                    ),
-                    SizedBox(height: 20),
-                    Text("or", style: TextStyle(color: Colors.grey.shade600, fontSize: 30), ),
-                    // --- END OF SEARCH BAR ---
-                    SizedBox(height:20),
-                    SizedBox(
-                      width: 700,
-                      child: ElevatedButton.icon(
-                        icon: Icon(Icons.grid_view_rounded, size: 60,),
-                        onPressed: () => _goTo(context, '/categories'),
-                        label: Text(
-                          'Browse All Products',
-                          style: TextStyle(fontSize: 50),
+                      SizedBox(height: 20),
+                      Text("or", style: TextStyle(color: Colors.grey.shade600, fontSize: 30)),
+                      SizedBox(height:20),
+                      SizedBox(
+                        width: 700,
+                        child: ElevatedButton.icon(
+                          icon: Icon(Icons.grid_view_rounded, size: 60),
+                          onPressed: () => _goTo(context, '/categories'),
+                          label: Text('Browse All Products', style: TextStyle(fontSize: 50)),
                         ),
-                        // style:
-                        //   ElevatedButton.styleFrom(
-                        //     minimumSize: Size(double.infinity, 60),
-                        //     textStyle: TextStyle(fontSize: 20),
-                        //   ),
                       ),
-                    ),
-                    SizedBox(height:20),
-                    SizedBox(
-                      width: 700,
-                      child: ElevatedButton.icon(
-                        icon: Icon(Icons.map_rounded, size: 60,),
-                        onPressed: () => _goTo(context, '/map'),
-                        label: Text(
-                          'Find Product on Map',
-                          style: TextStyle(fontSize: 50),
+                      SizedBox(height:20),
+                      SizedBox(
+                        width: 700,
+                        child: ElevatedButton.icon(
+                          icon: Icon(Icons.map_rounded, size: 60),
+                          onPressed: () => _goTo(context, '/map'),
+                          label: Text('Find Product on Map', style: TextStyle(fontSize: 50)),
                         ),
-                        // style: ElevatedButton.styleFrom(
-                        //   minimumSize: Size(double.infinity, 60),
-                        //   textStyle: TextStyle(fontSize: 20),
-                        // ),
-                      ),
-                    ),  
-                    SizedBox(height:20),
-                    SizedBox(
-                      width: 700,
-                      child: ElevatedButton.icon(
-                        icon: Icon(Icons.shopping_cart_rounded, size: 60,),
-                        onPressed: () => _goTo(context, '/cart'),
-                        label: Text(
-                          'View Your Cart',
-                          style: TextStyle(fontSize: 50),
+                      ),  
+                      SizedBox(height:20),
+                      SizedBox(
+                        width: 700,
+                        child: ElevatedButton.icon(
+                          icon: Icon(Icons.shopping_cart_rounded, size: 60),
+                          onPressed: () => _goTo(context, '/cart'),
+                          label: Text('View Your Cart', style: TextStyle(fontSize: 50)),
                         ),
-                        // style: ElevatedButton.styleFrom(
-                        //   minimumSize: Size(double.infinity, 60),
-                        //   textStyle: TextStyle(fontSize: 20),
-                        // ),
                       ),
-                    ),
-                  ],
+                      SizedBox(height: 20),
+                      SizedBox(
+                        width: 700,
+                        child: ElevatedButton.icon(
+                          icon: Icon(Icons.print_rounded, size: 60, color: Colors.white),
+                          onPressed: () {
+                            _goTo(context, '/frame_selection');
+                            // Navigator.pushNamed(context, '/photo_editor');
+
+                          },
+                          label: Text('Print Photos', style: TextStyle(fontSize: 50, color: Colors.white)),
+                          style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255, 8, 45, 82)),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

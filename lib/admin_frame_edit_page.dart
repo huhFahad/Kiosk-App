@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kiosk_app/widgets/common_app_bar.dart';
-import 'package:matrix_gesture_detector/matrix_gesture_detector.dart';
 import 'package:uuid/uuid.dart';
 import 'models/frame_model.dart';
 import 'services/data_service.dart';
@@ -34,7 +33,7 @@ class _AdminFrameEditPageState extends State<AdminFrameEditPage> {
   double _windowHeight = 0.8;
 
   // We need the size of the displayed image to calculate relative coordinates
-  Size _displayedImageSize = Size.zero;
+  // Size _displayedImageSize = Size.zero;
   final _imageKey = GlobalKey(); // To get the size of the Image widget
 
   bool get _isEditing => widget.frame != null;

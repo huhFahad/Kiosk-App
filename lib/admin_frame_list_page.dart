@@ -131,7 +131,7 @@ class _AdminFrameListPageState extends State<AdminFrameListPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          TODO: _navigateAndRefresh();
+          _navigateAndRefresh();
           print('Adding new frame');
         },
         child: Icon(Icons.add_photo_alternate_outlined),
