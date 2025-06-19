@@ -42,10 +42,10 @@ dependencies:
   uuid: ^4.5.1
   path: ^1.9.1
   photo_view: ^0.15.0
-  matrix_gesture_detector: ^0.2.0-nullsafety.1
   image: ^4.5.4
   printing: ^5.14.2
   pro_image_editor: ^9.13.0
+  virtual_keyboard_multi_language: ^1.1.2
 
 dev_dependencies:
   flutter_test:
@@ -68,9 +68,11 @@ flutter:
   assets:
     - assets/images/
     - assets/images/frames/
+    - assets/images/templates/
     - assets/data/products.json
     - assets/data/categories.json
     - assets/data/frames.json
+    - assets/data/templates.json
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

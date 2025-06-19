@@ -31,8 +31,11 @@ class AdminDashboardPage extends StatelessWidget {
             Navigator.pushNamed(context, '/admin/products');
             // print('Go to product management');
           }),
-          _buildDashboardCard(context, 'Manage Frames', Icons.photo_library, () {
+          _buildDashboardCard(context, 'Manage Frames', Icons.filter_frames_outlined, () {
             Navigator.pushNamed(context, '/admin/frames');
+          }),
+          _buildDashboardCard(context, 'Manage Templates', Icons.photo_library, () {
+            Navigator.pushNamed(context, '/admin/templates');
           }),
           _buildDashboardCard(context, 'View Orders', Icons.receipt_long, () {
             print('Go to order history');

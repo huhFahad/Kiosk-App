@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import '../models/product_model.dart';
 import '../models/category_model.dart';
 import '../models/frame_model.dart';
+import '../models/template_model.dart';
 import 'package:uuid/uuid.dart';
 import 'package:path/path.dart' as p;
 
@@ -88,7 +89,10 @@ class DataService {
     final allProducts = await readProducts();
     
     // Check if it's a new product or an update to an existing one.
-    final int index = allProducts.indexWhere((p) => p.id == productToSave.id);
+    // final int index = allProducts.indexWhere((p) => p.id == productToSave.id);
+    final int index = productToSave.id.isEmpty 
+      ? -1 
+      : allProducts.indexWhere((p) => p.id == productToSave.id);
 
     if (index >= 0) {
       // It's an existing product, so we replace it in the list.
@@ -228,18 +232,58 @@ class DataService {
     await file.writeAsString(jsonEncode(jsonList));
   }
 
-Future<void> saveFrame(Frame frameToSave) async {
-  final allFrames = await readFrames();
-  final index = allFrames.indexWhere((f) => f.id == frameToSave.id);
+  Future<void> saveFrame(Frame frameToSave) async {
+    final allFrames = await readFrames();
+    final index = allFrames.indexWhere((f) => f.id == frameToSave.id);
 
-  if (index >= 0) {
-    // Update existing
-    allFrames[index] = frameToSave;
-  } else {
-    // Add new
-    allFrames.add(frameToSave);
+    if (index >= 0) {
+      // Update existing
+      allFrames[index] = frameToSave;
+    } else {
+      // Add new
+      allFrames.add(frameToSave);
+    }
+    await saveFrames(allFrames);
   }
-  await saveFrames(allFrames);
-}
+
+  // --- TEMPLATE DATA HANDLING ---
+
+  Future<File> get _localTemplatesFile async {
+    final path = await _localPath;
+    return File('$path/templates.json');
+  }
+
+  Future<List<Template>> readTemplates() async {
+    try {
+      final file = await _localTemplatesFile;
+      if (await file.exists()) {
+        final contents = await file.readAsString();
+        return (jsonDecode(contents) as List).map((e) => Template.fromJson(e)).toList();
+      }
+    } catch (e) { /* ... */ }
+    try {
+      final jsonString = await rootBundle.loadString('assets/data/templates.json');
+      return (jsonDecode(jsonString) as List).map((e) => Template.fromJson(e)).toList();
+    } catch (e) { /* ... */ }
+    return [];
+  }
+
+  Future<void> saveTemplates(List<Template> templates) async {
+    final file = await _localTemplatesFile;
+    await file.writeAsString(jsonEncode(templates.map((t) => t.toJson()).toList()));
+  }
+
+  Future<void> addTemplate(Template template) async {
+    final templates = await readTemplates();
+    templates.add(template);
+    await saveTemplates(templates);
+  }
+
+  Future<void> deleteTemplate(String templateId) async {
+    final templates = await readTemplates();
+    templates.removeWhere((t) => t.id == templateId);
+    await saveTemplates(templates);
+  }
+
 
 }

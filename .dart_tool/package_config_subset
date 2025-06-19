@@ -246,10 +246,6 @@ material_color_utilities
 2.17
 file:///home/chewbacca/.pub-cache/hosted/pub.dev/material_color_utilities-0.11.1/
 file:///home/chewbacca/.pub-cache/hosted/pub.dev/material_color_utilities-0.11.1/lib/
-matrix_gesture_detector
-2.12
-file:///home/chewbacca/.pub-cache/hosted/pub.dev/matrix_gesture_detector-0.2.0-nullsafety.1/
-file:///home/chewbacca/.pub-cache/hosted/pub.dev/matrix_gesture_detector-0.2.0-nullsafety.1/lib/
 meta
 2.12
 file:///home/chewbacca/.pub-cache/hosted/pub.dev/meta-1.16.0/
@@ -466,6 +462,10 @@ vector_math
 2.14
 file:///home/chewbacca/.pub-cache/hosted/pub.dev/vector_math-2.1.4/
 file:///home/chewbacca/.pub-cache/hosted/pub.dev/vector_math-2.1.4/lib/
+virtual_keyboard_multi_language
+2.12
+file:///home/chewbacca/.pub-cache/hosted/pub.dev/virtual_keyboard_multi_language-1.1.2/
+file:///home/chewbacca/.pub-cache/hosted/pub.dev/virtual_keyboard_multi_language-1.1.2/lib/
 vm_service
 3.3
 file:///home/chewbacca/.pub-cache/hosted/pub.dev/vm_service-14.3.1/

@@ -13,6 +13,7 @@ import 'map_page.dart';
 import 'cart_page.dart';
 import 'home_page.dart';
 import 'search_results_page.dart';
+import 'admin_template_list_page.dart';
 
 // import 'photo_and_frame_editor_page.dart';
 import 'frame_selection_page.dart';
@@ -59,6 +60,7 @@ class KioskApp extends StatelessWidget {
         '/admin': (context) => AdminDashboardPage(),
         '/admin/products': (context) => AdminProductListPage(),
         '/admin/frames': (context) => AdminFrameListPage(),
+        '/admin/templates': (context) => AdminTemplateListPage(),
         '/frame_selection': (context) => FrameSelectionPage(),
         '/photo_upload': (context) => PhotoUploadPage(),
         '/photo_editor': (context) => PhotoEditorPage(),

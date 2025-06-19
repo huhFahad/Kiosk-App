@@ -392,12 +392,6 @@
       "languageVersion": "2.17"
     },
     {
-      "name": "matrix_gesture_detector",
-      "rootUri": "file:///home/chewbacca/.pub-cache/hosted/pub.dev/matrix_gesture_detector-0.2.0-nullsafety.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
       "name": "meta",
       "rootUri": "file:///home/chewbacca/.pub-cache/hosted/pub.dev/meta-1.16.0",
       "packageUri": "lib/",
@@ -728,6 +722,12 @@
       "languageVersion": "2.14"
     },
     {
+      "name": "virtual_keyboard_multi_language",
+      "rootUri": "file:///home/chewbacca/.pub-cache/hosted/pub.dev/virtual_keyboard_multi_language-1.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "vm_service",
       "rootUri": "file:///home/chewbacca/.pub-cache/hosted/pub.dev/vm_service-14.3.1",
       "packageUri": "lib/",
@@ -788,7 +788,7 @@
       "languageVersion": "3.7"
     }
   ],
-  "generated": "2025-06-17T13:09:44.626004Z",
+  "generated": "2025-06-19T10:02:50.645333Z",
   "generator": "pub",
   "generatorVersion": "3.7.0",
   "flutterRoot": "file:///home/chewbacca/development",

@@ -1,0 +1,12 @@
+[
+  {
+    "id": "template_bday_1",
+    "name": "Birthday Card",
+    "imagePath": "assets/images/templates/birthday1.jpg"
+  },
+  {
+    "id": "template_thankyou_1",
+    "name": "Thank You Note",
+    "imagePath": "assets/images/templates/thankyou1.jpg"
+  }
+]
