@@ -22,6 +22,14 @@ class CartModel extends ChangeNotifier {
     return total;
   }
 
+  int get itemCount {
+    int count = 0;
+    for (var item in _items) {
+      count += item.quantity;
+    }
+    return count;
+  }
+
   CartItem? findItemById(String productId) {
     try {
       // firstWhere will throw an error if no item is found.

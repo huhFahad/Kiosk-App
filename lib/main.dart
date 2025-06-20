@@ -27,7 +27,15 @@ import 'theme/kiosk_theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  windowManager.waitUntilReadyToShow(const WindowOptions(fullScreen: true));
+  // windowManager.waitUntilReadyToShow(const WindowOptions(fullScreen: true));
+  // windowManager.waitUntilReadyToShow(
+  //   const WindowOptions(
+  //     fullScreen: true,
+  //     titleBarStyle: TitleBarStyle.hidden,
+  //     alwaysOnTop: false,
+  //   )
+  // );
+
   runApp(
     ChangeNotifierProvider(
       create: (context) => CartModel(),

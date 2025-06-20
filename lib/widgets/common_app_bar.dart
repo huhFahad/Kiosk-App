@@ -14,24 +14,25 @@ PreferredSizeWidget CommonAppBar({
 }) {
   final canPop = Navigator.of(context).canPop();
   
-  const double actionZoneWidth = 400.0;
+  const double actionZoneWidth = 237.2;
 
   return AppBar(
     leadingWidth: actionZoneWidth, 
     automaticallyImplyLeading: false,
     leading: canPop
-        ? Align(
-            alignment: Alignment.centerLeft,
-            child: IconButton(
-              icon: const Icon(Icons.arrow_back_ios_rounded),
-              iconSize: 70, 
-              onPressed: () => Navigator.of(context).pop(),
-              tooltip: 'Back',
-            ),
-          )
-        : const SizedBox.shrink(),
-
+      ? Align(
+          alignment: Alignment.centerLeft,
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_rounded),
+            iconSize: 70, 
+            onPressed: () => Navigator.of(context).pop(),
+            tooltip: 'Back',
+          ),
+        )
+      : const SizedBox.shrink(),
+    
     centerTitle: true,
+    titleSpacing: 0.0,
     title: Text(
       title,
       overflow: TextOverflow.ellipsis,
@@ -43,16 +44,7 @@ PreferredSizeWidget CommonAppBar({
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            if (showCartButton)
-              IconButton(
-                icon: const Icon(Icons.shopping_cart_outlined),
-                iconSize: 70,
-                tooltip: 'View Cart',
-                onPressed: () {
-                  Navigator.of(context).pushNamed('/cart');
-                },
-              ),
-            
+
             if (showHomeButton)
               IconButton(
                 icon: const Icon(Icons.home_outlined),
@@ -63,7 +55,17 @@ PreferredSizeWidget CommonAppBar({
                 },
               ),
 
-              if (showSaveButton)
+            if (showCartButton)
+              IconButton(
+                icon: const Icon(Icons.shopping_cart_outlined),
+                iconSize: 70,
+                tooltip: 'View Cart',
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/cart');
+                },
+              ),
+
+            if (showSaveButton)
               IconButton(
                 icon: const Icon(Icons.save_outlined),
                 iconSize: 70,

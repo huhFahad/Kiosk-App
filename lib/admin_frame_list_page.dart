@@ -46,6 +46,8 @@ class _AdminFrameListPageState extends State<AdminFrameListPage> {
       appBar: CommonAppBar(
         context: context, 
         title: 'Manage Photo Frames', 
+        showCartButton: false,
+        showHomeButton: false,
       ),  
       body: FutureBuilder<List<Frame>>(
         future: _framesFuture,

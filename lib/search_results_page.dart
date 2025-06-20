@@ -8,6 +8,7 @@ import 'models/product_model.dart';
 import 'widgets/common_app_bar.dart';
 // import 'widgets/quantity_control_widget.dart';
 import 'widgets/product_list_item.dart';
+import 'widgets/proceed_to_cart_widget.dart';
 
 class SearchResultsPage extends StatelessWidget {
   @override
@@ -36,22 +37,27 @@ class SearchResultsPage extends StatelessWidget {
       //   child: buildCommonAppBar(context: context, title: 'Search Results for "$searchQuery"'),
       // ),
       appBar: CommonAppBar(context: context, title: 'Search Results for "$searchQuery"'),
-      body: searchResults.isEmpty
-          ? Center(
-              child: Text(
-                'No products found matching your search.',
-                style: TextStyle(fontSize: 18),
-                textAlign: TextAlign.center,
+      body: Stack(
+        children: [
+          searchResults.isEmpty
+            ? Center(
+                child: Text(
+                  'No products found matching your search.',
+                  style: TextStyle(fontSize: 18),
+                  textAlign: TextAlign.center,
+                ),
+              )
+            : ListView.builder(
+                padding: EdgeInsets.all(12),
+                itemCount: searchResults.length,
+                itemBuilder: (context, index) {
+                  final product = searchResults[index];
+                  return ProductListItem(product: product);
+                },
               ),
-            )
-          : ListView.builder(
-              padding: EdgeInsets.all(12),
-              itemCount: searchResults.length,
-              itemBuilder: (context, index) {
-                final product = searchResults[index];
-                return ProductListItem(product: product);
-              },
-            ),
+            const ProceedToCartWidget(),
+        ],
+      )
     );
   }
 }

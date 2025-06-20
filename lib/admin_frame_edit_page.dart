@@ -41,6 +41,7 @@ class _AdminFrameEditPageState extends State<AdminFrameEditPage> {
   @override
   void initState() {
     super.initState();
+
     if (_isEditing) {
       // Pre-fill fields if we are editing
       _nameController.text = widget.frame!.name;

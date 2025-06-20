@@ -112,7 +112,7 @@ class _PhotoEditorPageState extends State<PhotoEditorPage> {
       callbacks: ProImageEditorCallbacks(
         // The one true way to get the final image
         onImageEditingComplete: (Uint8List bytes) async {
-          await showDialog(
+          showDialog(
             context: context,
             builder: (dialogContext) {
               return AlertDialog(

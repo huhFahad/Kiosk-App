@@ -8,6 +8,7 @@ import 'widgets/common_app_bar.dart';
 // import 'widgets/quantity_control_widget.dart';
 // import 'admin_product_list_page.dart'; // For ProductImageView
 import 'widgets/product_list_item.dart';
+import 'widgets/proceed_to_cart_widget.dart';
 
 // An enum to define our sorting options cleanly
 enum ProductSortOption { Default, PriceHighToLow, PriceLowToHigh }
@@ -54,78 +55,80 @@ class _ProductsListPageState extends State<ProductsListPage> {
     }
 
     return Scaffold(
-      // appBar: PreferredSize(
-      //   preferredSize: Size.fromHeight(Theme.of(context).appBarTheme.toolbarHeight ?? kToolbarHeight),
-      //   child: buildCommonAppBar(context: context, title: categoryName),
-      // ),
       appBar: CommonAppBar(context: context, title: categoryName,),
-      body: Column(
+      body: Stack(
         children: [
-          // --- Sub-category Filter Bar ---
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
-            child: SizedBox(
-              // height: 40.0,
-              height: defaultFontSize * 2.5,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: subcategories.length,
-                itemBuilder: (context, index) {
-                  final subcategory = subcategories[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    child: ChoiceChip(
-                      label: Text(subcategory),
-                      selected: selectedSubcategory == subcategory,
-                      onSelected: (isSelected) {
-                        if (isSelected) {
-                          setState(() {
-                            selectedSubcategory = subcategory;
-                          });
-                        }
-                      },
-                    ),
-                  );
-                },
+          Column(
+            children: [
+              // --- Sub-category Filter Bar ---
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+                child: SizedBox(
+                  // height: 40.0,
+                  height: defaultFontSize * 2.5,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: subcategories.length,
+                    itemBuilder: (context, index) {
+                      final subcategory = subcategories[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        child: ChoiceChip(
+                          label: Text(subcategory),
+                          selected: selectedSubcategory == subcategory,
+                          onSelected: (isSelected) {
+                            if (isSelected) {
+                              setState(() {
+                                selectedSubcategory = subcategory;
+                              });
+                            }
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ),
-            ),
-          ),
-          // --- NEW: Sort Options Bar ---
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text("Sort by:", style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(width: 8),
-                ChoiceChip(
-                  label: Text('Price: High-Low'),
-                  selected: _sortOption == ProductSortOption.PriceHighToLow,
-                  onSelected: (_) => setState(() => _sortOption = ProductSortOption.PriceHighToLow),
+              // --- NEW: Sort Options Bar ---
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text("Sort by:", style: TextStyle(fontWeight: FontWeight.bold)),
+                    SizedBox(width: 8),
+                    ChoiceChip(
+                      label: Text('Price: High-Low'),
+                      selected: _sortOption == ProductSortOption.PriceHighToLow,
+                      onSelected: (_) => setState(() => _sortOption = ProductSortOption.PriceHighToLow),
+                    ),
+                    SizedBox(width: 8),
+                    ChoiceChip(
+                      label: Text('Price: Low-High'),
+                      selected: _sortOption == ProductSortOption.PriceLowToHigh,
+                      onSelected: (_) => setState(() => _sortOption = ProductSortOption.PriceLowToHigh),
+                    ),
+                  ],
                 ),
-                SizedBox(width: 8),
-                ChoiceChip(
-                  label: Text('Price: Low-High'),
-                  selected: _sortOption == ProductSortOption.PriceLowToHigh,
-                  onSelected: (_) => setState(() => _sortOption = ProductSortOption.PriceLowToHigh),
+              ),
+              Divider(),
+              // --- Product List ---
+              Expanded(
+                child: ListView.builder(
+                  padding: EdgeInsets.all(12),
+                  itemCount: sortedProducts.length, // Use the sorted list
+                  itemBuilder: (context, index) {
+                    final product = sortedProducts[index]; // Use the sorted list
+                    return ProductListItem(product: product);
+                  },
                 ),
-              ],
-            ),
+              ),
+            
+            ],
           ),
-          Divider(),
-          // --- Product List ---
-          Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.all(12),
-              itemCount: sortedProducts.length, // Use the sorted list
-              itemBuilder: (context, index) {
-                final product = sortedProducts[index]; // Use the sorted list
-                return ProductListItem(product: product);
-              },
-            ),
-          ),
+          const ProceedToCartWidget(),
         ],
-      ),
+      )
     );
   }
 }
