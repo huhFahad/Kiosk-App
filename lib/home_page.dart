@@ -36,6 +36,8 @@ class _HomePageState extends State<HomePage> {
 
   void _showAdminPinDialog(BuildContext context) {
     final pinController = TextEditingController();
+    final dataService = DataService();
+
     showDialog(
       context: context,
       builder: (context) {
@@ -51,17 +53,22 @@ class _HomePageState extends State<HomePage> {
           actions: [
             TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
             ElevatedButton(
-              onPressed: () {
-                if (pinController.text == '1234') {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/admin');
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Incorrect PIN')),
-                  );
-                }
-              },
-              child: const Text('Login'),
+              onPressed: () async {
+                final String savedPin = await dataService.getAdminPin();
+                  if (pinController.text == savedPin) {
+                    if (mounted) {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/admin');
+                    }
+                  } else {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Incorrect PIN')),
+                      );
+                    }
+                  }
+                },
+              child: Text('Login'),
             ),
           ],
         );
@@ -71,7 +78,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // We are back to a simple, standard Scaffold.
     return Scaffold(
       body: Stack(
         children: [
@@ -87,10 +93,15 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.store, size: 250, color: Colors.green),
+                          Image.asset(
+                            "assets/images/urban_rain_logo.png",
+                            width: 700,
+                            // height: 500,
+                            fit: BoxFit.contain,
+                          ),
                           const SizedBox(height: 20),
                           const Text(
-                            'Welcome to Our Store',
+                            'Welcome to Urban Rain',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.black,

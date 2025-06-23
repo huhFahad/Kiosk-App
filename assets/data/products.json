@@ -64,5 +64,27 @@
     "image": "assets/images/pocket-journal.jpg",
     "mapX": 0.88,
     "mapY": 0.20
+  },
+  {
+    "id": "p7",
+    "name": "Arch 1",
+    "category": "Balloon Arches",
+    "subcategory": "Blue",
+    "price": 500.0,
+    "unit": "/piece",
+    "image": "assets/images/balloon_arch_1.webp",
+    "mapX": 1,
+    "mapY": 1
+  },
+  {
+    "id": "p8",
+    "name": "Arch 2",
+    "category": "Balloon Arches",
+    "subcategory": "Pink",
+    "price": 700.0,
+    "unit": "/piece",
+    "image": "assets/images/balloon_arch_2.jpg",
+    "mapX": 1,
+    "mapY": 1
   }
 ]

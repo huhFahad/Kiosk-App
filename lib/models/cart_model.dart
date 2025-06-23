@@ -2,13 +2,14 @@
 
 import 'package:flutter/foundation.dart';
 import 'product_model.dart';
-import 'cart_item_model.dart';
-
+import 'order_model.dart';
+import 'package:kiosk_app/services/data_service.dart';
 import 'dart:math';
 
 class CartModel extends ChangeNotifier {
   // The cart now stores a list of CartItem objects
   final List<CartItem> _items = [];
+  final DataService _dataService = DataService();
 
   // Public getter for the items
   List<CartItem> get items => _items;
@@ -87,15 +88,22 @@ class CartModel extends ChangeNotifier {
   }
 
   String placeOrder() {
-    // In a real app, you would save the order to a database or send it to a server.
-    // For now, we'll just generate a random order ID and clear the cart.
+    // Create a unique ID
+    final orderId = 'ORD-${Random().nextInt(9000) + 1000}';
     
-    final orderId = 'KIOSK-${Random().nextInt(9000) + 1000}'; // e.g., KIOSK-5821
+    // Create a new Order object from the current cart state
+    final newOrder = Order(
+      id: orderId,
+      items: List<CartItem>.from(_items), // Create a copy of the items list
+      totalPrice: totalPrice,
+      createdAt: DateTime.now(),
+    );
     
-    // Clear the cart
+    // Use the DataService to save the order to a file
+    _dataService.saveOrder(newOrder);
+
+    // Clear the cart for the next customer
     _items.clear();
-    
-    // Notify listeners to update the UI (so the cart page becomes empty)
     notifyListeners();
     
     return orderId;

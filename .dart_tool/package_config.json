@@ -224,6 +224,12 @@
       "languageVersion": "3.6"
     },
     {
+      "name": "flutter_secure_storage",
+      "rootUri": "file:///home/chewbacca/.pub-cache/hosted/pub.dev/flutter_secure_storage-4.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "flutter_test",
       "rootUri": "file:///home/chewbacca/development/packages/flutter_test",
       "packageUri": "lib/",
@@ -324,6 +330,12 @@
       "rootUri": "file:///home/chewbacca/.pub-cache/hosted/pub.dev/image_picker_windows-0.2.1+1",
       "packageUri": "lib/",
       "languageVersion": "2.19"
+    },
+    {
+      "name": "intl",
+      "rootUri": "file:///home/chewbacca/.pub-cache/hosted/pub.dev/intl-0.18.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "io",
@@ -782,7 +794,7 @@
       "languageVersion": "3.7"
     }
   ],
-  "generated": "2025-06-20T07:13:32.261749Z",
+  "generated": "2025-06-23T07:03:09.807496Z",
   "generator": "pub",
   "generatorVersion": "3.7.0",
   "flutterRoot": "file:///home/chewbacca/development",

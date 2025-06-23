@@ -142,6 +142,10 @@ flutter_plugin_android_lifecycle
 3.6
 file:///home/chewbacca/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.28/
 file:///home/chewbacca/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.28/lib/
+flutter_secure_storage
+2.12
+file:///home/chewbacca/.pub-cache/hosted/pub.dev/flutter_secure_storage-4.2.1/
+file:///home/chewbacca/.pub-cache/hosted/pub.dev/flutter_secure_storage-4.2.1/lib/
 frontend_server_client
 3.0
 file:///home/chewbacca/.pub-cache/hosted/pub.dev/frontend_server_client-4.0.0/
@@ -202,6 +206,10 @@ image_picker_windows
 2.19
 file:///home/chewbacca/.pub-cache/hosted/pub.dev/image_picker_windows-0.2.1+1/
 file:///home/chewbacca/.pub-cache/hosted/pub.dev/image_picker_windows-0.2.1+1/lib/
+intl
+2.12
+file:///home/chewbacca/.pub-cache/hosted/pub.dev/intl-0.18.1/
+file:///home/chewbacca/.pub-cache/hosted/pub.dev/intl-0.18.1/lib/
 io
 3.4
 file:///home/chewbacca/.pub-cache/hosted/pub.dev/io-1.0.5/

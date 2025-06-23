@@ -45,7 +45,7 @@ class _FrameSelectionPageState extends State<FrameSelectionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(context: context, title: 'Step 2: Choose Your Frame'),
+      appBar: CommonAppBar(context: context, title: 'Choose Your Frame'),
       body: FutureBuilder<List<Frame>>(
         future: _framesFuture,
         builder: (context, snapshot) {

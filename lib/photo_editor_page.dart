@@ -15,16 +15,7 @@ class PhotoEditorPage extends StatefulWidget {
 class _PhotoEditorPageState extends State<PhotoEditorPage> {
   final _editorKey = GlobalKey<ProImageEditorState>();
   late Frame _frame;
-  late File _customerImageFile;
-
-  // A blank background for our editor canvas
-  // final Uint8List _blankBackground = Uint8List.fromList([
-  //   137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 1,
-  //   0, 0, 0, 1, 8, 0, 0, 0, 0, 90, 111, 222, 243, 0, 0, 0, 12, 73, 68, 65, 84,
-  //   8, 215, 99, 96, 0, 0, 0, 2, 0, 1, 226, 33, 183, 130, 0, 0, 0, 0, 73, 69,
-  //   78, 68, 174, 66, 96, 130
-  // ]);
- 
+  late File _customerImageFile; 
   late Uint8List _blankBackground;
 
   Future<void> _loadBlankBackground() async {
@@ -83,7 +74,7 @@ class _PhotoEditorPageState extends State<PhotoEditorPage> {
           fit: BoxFit.contain,
         ),
         scale: 5.0,
-        offset: Offset(650, 0), // Adjust as needed
+        offset: Offset(450, -200), // Adjust as needed
         interaction: LayerInteraction(
           // enableMove: false,
           // enableScale: false,
@@ -183,9 +174,6 @@ class _PhotoEditorPageState extends State<PhotoEditorPage> {
               );
             },
           ),
-
-          // Let the editor show its default AppBar with "Done" and "Close"
-          // This is the most reliable way.
         ),
       ),
     );
@@ -214,16 +202,21 @@ class _PhotoEditorPageState extends State<PhotoEditorPage> {
                     context: context,
                     builder: (dialogContext) {
                       return AlertDialog(
+                        
                         title: const Text('How to Use This Editor'),
-                        content: const Text(
-                          '1. Tap a layer to select it.\n'
-                          '2. Drag the layer to move around.\n'
-                          '3. Hold and drag the bottom right corner of a layer to resize/rotate it.\n\n'
-                          '   NOTE: Edit the photo layer first. Placing the frame layer prevents access to the photo layer. \n'
-                          '   If you want to edit the photo layer after placing the frame, you can simply move the frame away from\n'
-                          '   the photo layer, edit the photo layer, and then move the frame back on top of the photo layer.\n\n'
-                          '4. Tap the buttons below to use advance drawing or text features.\n'
-                          '5. When done, click "   " on the top right of the screen to proceed.',
+                        content: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width * 0.8, // 80% of screen
+                          ),
+                          child: const Text(
+                            '1. Tap a layer to select it.\n'
+                            '2. Drag the layer to move around.\n'
+                            '3. Hold and drag the bottom right corner of a layer to resize/rotate it.\n\n'
+                            '   NOTE: Edit the photo layer first. Placing the frame layer prevents access to the photo layer. If you want to edit the photo layer after placing the frame, you can simply move the frame away from the photo layer, edit the photo layer, and then move the frame back on top of the photo layer.\n\n'
+                            '4. Tap the buttons below to use advance drawing or text features.\n'
+                            '5. When done, click the check icon on the top right of the screen to proceed.',
+                            softWrap: true,
+                          ),
                         ),
                         actions: [
                           TextButton(

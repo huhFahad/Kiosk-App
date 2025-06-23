@@ -18,7 +18,7 @@ class KioskTheme {
       // For regular text, list tile titles
       bodyLarge: TextStyle(fontSize: _baseFontSize * _scale, color: Colors.black87),
       // For subtitles, helper text
-      bodyMedium: TextStyle(fontSize: _baseFontSize * 0.9 * _scale, color: Colors.black54),
+      bodyMedium: TextStyle(fontSize: _baseFontSize * 0.75 * _scale, color: Colors.black54),
       // For button text
       labelLarge: TextStyle(fontSize: _baseFontSize * 1.1 * _scale, fontWeight: FontWeight.bold),
     );

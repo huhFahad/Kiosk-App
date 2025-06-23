@@ -45,7 +45,7 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(context: context, title: 'Step 1: Choose an Image'),
+      appBar: CommonAppBar(context: context, title: 'Choose an Image'),
       body: Column(
         children: [
           Padding(

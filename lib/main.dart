@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:window_manager/window_manager.dart';
+// import 'package:window_manager/window_manager.dart';
 
 import 'models/cart_model.dart';
 import 'categories_page.dart';
@@ -14,8 +14,6 @@ import 'cart_page.dart';
 import 'home_page.dart';
 import 'search_results_page.dart';
 import 'admin_template_list_page.dart';
-
-// import 'photo_and_frame_editor_page.dart';
 import 'frame_selection_page.dart';
 import 'photo_upload_page.dart';
 import 'photo_editor_page.dart';
@@ -23,6 +21,9 @@ import 'print_confirmation_page.dart';
 import 'admin_dashboard_page.dart';
 import 'admin_product_list_page.dart';
 import 'admin_frame_list_page.dart';
+import 'admin_order_list_page.dart';
+import 'admin_order_detail_page.dart';
+import 'system_settings_page.dart';
 import 'theme/kiosk_theme.dart';
 
 void main() {
@@ -65,16 +66,17 @@ class KioskApp extends StatelessWidget {
         '/cart': (context) => CartPage(),
         '/confirmation': (context) => OrderConfirmationPage(),
         '/search': (context) => SearchResultsPage(),
+        '/frame_selection': (context) => FrameSelectionPage(),
+        '/photo_upload': (context) => PhotoUploadPage(),
+        '/photo_editor': (context) => PhotoEditorPage(),
+        '/print_confirmation': (context) => PrintConfirmationPage(),
         '/admin': (context) => AdminDashboardPage(),
         '/admin/products': (context) => AdminProductListPage(),
         '/admin/frames': (context) => AdminFrameListPage(),
         '/admin/templates': (context) => AdminTemplateListPage(),
-        '/frame_selection': (context) => FrameSelectionPage(),
-        '/photo_upload': (context) => PhotoUploadPage(),
-        '/photo_editor': (context) => PhotoEditorPage(),
-        // '/photo_editor': (context) => PhotoAndFrameEditorPage(),
-        '/print_confirmation': (context) => PrintConfirmationPage(),
-
+        '/admin/orders':(context) => AdminOrderListPage(),
+        '/admin/order_detail': (context) => AdminOrderDetailPage(),
+        '/admin/settings': (context) => SystemSettingsPage(),
       },
     );
   }

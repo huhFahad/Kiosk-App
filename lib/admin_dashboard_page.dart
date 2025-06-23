@@ -29,7 +29,6 @@ class AdminDashboardPage extends StatelessWidget {
         children: [
           _buildDashboardCard(context, 'Manage Products', Icons.shopping_bag, () {
             Navigator.pushNamed(context, '/admin/products');
-            // print('Go to product management');
           }),
           _buildDashboardCard(context, 'Manage Frames', Icons.filter_frames_outlined, () {
             Navigator.pushNamed(context, '/admin/frames');
@@ -38,10 +37,10 @@ class AdminDashboardPage extends StatelessWidget {
             Navigator.pushNamed(context, '/admin/templates');
           }),
           _buildDashboardCard(context, 'View Orders', Icons.receipt_long, () {
-            print('Go to order history');
+            Navigator.pushNamed(context, '/admin/orders');
           }),
           _buildDashboardCard(context, 'System Settings', Icons.settings, () {
-            print('Go to system settings');
+            Navigator.pushNamed(context, '/admin/settings');
           }),
           _buildDashboardCard(context, 'App Updates', Icons.update, () {
             print('Check for updates');
