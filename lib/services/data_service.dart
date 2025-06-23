@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart'; 
 import '../models/product_model.dart';
 import '../models/category_model.dart';
 import '../models/frame_model.dart';
@@ -17,7 +18,45 @@ class DataService {
   static const _uuid = Uuid();
   static const _secureStorage = FlutterSecureStorage();
   static const _adminPinKey = 'admin_pin';
+  static const _themeColorKey = 'theme_primary_color'; 
+  static const _timeoutKey = 'inactivity_timeout_seconds';
+  static const _screensaverImagePathKey = 'screensaver_image_path';
+  static const _screensaverEnabledKey = 'screensaver_enabled';
 
+  // --- INACTIVITY & SCREENSAVER SETTINGS ---
+
+  Future<void> saveTimeoutDuration(int seconds) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_timeoutKey, seconds);
+  }
+
+  Future<int> getTimeoutDuration() async {
+    final prefs = await SharedPreferences.getInstance();
+    // Default to 90 seconds if nothing is set
+    return prefs.getInt(_timeoutKey) ?? 90;
+  }
+
+  Future<void> saveScreensaverImagePath(String path) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_screensaverImagePathKey, path);
+  }
+
+  Future<String?> getScreensaverImagePath() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_screensaverImagePathKey);
+  }
+
+   Future<void> saveScreensaverEnabled(bool isEnabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_screensaverEnabledKey, isEnabled);
+  }
+
+  Future<bool> getScreensaverEnabled() async {
+    final prefs = await SharedPreferences.getInstance();
+    // Default to 'true' (enabled) if the setting has never been touched.
+    return prefs.getBool(_screensaverEnabledKey) ?? true;
+  }
+  
   // --- File Path Helpers ---
 
   Future<String> saveImage(File imageFile) async {
@@ -319,6 +358,8 @@ class DataService {
     await file.writeAsString(jsonEncode(allOrders.map((o) => o.toJson()).toList()));
   }
 
+  // ----- Admin Pin ----
+
   Future<String> getAdminPin() async {
     // Read the PIN from secure storage.
     // If it's null (never been set), return the default '1234'.
@@ -330,5 +371,18 @@ class DataService {
     await _secureStorage.write(key: _adminPinKey, value: newPin);
   }
 
+  // ----- Theme Colors ------
+
+  Future<int> getThemeColorValue() async {
+    final prefs = await SharedPreferences.getInstance();
+    // Read the color value. If it's null (never set), return green's value.
+    // 0xFF4CAF50 is the hex value for Colors.green
+    return prefs.getInt(_themeColorKey) ?? 0xFF4CAF50;
+  }
+
+  Future<void> saveThemeColorValue(int colorValue) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_themeColorKey, colorValue);
+  }
 
 }

@@ -125,7 +125,7 @@ class CartPage extends StatelessWidget {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.symmetric(vertical: 20),
-                          backgroundColor: Colors.green, // Use primary color
+                          backgroundColor: Theme.of(context).primaryColor, // Use primary color
                           foregroundColor: Colors.white, // Text color
                         ),
                         onPressed: () {

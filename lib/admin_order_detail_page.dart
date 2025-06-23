@@ -59,7 +59,7 @@ class AdminOrderDetailPage extends StatelessWidget {
                       'Total Price:',
                       '₹${order.totalPrice.toStringAsFixed(2)}',
                       isBold: true,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.green.shade800),
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).primaryColor,),
                     ),
                   ],
                 ),

@@ -23,7 +23,7 @@ PreferredSizeWidget CommonAppBar({
       ? Align(
           alignment: Alignment.centerLeft,
           child: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_rounded),
+            icon: Icon(Icons.arrow_back_ios_rounded, color: Theme.of(context).primaryColor,),
             iconSize: 70, 
             onPressed: () => Navigator.of(context).pop(),
             tooltip: 'Back',
@@ -47,7 +47,7 @@ PreferredSizeWidget CommonAppBar({
 
             if (showHomeButton)
               IconButton(
-                icon: const Icon(Icons.home_outlined),
+                icon: Icon(Icons.home_outlined, color: Theme.of(context).primaryColor,),
                 iconSize: 70,
                 tooltip: 'Go to Home',
                 onPressed: () {
@@ -57,7 +57,7 @@ PreferredSizeWidget CommonAppBar({
 
             if (showCartButton)
               IconButton(
-                icon: const Icon(Icons.shopping_cart_outlined),
+                icon: Icon(Icons.shopping_cart_outlined, color: Theme.of(context).primaryColor,),
                 iconSize: 70,
                 tooltip: 'View Cart',
                 onPressed: () {
@@ -67,7 +67,7 @@ PreferredSizeWidget CommonAppBar({
 
             if (showSaveButton)
               IconButton(
-                icon: const Icon(Icons.save_outlined),
+                icon: Icon(Icons.save_outlined, color: Theme.of(context).primaryColor,),
                 iconSize: 70,
                 tooltip: 'Save',
                 onPressed: onSavePressed,

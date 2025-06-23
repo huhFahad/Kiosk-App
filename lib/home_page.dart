@@ -21,7 +21,6 @@ class _HomePageState extends State<HomePage> {
     final query = _searchController.text;
     if (query.isEmpty) return;
     
-    // Unfocus to hide the OSK before navigating
     FocusScope.of(context).unfocus(); 
     
     final allProducts = await _dataService.readProducts();
@@ -123,7 +122,7 @@ class _HomePageState extends State<HomePage> {
                                 label: Text('Search for products'),
                                 hintText: 'Apples, Mobile Phones.. etc',
                                 hintStyle: TextStyle(color: const Color.fromARGB(255, 142, 142, 142)),
-                                prefixIcon: const Icon(Icons.search),
+                                prefixIcon: Icon(Icons.search, color: Theme.of(context).primaryColor,),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(30.0),
                                 ),
@@ -171,7 +170,7 @@ class _HomePageState extends State<HomePage> {
                               onPressed: () => _goTo(context, '/photo_upload'),
                               label: Text('Print Photos', style: TextStyle(fontSize: 50, color: Colors.white)),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color.fromARGB(255, 8, 45, 82),
+                                backgroundColor: Theme.of(context).colorScheme.secondary,
                               ),
                             ),
                           ),

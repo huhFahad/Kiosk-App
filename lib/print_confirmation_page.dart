@@ -92,7 +92,7 @@ class _PrintConfirmationPageState extends State<PrintConfirmationPage> {
                     onPressed: _imageBytes == null ? null : () => _printImage(context, _imageBytes!),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 24),
-                      backgroundColor: Colors.green,
+                      backgroundColor: Theme.of(context).primaryColor,
                     ),
                   ),
                 ),

@@ -1,5 +1,11 @@
 // lib/system_settings_page.dart
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:provider/provider.dart';
+import 'package:kiosk_app/theme/theme_notifier.dart';
+import 'package:kiosk_app/notifiers/settings_notifier.dart'; // Import SettingsNotifier
 import 'package:kiosk_app/widgets/common_app_bar.dart';
 import 'package:kiosk_app/services/data_service.dart';
 
@@ -11,16 +17,106 @@ class SystemSettingsPage extends StatefulWidget {
 }
 
 class _SystemSettingsPageState extends State<SystemSettingsPage> {
-  // We can add state variables here later, e.g., for the timeout duration
-  // double _inactivityTimeout = 90;
-  
+  // We only need DataService for things not in our notifiers, like PIN and screensaver image
   final _dataService = DataService();
+  String? _currentScreensaverPath;
+
+  @override
+  void initState() {
+    super.initState();
+    // Load settings that are not part of the global notifier
+    _loadLocalSettings();
+  }
+
+  // This method now only loads page-specific data
+  Future<void> _loadLocalSettings() async {
+    final path = await _dataService.getScreensaverImagePath();
+    if (mounted) {
+      setState(() {
+        _currentScreensaverPath = path;
+      });
+    }
+  }
+
+  // --- DIALOG AND ACTION METHODS ---
+
+  void _showChangeTimeoutDialog(SettingsNotifier notifier) {
+    final controller = TextEditingController(text: notifier.timeoutDurationSeconds.toString());
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Set Inactivity Timeout'),
+        content: TextField(
+          controller: controller,
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(labelText: 'Seconds until screensaver appears'),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('Cancel')),
+          ElevatedButton(
+            onPressed: () async {
+              final newTimeout = int.tryParse(controller.text);
+              if (newTimeout != null && newTimeout >= 10) {
+                // Call the notifier to update the setting globally
+                await notifier.updateTimeoutDuration(newTimeout);
+                if (mounted) Navigator.of(context).pop();
+              }
+            },
+            child: Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _changeScreensaverImage() async {
+    final file = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (file == null) return;
+    
+    final newPath = await _dataService.saveImage(File(file.path));
+    await _dataService.saveScreensaverImagePath(newPath);
+    _loadLocalSettings(); // Refresh just the local state for the image preview
+  }
+
+  Future<void> _removeScreensaverImage() async {
+    await _dataService.saveScreensaverImagePath('');
+    _loadLocalSettings();
+  }
+
+  void _showColorPickerDialog() {
+    final themeNotifier = Provider.of<ThemeNotifier>(context, listen: false);
+    Color currentColor = themeNotifier.currentTheme.primaryColor;
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Select Primary Color'),
+          content: SingleChildScrollView(
+            child: ColorPicker(
+              pickerColor: currentColor,
+              onColorChanged: (color) => currentColor = color,
+            ),
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('Cancel')),
+            ElevatedButton(
+              onPressed: () {
+                themeNotifier.updateThemeColor(currentColor);
+                Navigator.of(context).pop();
+              },
+              child: Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   void _showChangePinDialog() {
+    final formKey = GlobalKey<FormState>();
     final currentPinController = TextEditingController();
     final newPinController = TextEditingController();
     final confirmPinController = TextEditingController();
-    final formKey = GlobalKey<FormState>();
 
     showDialog(
       context: context,
@@ -35,74 +131,39 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
               children: [
                 TextFormField(
                   controller: currentPinController,
-                  keyboardType: TextInputType.number,
                   obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'Current PIN',
-                    labelStyle: TextStyle(fontSize: 18),
-                    constraints: BoxConstraints(minWidth: 400),
-                  ),
-                  validator: (value) => value!.isEmpty ? 'Required' : null,
+                  decoration: InputDecoration(labelText: 'Current PIN'),
+                  validator: (v) => v!.isEmpty ? 'Required' : null,
                 ),
-                SizedBox(height: 20),
                 TextFormField(
                   controller: newPinController,
-                  keyboardType: TextInputType.number,
                   obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'New PIN',
-                    labelStyle: TextStyle(fontSize: 18),
-                    constraints: BoxConstraints(minWidth: 400),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) return 'Required';
-                    if (value.length < 4) return 'PIN must be at least 4 digits';
-                    return null;
-                  },
+                  decoration: InputDecoration(labelText: 'New PIN'),
+                  validator: (v) => (v?.length ?? 0) < 4 ? 'Min 4 digits' : null,
                 ),
-                SizedBox(height: 7),
                 TextFormField(
                   controller: confirmPinController,
-                  keyboardType: TextInputType.number,
                   obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'Confirm New PIN',
-                    labelStyle: TextStyle(fontSize: 18),
-                    constraints: BoxConstraints(minWidth: 400),
-                  ),
-                  validator: (value) {
-                    if (value != newPinController.text) return 'PINs do not match';
-                    return null;
-                  },
+                  decoration: InputDecoration(labelText: 'Confirm New PIN'),
+                  validator: (v) => v != newPinController.text ? 'PINs do not match' : null,
                 ),
               ],
             ),
           ),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: Text('Cancel'),
-            ),
+            TextButton(onPressed: () => Navigator.of(dialogContext).pop(), child: Text('Cancel')),
             ElevatedButton(
               onPressed: () async {
                 if (formKey.currentState!.validate()) {
-                  // Check if current PIN is correct
                   final savedPin = await _dataService.getAdminPin();
                   if (currentPinController.text != savedPin) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Current PIN is incorrect.'), backgroundColor: Colors.red),
-                    );
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Current PIN is incorrect.'), backgroundColor: Colors.red));
                     return;
                   }
-
-                  // Save the new PIN
                   await _dataService.saveAdminPin(newPinController.text);
-
                   if (mounted) {
                     Navigator.of(dialogContext).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('PIN updated successfully!'), backgroundColor: Colors.green),
-                    );
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('PIN updated successfully!'), backgroundColor: Colors.green));
                   }
                 }
               },
@@ -116,131 +177,160 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CommonAppBar(
-        context: context, 
-        title: 'System Settings',
-        showCartButton: false,
-        showHomeButton: false,
-      ),
-      body: ListView(
-        children: [
-          // --- App Settings Section ---
-          _buildSectionHeader('Application'),
-          _buildSettingsTile(
-            icon: Icons.color_lens,
-            title: 'Appearance',
-            subtitle: 'Change the app\'s primary color scheme.',
-            onTap: () {
-              // TODO: Open a color picker dialog
-              print('Tapped Change Appearance');
-            },
-          ),
-          _buildSettingsTile(
-            icon: Icons.timer,
-            title: 'Inactivity Timeout',
-            subtitle: 'Set time before app resets to home screen (e.g., 90 seconds).',
-            onTap: () {
-              // TODO: Open a dialog with a slider or text input
-              print('Tapped Inactivity Timeout');
-            },
-          ),
-          
-          const Divider(),
+    // We use Consumer here to listen to global setting changes
+    return Consumer<SettingsNotifier>(
+      builder: (context, settingsNotifier, child) {
+        return Scaffold(
+          appBar: CommonAppBar(context: context, title: 'System Settings'),
+          body: ListView(
+            children: [
+              _buildSectionHeader('Application'),
+              SwitchListTile(
+                title: Text('Enable Screensaver'),
+                subtitle: Text('Automatically show a screensaver when idle.'),
+                value: settingsNotifier.isScreensaverEnabled,
+                onChanged: (bool value) {
+                  settingsNotifier.updateScreensaverEnabled(value);
+                },
+                secondary: Icon(Icons.slideshow),
+              ),
+              if (settingsNotifier.isScreensaverEnabled) ...[
+                const Divider(),
+                _buildSettingsTile(
+                  icon: Icons.image,
+                  title: 'Change Screensaver Image',
+                  subtitle: _currentScreensaverPath == null || _currentScreensaverPath!.isEmpty 
+                      ? 'Using default screensaver.' 
+                      : 'Using custom image.',
+                  onTap: _changeScreensaverImage,
+                  trailing: _buildScreensaverPreview(),
+                ),
+                _buildSettingsTile(
+                  icon: Icons.timer,
+                  title: 'Inactivity Timeout',
+                  subtitle: 'Currently: ${settingsNotifier.timeoutDurationSeconds} seconds',
+                  onTap: () => _showChangeTimeoutDialog(settingsNotifier),
+                ),
+              ],
+              _buildSettingsTile(
+                icon: Icons.color_lens,
+                title: 'Appearance',
+                subtitle: "Change the app's primary color scheme.",
+                onTap: _showColorPickerDialog,
+                trailing: Container(
+                  width: 64,
+                  // height: 100,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.grey),
+                  ),
+                ),
+              ),
+              const Divider(),
+              _buildSectionHeader('Security'),
+              _buildSettingsTile(
+                icon: Icons.pin,
+                title: 'Change Admin PIN',
+                subtitle: 'Update the PIN used to access the admin dashboard.',
+                onTap: _showChangePinDialog,
+              ),
 
-          // --- Security Section ---
-          _buildSectionHeader('Security'),
-          _buildSettingsTile(
-            icon: Icons.pin,
-            title: 'Change Admin PIN',
-            subtitle: 'Update the PIN used to access the admin dashboard.',
-            onTap: _showChangePinDialog,
-          ),
+              const Divider(),
 
-          const Divider(),
+              // --- Device Section ---
+              _buildSectionHeader('Device'),
+              _buildSettingsTile(
+                icon: Icons.wifi,
+                title: 'Wi-Fi Settings',
+                subtitle: 'View available networks and connect.',
+                onTap: () {
+                  // TODO: Open a new page to list Wi-Fi networks
+                  print('Tapped Wi-Fi Settings');
+                },
+              ),
+              _buildSettingsTile(
+                icon: Icons.print,
+                title: 'Printer Settings',
+                subtitle: 'Manage the connected photo printer.',
+                onTap: () {
+                  // TODO: Open printer management page
+                  print('Tapped Printer Settings');
+                },
+              ),
 
-          // --- Device Section ---
-          _buildSectionHeader('Device'),
-          _buildSettingsTile(
-            icon: Icons.wifi,
-            title: 'Wi-Fi Settings',
-            subtitle: 'View available networks and connect.',
-            onTap: () {
-              // TODO: Open a new page to list Wi-Fi networks
-              print('Tapped Wi-Fi Settings');
-            },
-          ),
-          _buildSettingsTile(
-            icon: Icons.print,
-            title: 'Printer Settings',
-            subtitle: 'Manage the connected photo printer.',
-            onTap: () {
-              // TODO: Open printer management page
-              print('Tapped Printer Settings');
-            },
-          ),
+              const Divider(),
 
-          const Divider(),
-
-          // --- Maintenance Section ---
-          _buildSectionHeader('Maintenance'),
-          _buildSettingsTile(
-            icon: Icons.delete_sweep,
-            title: 'Clear Cache',
-            subtitle: 'Clear all saved orders and product edits.',
-            onTap: () {
-              // TODO: Show a confirmation dialog before clearing
-              print('Tapped Clear Cache');
-            },
-            isDestructive: true, // Make it red to indicate caution
+              // --- Maintenance Section ---
+              _buildSectionHeader('Maintenance'),
+              _buildSettingsTile(
+                icon: Icons.delete_sweep,
+                title: 'Clear Cache',
+                subtitle: 'Clear all saved orders and product edits.',
+                onTap: () {
+                  // TODO: Show a confirmation dialog before clearing
+                  print('Tapped Clear Cache');
+                },
+                isDestructive: true, // Make it red to indicate caution
+              ),
+              _buildSettingsTile(
+                icon: Icons.info_outline,
+                title: 'About',
+                subtitle: 'View application version and support info.',
+                onTap: () {
+                  // TODO: Show an "About" dialog
+                  print('Tapped About');
+                },
+              ),
+            ],
           ),
-          _buildSettingsTile(
-            icon: Icons.info_outline,
-            title: 'About',
-            subtitle: 'View application version and support info.',
-            onTap: () {
-              // TODO: Show an "About" dialog
-              print('Tapped About');
-            },
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
-  // Helper widget to create consistent section headers
   Widget _buildSectionHeader(String title) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 8.0),
       child: Text(
         title.toUpperCase(),
-        style: TextStyle(
-          color: Theme.of(context).primaryColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 14,
-        ),
+        style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),
       ),
     );
   }
 
-  // Helper widget to create consistent settings tiles
   Widget _buildSettingsTile({
     required IconData icon,
     required String title,
     required String subtitle,
     required VoidCallback onTap,
+    Widget? trailing,
     bool isDestructive = false,
   }) {
-    final color = isDestructive ? Colors.red.shade700 : Theme.of(context).textTheme.bodyLarge?.color;
-    final iconColor = isDestructive ? Colors.red.shade700 : Colors.grey.shade700;
-
+    final destructiveColor = Colors.red.shade700;
     return ListTile(
-      leading: Icon(icon, color: iconColor, size: 32),
-      title: Text(title, style: TextStyle(color: color, fontSize: 18, fontWeight: FontWeight.w500)),
-      subtitle: Text(subtitle, style: TextStyle(color: Colors.grey.shade600)),
+      leading: Icon(icon, color: isDestructive ? destructiveColor : null),
+      title: Text(title, style: TextStyle(color: isDestructive ? destructiveColor : null)),
+      subtitle: Text(subtitle),
+      trailing: trailing,
       onTap: onTap,
     );
   }
 
-
+  Widget _buildScreensaverPreview() {
+    if (_currentScreensaverPath == null || _currentScreensaverPath!.isEmpty) {
+      return const Icon(Icons.no_photography);
+    }
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(width: 100, height: 1000, child: Image.file(File(_currentScreensaverPath!))),
+        IconButton(
+          icon: Icon(Icons.delete_forever, color: Colors.red.shade400),
+          onPressed: _removeScreensaverImage,
+          tooltip: 'Remove custom image',
+        )
+      ],
+    );
+  }
 }

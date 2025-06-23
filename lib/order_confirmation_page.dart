@@ -32,7 +32,7 @@ class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.check_circle_outline, color: Colors.green, size: 120),
+            Icon(Icons.check_circle_outline, color: Theme.of(context).primaryColor, size: 120),
             SizedBox(height: 24),
             Text(
               'Thank You!',

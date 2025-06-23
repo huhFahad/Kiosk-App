@@ -37,14 +37,14 @@ class QuantityControlWidget extends StatelessWidget {
         return Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            color: Colors.green.shade50,
+            color: Theme.of(context).primaryColor.withOpacity(0.2),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               // Decrease quantity button
               IconButton(
-                icon: Icon(Icons.remove, color: Colors.green),
+                icon: Icon(Icons.remove, color: Theme.of(context).primaryColor,),
                 onPressed: () {
                   if (cartItem != null) {
                     cart.decreaseQuantity(cartItem);
@@ -59,7 +59,7 @@ class QuantityControlWidget extends StatelessWidget {
               ),
               // Increase quantity button
               IconButton(
-                icon: Icon(Icons.add, color: Colors.green),
+                icon: Icon(Icons.add, color: Theme.of(context).primaryColor,),
                 onPressed: () {
                   cart.add(product);
                 },

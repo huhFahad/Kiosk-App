@@ -24,7 +24,10 @@ import 'admin_frame_list_page.dart';
 import 'admin_order_list_page.dart';
 import 'admin_order_detail_page.dart';
 import 'system_settings_page.dart';
-import 'theme/kiosk_theme.dart';
+import 'screensaver_page.dart';
+import 'widgets/inactivity_detector.dart';
+import 'notifiers/settings_notifier.dart';
+import 'theme/theme_notifier.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,9 +41,15 @@ void main() {
   // );
 
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => CartModel(),
-      child: KioskApp(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => CartModel()),
+        ChangeNotifierProvider(create: (context) => ThemeNotifier()),
+        ChangeNotifierProvider(create: (context) => SettingsNotifier()),
+      ],
+      child: InactivityDetector(
+        child: KioskApp(),
+      ),
     ),
   );
 }
@@ -48,14 +57,13 @@ void main() {
 class KioskApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
+
     return MaterialApp(
+      navigatorKey: navigatorKey,
       title: 'Retail Kiosk',
-      // theme: ThemeData(
-      //   brightness: Brightness.light,
-      //   primarySwatch: Colors.green,
-      //   visualDensity: VisualDensity.adaptivePlatformDensity,
-      // ),
-      theme: KioskTheme.themeData,
+      theme: themeNotifier.currentTheme,
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
@@ -77,6 +85,7 @@ class KioskApp extends StatelessWidget {
         '/admin/orders':(context) => AdminOrderListPage(),
         '/admin/order_detail': (context) => AdminOrderDetailPage(),
         '/admin/settings': (context) => SystemSettingsPage(),
+        '/screensaver': (context) => ScreensaverPage(),
       },
     );
   }

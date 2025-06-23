@@ -1,6 +1,7 @@
 // lib/theme/kiosk_theme.dart
 
 import 'package:flutter/material.dart';
+import 'package:kiosk_app/theme/kiosk_theme.dart';
 
 class KioskTheme {
   // --- BASE SIZES ---
@@ -52,7 +53,6 @@ class KioskTheme {
   static ListTileThemeData get listTileTheme {
     return ListTileThemeData(
       contentPadding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-      iconColor: Colors.green,
       titleTextStyle: textTheme.bodyLarge,
       subtitleTextStyle: textTheme.bodyMedium,
     );
@@ -72,7 +72,6 @@ class KioskTheme {
   static IconThemeData get iconTheme {
     return IconThemeData(
       size: 28.0 * _scale, // Set a larger default icon size
-      color: Colors.green.shade700, // Set a default icon color
     );
   }
 
@@ -88,8 +87,7 @@ class KioskTheme {
           )      
       ),
       iconTheme: IconThemeData(
-        size: 80,       // <-- Icon size
-        // color: Colors.black,  // <-- Icon color
+        size: 80,
       ),
     );
   }
@@ -98,17 +96,16 @@ class KioskTheme {
   static ThemeData get themeData {
     return ThemeData(
       brightness: Brightness.light,
-      primarySwatch: Colors.green,
       fontFamily: 'Roboto',
-      
       appBarTheme: appBarTheme,
       textTheme: textTheme,
-      iconTheme: iconTheme,
+      iconTheme: IconThemeData(
+        size: 28.0 * _scale,
+        color: Colors.grey.shade800,
+      ),
       iconButtonTheme: IconButtonThemeData(
         style: IconButton.styleFrom(
           padding: const EdgeInsets.all(12.0 * _scale),
-          iconSize: 28.0 * _scale,
-          foregroundColor: Colors.green.shade700,
         ),
       ),
       elevatedButtonTheme: elevatedButtonTheme,
@@ -116,7 +113,6 @@ class KioskTheme {
       listTileTheme: listTileTheme,
       inputDecorationTheme: inputDecorationTheme,
 
-      // Increase tap target sizes for better touch accuracy
       visualDensity: VisualDensity.adaptivePlatformDensity,
     );
   }

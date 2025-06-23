@@ -58,7 +58,7 @@ class AdminDashboardPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 200, color: Colors.green),
+            Icon(icon, size: 200, color: Theme.of(context).primaryColor,),
             SizedBox(height: 10),
             Text(title, textAlign: TextAlign.center, style: TextStyle(fontSize: 40)),
           ],
