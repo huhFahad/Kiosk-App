@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:encrypt_shared_preferences/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart'; 
 import '../models/product_model.dart';
 import '../models/category_model.dart';
@@ -17,7 +17,6 @@ import 'package:path/path.dart' as p;
 
 class DataService {
   static const _uuid = Uuid();
-  static const _secureStorage = FlutterSecureStorage();
   static const _adminPinKey = 'admin_pin';
   static const _themeColorKey = 'theme_primary_color'; 
   static const _timeoutKey = 'inactivity_timeout_seconds';
@@ -365,14 +364,13 @@ class DataService {
   // ----- Admin Pin ----
 
   Future<String> getAdminPin() async {
-    // Read the PIN from secure storage.
-    // If it's null (never been set), return the default '1234'.
-    return await _secureStorage.read(key: _adminPinKey) ?? '1234';
+    final prefs = EncryptedSharedPreferences.getInstance();
+    return prefs.getString(_adminPinKey) ?? '1234';
   }
 
   Future<void> saveAdminPin(String newPin) async {
-    // Write the new PIN to secure storage.
-    await _secureStorage.write(key: _adminPinKey, value: newPin);
+    final prefs = EncryptedSharedPreferences.getInstance();
+    await prefs.setString(_adminPinKey, newPin);
   }
 
   // ----- Theme Colors ------

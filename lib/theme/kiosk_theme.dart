@@ -1,7 +1,6 @@
 // lib/theme/kiosk_theme.dart
 
 import 'package:flutter/material.dart';
-import 'package:kiosk_app/theme/kiosk_theme.dart';
 
 class KioskTheme {
   // --- BASE SIZES ---

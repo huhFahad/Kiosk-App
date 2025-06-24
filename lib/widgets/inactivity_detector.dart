@@ -2,7 +2,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:kiosk_app/models/cart_model.dart';
+// import 'package:kiosk_app/models/cart_model.dart';
 import 'package:kiosk_app/notifiers/settings_notifier.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

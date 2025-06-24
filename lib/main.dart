@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:encrypt_shared_preferences/provider.dart';
 // import 'package:window_manager/window_manager.dart';
 
 import 'models/cart_model.dart';
@@ -30,7 +31,7 @@ import 'widgets/inactivity_detector.dart';
 import 'notifiers/settings_notifier.dart';
 import 'theme/theme_notifier.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // windowManager.waitUntilReadyToShow(const WindowOptions(fullScreen: true));
   // windowManager.waitUntilReadyToShow(
@@ -40,6 +41,8 @@ void main() {
   //     alwaysOnTop: false,
   //   )
   // );
+
+  await EncryptedSharedPreferences.initialize('1111111111111111');
 
   runApp(
     MultiProvider(
