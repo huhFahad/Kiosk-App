@@ -8,6 +8,7 @@ import 'package:kiosk_app/theme/theme_notifier.dart';
 import 'package:kiosk_app/notifiers/settings_notifier.dart'; // Import SettingsNotifier
 import 'package:kiosk_app/widgets/common_app_bar.dart';
 import 'package:kiosk_app/services/data_service.dart';
+import 'package:kiosk_app/admin_map_picker_page.dart';
 
 class SystemSettingsPage extends StatefulWidget {
   const SystemSettingsPage({Key? key}) : super(key: key);
@@ -20,20 +21,21 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
   // We only need DataService for things not in our notifiers, like PIN and screensaver image
   final _dataService = DataService();
   String? _currentScreensaverPath;
+  String? _currentStoreMapPath;
 
   @override
   void initState() {
     super.initState();
-    // Load settings that are not part of the global notifier
     _loadLocalSettings();
   }
 
-  // This method now only loads page-specific data
   Future<void> _loadLocalSettings() async {
     final path = await _dataService.getScreensaverImagePath();
+    final mapPath = await _dataService.getStoreMapPath(); 
     if (mounted) {
       setState(() {
         _currentScreensaverPath = path;
+        _currentStoreMapPath = mapPath;
       });
     }
   }
@@ -83,6 +85,41 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     _loadLocalSettings();
   }
 
+  Future<void> _changeStoreMap() async {
+    final file = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (file == null) return;
+    
+    // Use the saveImage service we already built to copy it to a safe place
+    final newPath = await _dataService.saveImage(File(file.path));
+    // Save the new path using our new service method
+    await _dataService.saveStoreMapPath(newPath);
+    // Refresh the UI to show the new map preview
+    _loadLocalSettings();
+  }
+
+  Future<void> _removeStoreMap() async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Remove Custom Map?'),
+        content: Text('This will revert the app to using the default placeholder map. Are you sure?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text('Remove', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      await _dataService.removeStoreMapPath();
+      // Refresh the UI to show that the custom map is gone
+      _loadLocalSettings();
+    }
+  }
+
   void _showColorPickerDialog() {
     final themeNotifier = Provider.of<ThemeNotifier>(context, listen: false);
     Color currentColor = themeNotifier.currentTheme.primaryColor;
@@ -123,7 +160,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
       barrierDismissible: false,
       builder: (dialogContext) {
         return AlertDialog(
-          title: Text('Change Admin PIN'),
+          title: Text('CHANGE ADMIN PIN', style: TextStyle(fontWeight: FontWeight.bold),),
           content: Form(
             key: formKey,
             child: Column(
@@ -132,15 +169,17 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                 TextFormField(
                   controller: currentPinController,
                   obscureText: true,
-                  decoration: InputDecoration(labelText: 'Current PIN'),
+                  decoration: InputDecoration(labelText: 'Current PIN',  constraints: BoxConstraints(minWidth: 400)),
                   validator: (v) => v!.isEmpty ? 'Required' : null,
                 ),
+                SizedBox(height: 20),
                 TextFormField(
                   controller: newPinController,
                   obscureText: true,
                   decoration: InputDecoration(labelText: 'New PIN'),
                   validator: (v) => (v?.length ?? 0) < 4 ? 'Min 4 digits' : null,
                 ),
+                SizedBox(height: 7),
                 TextFormField(
                   controller: confirmPinController,
                   obscureText: true,
@@ -175,13 +214,28 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     );
   }
 
+  void _setKioskLocation() async {
+    final result = await Navigator.push<Map<String, double>>(
+      context,
+      MaterialPageRoute(builder: (ctx) => const AdminMapPickerPage()),
+    );
+    
+    // When it returns, we save the coordinates using our new DataService method.
+    if (result != null && result.containsKey('x') && result.containsKey('y')) {
+      await _dataService.saveKioskLocation(result['x']!, result['y']!);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Kiosk location saved!'), backgroundColor: Colors.green),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // We use Consumer here to listen to global setting changes
     return Consumer<SettingsNotifier>(
       builder: (context, settingsNotifier, child) {
         return Scaffold(
-          appBar: CommonAppBar(context: context, title: 'System Settings'),
+          appBar: CommonAppBar(context: context, title: 'System Settings', showCartButton: false, showHomeButton: false),
           body: ListView(
             children: [
               _buildSectionHeader('Application'),
@@ -240,6 +294,21 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
 
               // --- Device Section ---
               _buildSectionHeader('Device'),
+              _buildSettingsTile(
+                icon: Icons.map,
+                title: 'Upload Store Map',
+                subtitle: _currentStoreMapPath != null && _currentStoreMapPath!.isNotEmpty
+                  ? 'A custom map is set.'
+                  : 'Using the default map.',
+                onTap: _changeStoreMap,
+                trailing: _buildMapPreview(),
+              ),
+              _buildSettingsTile(
+                icon: Icons.my_location,
+                title: 'Set Kiosk Location',
+                subtitle: 'Set the "You Are Here" pin on the store map.',
+                onTap: _setKioskLocation,
+              ),
               _buildSettingsTile(
                 icon: Icons.wifi,
                 title: 'Wi-Fi Settings',
@@ -324,7 +393,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(width: 100, height: 1000, child: Image.file(File(_currentScreensaverPath!))),
+        SizedBox(width: 100, height: 100, child: Image.file(File(_currentScreensaverPath!))),
         IconButton(
           icon: Icon(Icons.delete_forever, color: Colors.red.shade400),
           onPressed: _removeScreensaverImage,
@@ -333,4 +402,32 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
       ],
     );
   }
+
+  Widget _buildMapPreview() {
+    // If there's no custom map, just show a button to add one.
+    if (_currentStoreMapPath == null || _currentStoreMapPath!.isEmpty) {
+      return ElevatedButton(
+        onPressed: _changeStoreMap,
+        child: Text('Upload', style: TextStyle(fontSize: 20),),
+      );
+    }
+    
+    // If there is a custom map, show the preview and a delete button.
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          width: 50,
+          height: 50,
+          child: Image.file(File(_currentStoreMapPath!), fit: BoxFit.cover),
+        ),
+        IconButton(
+          icon: Icon(Icons.delete_forever, color: Colors.red.shade400),
+          onPressed: _removeStoreMap,
+          tooltip: 'Remove Custom Map',
+        )
+      ],
+    );
+  }
+
 }

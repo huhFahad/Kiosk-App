@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'models/product_model.dart';
 import 'services/data_service.dart';
 import 'widgets/common_app_bar.dart';
+import 'admin_map_picker_page.dart';
 
 class AdminProductEditPage extends StatefulWidget {
   final Product? product;
@@ -95,6 +96,22 @@ class _AdminProductEditPageState extends State<AdminProductEditPage> {
     super.dispose();
   }
 
+   void _openMapPicker() async {
+    // Navigate to the picker and wait for a result
+    final result = await Navigator.push<Map<String, double>>(
+      context,
+      MaterialPageRoute(builder: (ctx) => const AdminMapPickerPage()),
+    );
+
+    // If we get coordinates back, update our state
+    if (result != null && result.containsKey('x') && result.containsKey('y')) {
+      setState(() {
+        _mapX = result['x'];
+        _mapY = result['y'];
+      });
+    }
+  }
+
   void _saveForm() async {
     final isValid = _formKey.currentState?.validate() ?? false;
     if (!isValid) return;
@@ -134,8 +151,8 @@ class _AdminProductEditPageState extends State<AdminProductEditPage> {
       price: _price!,
       unit: _unit ?? '',
       image: finalImagePath,
-      mapX: _mapX ?? 0.5,
-      mapY: _mapY ?? 0.5,
+      mapX: _mapX ?? -1.0,
+      mapY: _mapY ?? -1.0,
       tags: tags,
     );
 
@@ -151,6 +168,8 @@ class _AdminProductEditPageState extends State<AdminProductEditPage> {
       }
     }
   }
+
+
 
   Widget _buildNameField() {
     return TextFormField(
@@ -333,21 +352,22 @@ class _AdminProductEditPageState extends State<AdminProductEditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonAppBar(
-            context: context, 
-            title: _isEditing ? 'Edit Product' : 'Add Product',
-            showCartButton: false,
-            showHomeButton: false,
-            showSaveButton: true,
-            onSavePressed: _saveForm,
-            
-            ),
+        context: context, 
+        title: _isEditing ? 'Edit Product' : 'Add Product',
+        showCartButton: false,
+        showHomeButton: false,
+        showSaveButton: true,
+        onSavePressed: _saveForm,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: SingleChildScrollView(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(height: 12),
                 _buildNameField(),
                 SizedBox(height: 12),
                 _buildDropdown(
@@ -383,11 +403,28 @@ class _AdminProductEditPageState extends State<AdminProductEditPage> {
                 _buildDropdown('Unit', _unit, _existingUnits, (value) => _unit = value, (value) => setState(() => _unit = value)),
                 SizedBox(height: 24),
                 _buildImagePicker(),
-                SizedBox(height: 24),
-                _buildMapCoordinateField('Map X (0.0 - 1.0)', _mapX?.toString(), (value) => _mapX = double.tryParse(value!)),
-                SizedBox(height: 12),
-                _buildMapCoordinateField('Map Y (0.0 - 1.0)', _mapY?.toString(), (value) => _mapY = double.tryParse(value!)),
-                SizedBox(height: 12),
+                const SizedBox(height: 24),
+                Text('Product Location on Map', style: Theme.of(context).textTheme.titleLarge),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    ElevatedButton.icon(
+                      icon: Icon(Icons.map),
+                      label: Text('Set Location'),
+                      onPressed: _openMapPicker,
+                    ),
+                    const SizedBox(width: 16),
+                    // Display the current coordinates
+                    if (_mapX != null && _mapY != null)
+                      Text(
+                        'X: ${(_mapX! * 100).toStringAsFixed(1)}%, Y: ${(_mapY! * 100).toStringAsFixed(1)}%',
+                        style: TextStyle(fontStyle: FontStyle.italic),
+                      )
+                    else
+                      const Text('No location set.', style: TextStyle(fontStyle: FontStyle.italic)),
+                  ],
+                ),                
+                SizedBox(height: 100),
                 TextFormField(
                   controller: _tagsController,
                   decoration: InputDecoration(

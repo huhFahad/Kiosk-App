@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart'; 
@@ -22,6 +23,9 @@ class DataService {
   static const _timeoutKey = 'inactivity_timeout_seconds';
   static const _screensaverImagePathKey = 'screensaver_image_path';
   static const _screensaverEnabledKey = 'screensaver_enabled';
+  static const _storeMapPathKey = 'store_map_image_path';
+  static const _kioskLocationXKey = 'kiosk_location_x';
+  static const _kioskLocationYKey = 'kiosk_location_y';
 
   // --- INACTIVITY & SCREENSAVER SETTINGS ---
 
@@ -383,6 +387,44 @@ class DataService {
   Future<void> saveThemeColorValue(int colorValue) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_themeColorKey, colorValue);
+  }
+
+  // --- STORE MAP SETTINGS ---
+
+  Future<void> saveStoreMapPath(String path) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_storeMapPathKey, path);
+  }
+
+  Future<String?> getStoreMapPath() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_storeMapPathKey);
+  }
+
+  Future<void> removeStoreMapPath() async {
+    final prefs = await SharedPreferences.getInstance();
+    // The .remove() method deletes the key from storage.
+    await prefs.remove(_storeMapPathKey);
+  }
+
+  // --- KIOSK LOCATION SETTINGS ---
+
+  Future<void> saveKioskLocation(double x, double y) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble(_kioskLocationXKey, x);
+    await prefs.setDouble(_kioskLocationYKey, y);
+  }
+
+  Future<Offset?> getKioskLocation() async {
+    final prefs = await SharedPreferences.getInstance();
+    final x = prefs.getDouble(_kioskLocationXKey);
+    final y = prefs.getDouble(_kioskLocationYKey);
+
+    // Only return an Offset if both X and Y have been saved
+    if (x != null && y != null) {
+      return Offset(x, y);
+    }
+    return null;
   }
 
 }

@@ -23,6 +23,7 @@ import 'admin_product_list_page.dart';
 import 'admin_frame_list_page.dart';
 import 'admin_order_list_page.dart';
 import 'admin_order_detail_page.dart';
+import 'admin_map_picker_page.dart';
 import 'system_settings_page.dart';
 import 'screensaver_page.dart';
 import 'widgets/inactivity_detector.dart';
@@ -85,6 +86,7 @@ class KioskApp extends StatelessWidget {
         '/admin/orders':(context) => AdminOrderListPage(),
         '/admin/order_detail': (context) => AdminOrderDetailPage(),
         '/admin/settings': (context) => SystemSettingsPage(),
+        '/admin/map_picker': (context) => AdminMapPickerPage(),
         '/screensaver': (context) => ScreensaverPage(),
       },
     );

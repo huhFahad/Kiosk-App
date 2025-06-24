@@ -63,6 +63,7 @@ class ProductListItem extends StatelessWidget {
                   icon: const Icon(Icons.map_outlined),
                   tooltip: 'Find on Map',
                   onPressed: () {
+                    final product = this.product;
                     Navigator.pushNamed(context, '/map', arguments: product);
                   },
                 ),

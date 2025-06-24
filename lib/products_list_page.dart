@@ -89,7 +89,7 @@ class _ProductsListPageState extends State<ProductsListPage> {
                   ),
                 ),
               ),
-              // --- NEW: Sort Options Bar ---
+              // --- Sort Options Bar ---
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
                 child: Row(
