@@ -49,6 +49,8 @@ dependencies:
   shared_preferences: ^2.5.3
   flutter_colorpicker: ^1.1.0
   encrypt_shared_preferences: ^0.9.9
+  flutter_dotenv: ^5.2.1
+  flutter_phoenix: ^1.1.1
 
 dev_dependencies:
   flutter_test:
@@ -76,6 +78,7 @@ flutter:
     - assets/data/categories.json
     - assets/data/frames.json
     - assets/data/templates.json
+    - .env
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

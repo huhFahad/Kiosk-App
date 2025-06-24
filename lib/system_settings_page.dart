@@ -1,13 +1,15 @@
 // lib/system_settings_page.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
 import 'package:kiosk_app/theme/theme_notifier.dart';
-import 'package:kiosk_app/notifiers/settings_notifier.dart'; // Import SettingsNotifier
+import 'package:kiosk_app/notifiers/settings_notifier.dart'; 
 import 'package:kiosk_app/widgets/common_app_bar.dart';
 import 'package:kiosk_app/services/data_service.dart';
+import 'package:kiosk_app/models/cart_model.dart';
 import 'package:kiosk_app/admin_map_picker_page.dart';
 
 class SystemSettingsPage extends StatefulWidget {
@@ -229,6 +231,85 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     }
   }
 
+  void _showClearCacheDialog() async {
+    // --- First Confirmation Dialog ---
+    final bool? didConfirmFirst = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('⚠️ Are you absolutely sure?'),
+        content: Text('This will delete all saved orders, and revert any changes made to products, categories, frames, and templates. This action cannot be undone.', softWrap: true,),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: Text('Cancel')),
+          ElevatedButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: Text('Yes, I Understand', style: TextStyle(color: Colors.white,)),
+          ),
+        ],
+      ),
+    );
+
+    // If user cancelled the first dialog, do nothing.
+    if (didConfirmFirst != true) return;
+
+    // --- Second Confirmation Dialog (PIN Entry) ---
+    final pinController = TextEditingController();
+    final bool? didConfirmWithPin = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Final Confirmation'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('To proceed, please enter the Admin PIN.'),
+            SizedBox(height: 16),
+            TextField(
+              controller: pinController,
+              keyboardType: TextInputType.number,
+              obscureText: true,
+              autofocus: true,
+              decoration: InputDecoration(labelText: 'Admin PIN'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: Text('Cancel')),
+          ElevatedButton(
+            onPressed: () async {
+              final savedPin = await _dataService.getAdminPin();
+              if (pinController.text == savedPin) {
+                Navigator.of(ctx).pop(true); // PIN is correct
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Incorrect PIN.'), backgroundColor: Colors.red),
+                );
+                Navigator.of(ctx).pop(false); // PIN is incorrect
+              }
+            },
+            child: Text('Confirm & Delete'),
+          ),
+        ],
+      ),
+    );
+
+    // If user entered correct PIN, proceed with deletion.
+    if (didConfirmWithPin == true) {
+      await _dataService.clearCache();
+      if (mounted) {
+        Provider.of<CartModel>(context, listen: false).clear();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Cache cleared. App will now restart.'), backgroundColor: Colors.green),
+        );
+        await Future.delayed(const Duration(seconds: 2));
+        Phoenix.rebirth(context);
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          '/', // Navigate to the Home page
+          (Route<dynamic> route) => false, // This predicate always returns false
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // We use Consumer here to listen to global setting changes
@@ -334,12 +415,9 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
               _buildSectionHeader('Maintenance'),
               _buildSettingsTile(
                 icon: Icons.delete_sweep,
-                title: 'Clear Cache',
+                title: 'Clear Data',
                 subtitle: 'Clear all saved orders and product edits.',
-                onTap: () {
-                  // TODO: Show a confirmation dialog before clearing
-                  print('Tapped Clear Cache');
-                },
+                onTap: _showClearCacheDialog,
                 isDestructive: true, // Make it red to indicate caution
               ),
               _buildSettingsTile(

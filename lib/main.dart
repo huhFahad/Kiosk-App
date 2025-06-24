@@ -1,9 +1,10 @@
 // lib/main.dart
 
 import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:encrypt_shared_preferences/provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 // import 'package:window_manager/window_manager.dart';
 
 import 'models/cart_model.dart';
@@ -41,21 +42,29 @@ void main() async {
   //     alwaysOnTop: false,
   //   )
   // );
-
-  await EncryptedSharedPreferences.initialize('1111111111111111');
+  
+  await dotenv.load(fileName: ".env");
+  final String encryptionKey = dotenv.env['ENCRYPTION_KEY'] ?? 'd3v3l0pm3ntK3y16';
+  if (encryptionKey.length != 16) {
+    throw Exception('Encryption key must be 16 characters long.');
+  }
+  await EncryptedSharedPreferences.initialize(encryptionKey);
 
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => CartModel()),
-        ChangeNotifierProvider(create: (context) => ThemeNotifier()),
-        ChangeNotifierProvider(create: (context) => SettingsNotifier()),
-      ],
-      child: InactivityDetector(
-        child: KioskApp(),
+    Phoenix(
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (context) => CartModel()),
+          ChangeNotifierProvider(create: (context) => ThemeNotifier()),
+          ChangeNotifierProvider(create: (context) => SettingsNotifier()),
+        ],
+        child: InactivityDetector(
+          child: KioskApp(),
+        ),
       ),
     ),
   );
+  
 }
 
 class KioskApp extends StatelessWidget {

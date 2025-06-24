@@ -11,7 +11,6 @@
 .svn/
 .swiftpm/
 migrate_working_dir/
-/lib/photo_and_frame_editor_page.dart
 
 # IntelliJ related
 *.iml
@@ -46,3 +45,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Secrets
+.env

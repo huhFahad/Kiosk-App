@@ -425,4 +425,36 @@ class DataService {
     return null;
   }
 
+  // --- MAINTENANCE METHODS ---
+
+  Future<void> clearCache() async {
+    // We get the local files we want to delete
+    final productsFile = await _localFile; // Already defined for products
+    final categoriesFile = await _localCategoriesFile;
+    final framesFile = await _localFramesFile;
+    final templatesFile = await _localTemplatesFile;
+    final ordersFile = await _localOrdersFile;
+
+    // We can add any other files here in the future
+    final filesToDelete = [
+      productsFile,
+      categoriesFile,
+      framesFile,
+      templatesFile,
+      ordersFile,
+    ];
+
+    print("Clearing local cache...");
+    for (final file in filesToDelete) {
+      try {
+        if (await file.exists()) {
+          await file.delete();
+          print("Deleted: ${file.path}");
+        }
+      } catch (e) {
+        print("Error deleting file ${file.path}: $e");
+      }
+    }
+  }
+
 }

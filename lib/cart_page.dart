@@ -6,23 +6,66 @@ import 'models/cart_model.dart';
 import 'admin_product_list_page.dart';
 import 'widgets/common_app_bar.dart';
 
-class CartPage extends StatelessWidget {
+class CartPage extends StatefulWidget {
+  @override
+  _CartPageState createState() => _CartPageState();
+}
+
+class _CartPageState extends State<CartPage> {
+  void _showClearCartConfirmation() {
+    // Get the CartModel once, without listening.
+    final cart = Provider.of<CartModel>(context, listen: false);
+
+    // Don't show the dialog if the cart is already empty.
+    if (cart.items.isEmpty) {
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Clear Cart?'),
+        content: Text('Are you sure you want to remove all items from your cart?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              cart.clear(); 
+            },
+            child: Text('Clear', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonAppBar(
         context: context, 
         title: 'Your Cart', 
-        showCartButton: false
+        showCartButton: false,
       ), 
       body: Consumer<CartModel>(
         builder: (context, cart, child) {
           if (cart.items.isEmpty) {
             return Center(
-              child: Text('🧺 Your cart is empty.', style: TextStyle(fontSize: 24)),
-            );
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Icon((Icons.shopping_cart_outlined) , size: 240, color: Color.fromARGB(255, 233, 226, 226)),
+                  SizedBox(height: 20),
+                  const Text('Your cart is empty.', style: TextStyle(fontSize: 24)),
+                ]
+              ),
+            ); 
           }
-
           return Column(
             children: [
               Expanded(
@@ -40,7 +83,7 @@ class CartPage extends StatelessWidget {
                           imagePath: cartItem.product.image
                         ),
                         title: Text(cartItem.product.name, style: TextStyle(fontSize: 30)),
-                        subtitle: Text('₹${cartItem.product.price.toStringAsFixed(2)}',style: TextStyle(fontSize: 28)),
+                        subtitle: Text('₹${cartItem.product.price.toStringAsFixed(2)}', style: TextStyle(fontSize: 28)),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -112,13 +155,28 @@ class CartPage extends StatelessWidget {
                 child: Column(
                   children: [
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          'Number of Items:  ${cart.itemCount}   ',
+                          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Total:', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
-                        Text('₹${cart.totalPrice.toStringAsFixed(2)}', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
+                        TextButton.icon(
+                          icon: Icon(Icons.delete_sweep_outlined, size: 40,),
+                          label: Text('Clear Cart'),
+                          onPressed: _showClearCartConfirmation,
+                        ),
+                        Text('Total:  ₹${cart.totalPrice.toStringAsFixed(2)}  ', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.black)),
+                        // Text('₹${cart.totalPrice.toStringAsFixed(2)}', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
                       ],
                     ),
                     SizedBox(height: 16),
+                    
                     // The "Place Order" button.
                     SizedBox(
                       width: double.infinity, // Makes the button take the full width
@@ -148,22 +206,22 @@ class CartPage extends StatelessWidget {
               ),
 
               // This is the total price bar at the bottom
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Total:',
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      '₹${cart.totalPrice.toStringAsFixed(2)}',
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.all(16.0),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     children: [
+              //       Text(
+              //         'Number of Items:  ${cart.itemCount}',
+              //         style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              //       ),
+              //       Text(
+              //         'Total:  ₹${cart.totalPrice.toStringAsFixed(2)}',
+              //         style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              //       ),
+              //     ],
+              //   ),
+              // ),
             ],
           );
         },
