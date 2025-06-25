@@ -24,23 +24,28 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
   final _dataService = DataService();
   String? _currentScreensaverPath;
   String? _currentStoreMapPath;
+  String? _currentPrinterName;
 
   @override
   void initState() {
     super.initState();
-    _loadLocalSettings();
+    _loadCurrentSettings();
   }
 
-  Future<void> _loadLocalSettings() async {
+  Future<void> _loadCurrentSettings() async {
     final path = await _dataService.getScreensaverImagePath();
     final mapPath = await _dataService.getStoreMapPath(); 
+    final printerName = await _dataService.getPrinterName(); 
     if (mounted) {
       setState(() {
         _currentScreensaverPath = path;
         _currentStoreMapPath = mapPath;
+        _currentPrinterName = printerName;
       });
     }
   }
+
+  
 
   // --- DIALOG AND ACTION METHODS ---
 
@@ -79,12 +84,12 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     
     final newPath = await _dataService.saveImage(File(file.path));
     await _dataService.saveScreensaverImagePath(newPath);
-    _loadLocalSettings(); // Refresh just the local state for the image preview
+    _loadCurrentSettings(); // Refresh just the local state for the image preview
   }
 
   Future<void> _removeScreensaverImage() async {
     await _dataService.saveScreensaverImagePath('');
-    _loadLocalSettings();
+    _loadCurrentSettings();
   }
 
   Future<void> _changeStoreMap() async {
@@ -96,7 +101,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     // Save the new path using our new service method
     await _dataService.saveStoreMapPath(newPath);
     // Refresh the UI to show the new map preview
-    _loadLocalSettings();
+    _loadCurrentSettings();
   }
 
   Future<void> _removeStoreMap() async {
@@ -118,7 +123,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     if (confirm == true) {
       await _dataService.removeStoreMapPath();
       // Refresh the UI to show that the custom map is gone
-      _loadLocalSettings();
+      _loadCurrentSettings();
     }
   }
 
@@ -395,17 +400,18 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                 title: 'Wi-Fi Settings',
                 subtitle: 'View available networks and connect.',
                 onTap: () {
-                  // TODO: Open a new page to list Wi-Fi networks
-                  print('Tapped Wi-Fi Settings');
+                  Navigator.pushNamed(context, '/admin/wifi');
                 },
               ),
               _buildSettingsTile(
                 icon: Icons.print,
                 title: 'Printer Settings',
-                subtitle: 'Manage the connected photo printer.',
+                subtitle: 'Current Printer: ${_currentPrinterName ?? 'System Default'}',
                 onTap: () {
-                  // TODO: Open printer management page
-                  print('Tapped Printer Settings');
+                  // Navigate and then refresh the settings when we come back
+                  Navigator.pushNamed(context, '/admin/printers').then((_) {
+                    _loadCurrentSettings();
+                  });
                 },
               ),
 

@@ -1,8 +1,12 @@
 // lib/print_confirmation_page.dart
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:printing/printing.dart';
+import 'package:kiosk_app/services/data_service.dart';
 import 'package:kiosk_app/widgets/common_app_bar.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:process_run/shell.dart';
 
 class PrintConfirmationPage extends StatefulWidget {
   const PrintConfirmationPage({Key? key}) : super(key: key);
@@ -12,47 +16,86 @@ class PrintConfirmationPage extends StatefulWidget {
 }
 
 class _PrintConfirmationPageState extends State<PrintConfirmationPage> {
+  final DataService _dataService = DataService();
   Uint8List? _imageBytes;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Only set the bytes once
     if (_imageBytes == null) {
       _imageBytes = ModalRoute.of(context)!.settings.arguments as Uint8List?;
     }
   }
 
-  Future<void> _printImage(BuildContext context, Uint8List imageBytes) async {
+  Future<void> _directPrintImage(BuildContext context, Uint8List imageBytes) async {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (ctx) => const Center(child: CircularProgressIndicator()),
     );
+
+    bool success = false;
+    String errorMessage = 'An unknown error occurred.';
+
     try {
-      final success = await Printing.layoutPdf(onLayout: (format) async => imageBytes);
-      if (context.mounted) {
-        Navigator.of(context).pop();
-        if (success) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Print job sent successfully!')),
+      // 1. Get the saved printer name
+      final String? printerName = await _dataService.getPrinterName();
+      if (printerName == null || printerName.isEmpty) {
+        throw Exception('No printer configured in settings.');
+      }
+      
+      // --- STEP 2: GENERATE A PDF IN MEMORY ---
+      // This uses the printing package's strength without showing a dialog.
+      final doc = pw.Document();
+      final image = pw.MemoryImage(imageBytes);
+      
+      doc.addPage(pw.Page(
+        // We can control page orientation and format here if needed
+        build: (pw.Context context) {
+          return pw.Center(
+            child: pw.Image(image),
           );
-          Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
-        } else {
+        },
+      ));
+      
+      // This gives us the raw bytes of the generated PDF file
+      final Uint8List pdfBytes = await doc.save();
+
+      // --- STEP 3: SAVE THE PDF TO A TEMPORARY FILE ---
+      final tempDir = await getTemporaryDirectory();
+      final tempFile = File('${tempDir.path}/to_print.pdf'); // Save as .pdf
+      await tempFile.writeAsBytes(pdfBytes);
+
+      // --- STEP 4: SEND THE PDF FILE TO THE PRINTER USING LP ---
+      var shell = Shell();
+      var result = await shell.run('lp -d "$printerName" "${tempFile.path}"');
+
+      if (result.first.exitCode == 0) {
+        success = true;
+      } else {
+        errorMessage = result.first.stderr as String;
+      }
+
+      // 5. Clean up the temporary file
+      await tempFile.delete();
+
+    } catch (e) {
+      errorMessage = e.toString();
+      print("Printing failed: $e");
+    } finally {
+      if (mounted) Navigator.of(context).pop();
+
+      if (success) {
+        if (mounted) Navigator.of(context).pushNamedAndRemoveUntil('/thank_you', (route) => false);
+      } else {
+        if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Print job cancelled.')),
+            SnackBar(content: Text('Printing Failed: $errorMessage'), backgroundColor: Colors.red),
           );
         }
       }
-    } catch (e) {
-      if (context.mounted) {
-        Navigator.of(context).pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Printing failed: $e')),
-        );
-      }
     }
-  }
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -76,10 +119,7 @@ class _PrintConfirmationPageState extends State<PrintConfirmationPage> {
           ),
           Container(
             padding: const EdgeInsets.all(24.0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, -5))],
-            ),
+            decoration: BoxDecoration( /* ... box decoration ... */ ),
             child: Column(
               children: [
                 Text('Price: ₹150.00', style: Theme.of(context).textTheme.headlineMedium),
@@ -87,9 +127,10 @@ class _PrintConfirmationPageState extends State<PrintConfirmationPage> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
-                    icon: const Icon(Icons.print, size: 40, color: Colors.white),
-                    label: const Text('Pay at Counter & Print', style: TextStyle(fontSize: 40, color: Colors.white)),
-                    onPressed: _imageBytes == null ? null : () => _printImage(context, _imageBytes!),
+                    icon: const Icon(Icons.print),
+                    label: const Text('Pay at Counter & Print', style: TextStyle(color: Colors.white,)),
+                    // Call our new direct print method
+                    onPressed: _imageBytes == null ? null : () => _directPrintImage(context, _imageBytes!),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 24),
                       backgroundColor: Theme.of(context).primaryColor,

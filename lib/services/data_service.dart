@@ -25,6 +25,7 @@ class DataService {
   static const _storeMapPathKey = 'store_map_image_path';
   static const _kioskLocationXKey = 'kiosk_location_x';
   static const _kioskLocationYKey = 'kiosk_location_y';
+  static const _printerNameKey = 'printer_name';
 
   // --- INACTIVITY & SCREENSAVER SETTINGS ---
 
@@ -455,6 +456,39 @@ class DataService {
         print("Error deleting file ${file.path}: $e");
       }
     }
+  }
+
+  // --- WIFI PASSWORD HANDLING ---
+
+  // We create a unique key for each SSID
+  String _getWifiPasswordKey(String ssid) => 'wifi_password_$ssid';
+
+  Future<void> saveWifiPassword(String ssid, String password) async {
+    final prefs = await SharedPreferences.getInstance();
+    // Save the password with a key specific to the network's name
+    await prefs.setString(_getWifiPasswordKey(ssid), password);
+  }
+
+  Future<String?> getWifiPassword(String ssid) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_getWifiPasswordKey(ssid));
+  }
+
+  Future<void> forgetWifiPassword(String ssid) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_getWifiPasswordKey(ssid));
+  }
+
+  // --- PRINTER SETTINGS ---
+
+  Future<void> savePrinterName(String name) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_printerNameKey, name);
+  }
+
+  Future<String?> getPrinterName() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_printerNameKey);
   }
 
 }

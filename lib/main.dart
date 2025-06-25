@@ -27,7 +27,10 @@ import 'admin_order_list_page.dart';
 import 'admin_order_detail_page.dart';
 import 'admin_map_picker_page.dart';
 import 'system_settings_page.dart';
+import 'wifi_settings_page.dart';
+import 'printer_settings_page.dart';
 import 'screensaver_page.dart';
+import 'thank_you_page.dart';
 import 'widgets/inactivity_detector.dart';
 import 'notifiers/settings_notifier.dart';
 import 'theme/theme_notifier.dart';
@@ -99,7 +102,10 @@ class KioskApp extends StatelessWidget {
         '/admin/order_detail': (context) => AdminOrderDetailPage(),
         '/admin/settings': (context) => SystemSettingsPage(),
         '/admin/map_picker': (context) => AdminMapPickerPage(),
+        '/admin/wifi': (context) => WifiSettingsPage(),
+        '/admin/printers': (context) => PrinterSettingsPage(),
         '/screensaver': (context) => ScreensaverPage(),
+        '/thank_you': (context) => ThankYouPage(),
       },
     );
   }
