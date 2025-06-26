@@ -22,6 +22,26 @@ class _ProductsListPageState extends State<ProductsListPage> {
   // State variables for filters and sorting
   String selectedSubcategory = 'All';
   ProductSortOption _sortOption = ProductSortOption.Default;
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+
+  @override
+  void initState() {
+    super.initState();
+    // Add a listener to the search controller to update the UI when text changes
+    _searchController.addListener(() {
+      setState(() {
+        _searchQuery = _searchController.text;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    // IMPORTANT: Clean up the controller
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,14 +54,24 @@ class _ProductsListPageState extends State<ProductsListPage> {
     final productsInMainCategory = allProducts.where((p) => p.category == categoryName).toList();
     final subcategories = ['All', ...productsInMainCategory.map((p) => p.subcategory).toSet().toList()];
 
-    // --- 1. FILTERING LOGIC ---
-    final filteredProducts = selectedSubcategory == 'All'
-        ? productsInMainCategory
-        : productsInMainCategory.where((p) => p.subcategory == selectedSubcategory).toList();
+    // --- FILTERING LOGIC ---
+    final subCategoryFilteredProducts = selectedSubcategory == 'All'
+      ? productsInMainCategory
+      : productsInMainCategory.where((p) => p.subcategory == selectedSubcategory).toList();
 
-    // --- 2. SORTING LOGIC ---
+    // --- SEARCH FILTERING ---
+    final searchFilteredProducts = _searchQuery.isEmpty
+      ? subCategoryFilteredProducts // If search is empty, use the list from the previous step
+      : subCategoryFilteredProducts.where((product) {
+          // Filter by product name or tags
+          final nameMatch = product.name.toLowerCase().contains(_searchQuery.toLowerCase());
+          final tagMatch = product.tags.any((tag) => tag.toLowerCase().contains(_searchQuery.toLowerCase()));
+          return nameMatch || tagMatch;
+        }).toList();
+
+    // --- SORTING LOGIC ---
     // Create a mutable copy to sort
-    List<Product> sortedProducts = List.from(filteredProducts);
+    List<Product> sortedProducts = List.from(searchFilteredProducts);
     switch (_sortOption) {
       case ProductSortOption.PriceHighToLow:
         sortedProducts.sort((a, b) => b.price.compareTo(a.price));
@@ -86,6 +116,26 @@ class _ProductsListPageState extends State<ProductsListPage> {
                         ),
                       );
                     },
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    hintText: 'Search within "$categoryName"',
+                    prefixIcon: const Icon(Icons.search),
+                    suffixIcon: _searchQuery.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(Icons.clear),
+                            onPressed: () => _searchController.clear(),
+                          )
+                        : null,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
                   ),
                 ),
               ),

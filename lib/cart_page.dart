@@ -43,6 +43,41 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
+  void _showPlaceOrderConfirmation() {
+    final cart = Provider.of<CartModel>(context, listen: false);
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Confirm Your Order'),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(40.0)
+        ),
+        content: Text(
+          '\nYou are about to place an order for ${cart.itemCount} items, '
+          'totaling ₹${cart.totalPrice.toStringAsFixed(2)}.\n\nDo you want to proceed?',
+          style: TextStyle(fontSize: 20, height: 1.0),
+          softWrap: true,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text('Go Back'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              final String orderId = cart.placeOrder();
+              Navigator.pushNamed(context, '/confirmation', arguments: orderId);
+            },
+            child: Text('Confirm & Place Order'),
+          ),
+        ],
+      ),
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -179,25 +214,14 @@ class _CartPageState extends State<CartPage> {
                     
                     // The "Place Order" button.
                     SizedBox(
-                      width: double.infinity, // Makes the button take the full width
+                      width: double.infinity,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.symmetric(vertical: 20),
-                          backgroundColor: Theme.of(context).primaryColor, // Use primary color
-                          foregroundColor: Colors.white, // Text color
+                          backgroundColor: Theme.of(context).primaryColor, 
+                          foregroundColor: Colors.white, 
                         ),
-                        onPressed: () {
-                          // Get the cart model
-                          var cart = Provider.of<CartModel>(context, listen: false);
-
-                          if (cart.items.isNotEmpty) {
-                            // Place the order and get the new order ID
-                            final String orderId = cart.placeOrder();
-
-                            // Navigate to the confirmation screen, passing the order ID
-                            Navigator.pushNamed(context, '/confirmation', arguments: orderId);
-                          }
-                        },
+                        onPressed: _showPlaceOrderConfirmation,
                         child: Text('Place Order', style: TextStyle(fontSize: 40)),
                       ),
                     ),

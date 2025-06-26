@@ -52,7 +52,7 @@ class _PrinterSettingsPageState extends State<PrinterSettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(context: context, title: 'Select Kiosk Printer'),
+      appBar: CommonAppBar(context: context, title: 'Select Kiosk Printer', showCartButton: false, showHomeButton: false),
       body: FutureBuilder<List<Printer>>(
         future: _printersFuture,
         builder: (context, snapshot) {

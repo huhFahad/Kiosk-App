@@ -12,6 +12,14 @@ class _HomePageState extends State<HomePage> {
   final DataService _dataService = DataService();
 
   @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(() {
+      setState(() {}); // triggers rebuild when text changes
+    });
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
@@ -123,6 +131,15 @@ class _HomePageState extends State<HomePage> {
                                 hintText: 'Apples, Mobile Phones.. etc',
                                 hintStyle: TextStyle(color: const Color.fromARGB(255, 142, 142, 142)),
                                 prefixIcon: Icon(Icons.search, color: Theme.of(context).primaryColor,),
+                                suffixIcon: _searchController.text.isNotEmpty
+                                  ? IconButton(
+                                    icon: const Icon(Icons.arrow_forward_rounded),
+                                    tooltip: 'Search',
+                                    onPressed: () {
+                                      _executeSearch(context);
+                                    },
+                                  )
+                                : null,  
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(30.0),
                                 ),

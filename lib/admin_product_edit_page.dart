@@ -337,17 +337,6 @@ class _AdminProductEditPageState extends State<AdminProductEditPage> {
     return Center(child: Text('No Image'));
   }
 
-  // Widget _buildMapCoordinateField(String label, String? initialValue, Function(String?) onSaved) {
-  //   return TextFormField(
-  //     initialValue: initialValue,
-  //     decoration: InputDecoration(labelText: label),
-  //     keyboardType: TextInputType.numberWithOptions(decimal: true),
-  //     validator: (value) => (value!.isEmpty || double.tryParse(value) == null || double.parse(value) < 0 || double.parse(value) > 1)
-  //         ? 'Enter a value between 0.0 and 1.0' : null,
-  //     onSaved: onSaved,
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

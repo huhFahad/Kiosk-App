@@ -234,6 +234,7 @@ class _AdminProductListPageState extends State<AdminProductListPage> {
                 elevation: 4,
                 child: ExpansionTile(
                   // Initially expanded if there's a search query, to show results
+                  key: Key('$categoryName$_searchQuery'), 
                   initiallyExpanded: _searchQuery.isNotEmpty,
                   title: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -257,6 +258,7 @@ class _AdminProductListPageState extends State<AdminProductListPage> {
                     return Padding(
                       padding: const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 16.0),
                       child: ExpansionTile(
+                        key: Key('$categoryName$subCategoryName$_searchQuery'),
                         initiallyExpanded: _searchQuery.isNotEmpty,
                         title: 
                           Text(

@@ -5,6 +5,7 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:kiosk_app/theme/theme_notifier.dart';
 import 'package:kiosk_app/notifiers/settings_notifier.dart'; 
 import 'package:kiosk_app/widgets/common_app_bar.dart';
@@ -20,7 +21,6 @@ class SystemSettingsPage extends StatefulWidget {
 }
 
 class _SystemSettingsPageState extends State<SystemSettingsPage> {
-  // We only need DataService for things not in our notifiers, like PIN and screensaver image
   final _dataService = DataService();
   String? _currentScreensaverPath;
   String? _currentStoreMapPath;
@@ -315,6 +315,72 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     }
   }
 
+  void _showAboutDialog() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.transparent, // So the outer Container controls background
+          contentPadding: EdgeInsets.zero, // Remove default padding so our Container controls layout
+          content: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20.0),
+              border: Border.all(
+                color: Theme.of(context).primaryColorLight, // Border color
+                width: 30.0, // Border width
+              ),
+            ),
+            padding: const EdgeInsets.all(24.0), // Inner padding inside the border
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset(
+                  ('assets/icons/cent_transparent_logo.png'),
+                  width: 64,
+                  height: 64,
+                  // color: Colors.black,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Retail Kiosk App',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                Text('Version: ${packageInfo.version}'),
+                const SizedBox(height: 24),
+                const Text(
+                  'This application is the property of Centelon IT Solutions LLP.\nFor support, please contact the system administrator.',
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '© ${DateTime.now().year} Centelon IT Solutions LLP\nAuthor: fahad.kareem@centelon.com',
+                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                    SizedBox(
+                      width: 100,
+                      height: 50,
+                      child: TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('CLOSE', style: TextStyle(fontSize: 18)),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // We use Consumer here to listen to global setting changes
@@ -430,10 +496,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                 icon: Icons.info_outline,
                 title: 'About',
                 subtitle: 'View application version and support info.',
-                onTap: () {
-                  // TODO: Show an "About" dialog
-                  print('Tapped About');
-                },
+                onTap: _showAboutDialog,
               ),
             ],
           ),

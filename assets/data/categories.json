@@ -4,11 +4,11 @@
     "imagePath": "assets/images/category_groceries.jpg"
   },
   {
-    "name": "Stationery",
-    "imagePath": "assets/images/category_stationery.jpg"
-  },
-  {
     "name": "Baloon Arches",
     "imagePath": "assets/images/category_balloonarch.jpg"
+  },
+  {
+    "name": "Stationery",
+    "imagePath": "assets/images/category_stationery.jpg"
   }
 ]

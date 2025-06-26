@@ -1,32 +1,32 @@
-// lib/screensaver_page.dart
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:kiosk_app/services/data_service.dart';
+import 'package:media_kit/media_kit.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 
 class ScreensaverPage extends StatefulWidget {
-  const ScreensaverPage({Key? key}) : super(key: key);
+  const ScreensaverPage({super.key});
 
   @override
-  _ScreensaverPageState createState() => _ScreensaverPageState();
+  State<ScreensaverPage> createState() => _ScreensaverPageState();
 }
 
 class _ScreensaverPageState extends State<ScreensaverPage> {
-  final DataService _dataService = DataService();
-  String? _imagePath;
+  late final Player _player;
+  late final VideoController _controller;
 
   @override
   void initState() {
     super.initState();
-    _loadImage();
+    _player = Player();
+    _controller = VideoController(_player);
+    _player.open(Media('asset://assets/videos/screensaver_bg.mp4'));
+    _player.setVolume(0);
+    _player.setPlaylistMode(PlaylistMode.loop);
   }
 
-  Future<void> _loadImage() async {
-    final path = await _dataService.getScreensaverImagePath();
-    if (mounted) {
-      setState(() {
-        _imagePath = path;
-      });
-    }
+  @override
+  void dispose() {
+    _player.dispose();
+    super.dispose();
   }
 
   @override
@@ -34,42 +34,25 @@ class _ScreensaverPageState extends State<ScreensaverPage> {
     return GestureDetector(
       onTap: () => Navigator.of(context).pop(),
       child: Scaffold(
-        backgroundColor: Colors.black,
-        body: _buildScreensaverContent(),
-      ),
-    );
-  }
-  
-  Widget _buildScreensaverContent() {
-    // If a custom image path exists AND it's not empty, display it.
-    if (_imagePath != null && _imagePath!.isNotEmpty) {
-      return Image.file(
-        File(_imagePath!),
-        fit: BoxFit.cover,
-        height: double.infinity,
-        width: double.infinity,
-        alignment: Alignment.center,
-      );
-    }
-    
-    // Otherwise, show the default content.
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(
-            "assets/images/urban_rain_logo.png",
-            width: 700,
-            // height: 500,
-            fit: BoxFit.contain,
-          ),
-          const SizedBox(height: 32),
-          Text(
-            'Welcome! Touch to Begin',
-            style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white),
-            textAlign: TextAlign.center,
-          ),
-        ],
+        body: Stack(
+          children: [
+            Video(controller: _controller),
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset("assets/images/urban_rain_logo.png", width: 700, fit: BoxFit.contain),
+                  const SizedBox(height: 32),
+                  Text(
+                    'Welcome! Touch to Begin',
+                    style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
