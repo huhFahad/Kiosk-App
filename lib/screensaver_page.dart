@@ -2,7 +2,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'package:video_player_media_kit/video_player_media_kit.dart';
 import 'package:kiosk_app/services/data_service.dart';
 
 class ScreensaverPage extends StatefulWidget {
@@ -37,7 +36,7 @@ class _ScreensaverPageState extends State<ScreensaverPage> {
     try {
       _videoController = VideoPlayerController.asset(
         'assets/videos/screensaver_bg.mp4',
-        videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
+        videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true,),
       )..initialize().then((_) {
           _videoController?.setLooping(true);
           _videoController?.setVolume(0.0);
@@ -100,7 +99,12 @@ class _ScreensaverPageState extends State<ScreensaverPage> {
     // fallback: just overlay
     return Container(
       color: Colors.black,
-      child: _buildOverlayContent(),
+      child: Stack(
+        children: [ 
+          Image.asset('assets/images/screensaver_fallback.jpg', fit: BoxFit.cover, width: double.infinity, height: double.infinity),
+          _buildOverlayContent(),
+        ]
+      )
     );
   }
 
