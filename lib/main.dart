@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:encrypt_shared_preferences/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:video_player_media_kit/video_player_media_kit.dart';
 import 'package:media_kit/media_kit.dart';
 
 // import 'package:window_manager/window_manager.dart';
@@ -48,7 +49,8 @@ void main() async {
   //   )
   // );
   
-  MediaKit.ensureInitialized(); 
+  VideoPlayerMediaKit.ensureInitialized(); 
+  MediaKit.ensureInitialized();
   await dotenv.load(fileName: ".env");
   final String encryptionKey = dotenv.env['ENCRYPTION_KEY'] ?? 'd3v3l0pm3ntK3y16';
   if (encryptionKey.length != 16) {
