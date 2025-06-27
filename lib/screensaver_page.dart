@@ -1,3 +1,5 @@
+// lib/screensaver_page.dart
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
@@ -89,12 +91,14 @@ class _ScreensaverPageState extends State<ScreensaverPage> {
     if (_videoInitialized && !_videoError) {
       return Stack(
         children: [
-          FittedBox(
-            fit: BoxFit.cover,
-            child: SizedBox(
-              width: _player.state.width?.toDouble() ?? 1920,
-              height: _player.state.height?.toDouble() ?? 1080,
-              child: Video(controller: _controller),
+          SizedBox(
+            width: _player.state.width?.toDouble() ?? double.maxFinite,
+            height: _player.state.height?.toDouble() ?? double.maxFinite,
+            child: IgnorePointer(  
+              child: Video(
+                fit: BoxFit.cover,
+                controller: _controller
+              ),
             ),
           ),
           _buildOverlayContent(),
