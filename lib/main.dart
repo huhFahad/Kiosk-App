@@ -7,7 +7,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:media_kit/media_kit.dart';
 
-// import 'package:window_manager/window_manager.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'models/cart_model.dart';
 import 'categories_page.dart';
@@ -40,13 +40,13 @@ import 'theme/theme_notifier.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // windowManager.waitUntilReadyToShow(const WindowOptions(fullScreen: true));
-  // windowManager.waitUntilReadyToShow(
-  //   const WindowOptions(
-  //     fullScreen: true,
-  //     titleBarStyle: TitleBarStyle.hidden,
-  //     alwaysOnTop: false,
-  //   )
-  // );
+  windowManager.waitUntilReadyToShow(
+    const WindowOptions(
+      // fullScreen: true,
+      titleBarStyle: TitleBarStyle.hidden,
+      alwaysOnTop: false,
+    )
+  );
   
   MediaKit.ensureInitialized();
   await dotenv.load(fileName: ".env");

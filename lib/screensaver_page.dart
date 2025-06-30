@@ -45,10 +45,14 @@ class _ScreensaverPageState extends State<ScreensaverPage> {
           hwdec: 'no', 
         ),
       );
+      
+      final playlist = Playlist([
+        Media('asset://assets/videos/decor_ad_1.mp4'),
+        Media('asset://assets/videos/decor_ad_2.mp4'),
+        // Media('asset://assets/videos/ad_3.mp4'),
+      ]);
 
-      await _player.open(
-        Media('asset://assets/videos/ad_1.mp4'),
-      );
+      await _player.open(playlist);
       await _player.setVolume(0.0);
       await _player.setPlaylistMode(PlaylistMode.loop);
 
