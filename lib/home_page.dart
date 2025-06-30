@@ -227,10 +227,8 @@ class _HomePageState extends State<HomePage> {
             left: 10,
             child: GestureDetector(
               onLongPress: () => _showAdminPinDialog(context),
-              child: Container(
-                width: 50,
-                height: 50,
-                color: Colors.transparent,
+              child: Icon(Icons.icecream_outlined, size: 50,
+                color: Colors.black.withOpacity(0.6),
               ),
             ),
           ),
