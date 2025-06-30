@@ -154,17 +154,29 @@ class _HomePageState extends State<HomePage> {
                           ),
                           const SizedBox(height: 20),
                           SizedBox(
-                            width: 700,
+                            width: 700, height: 150,
                             child: ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                elevation: 6, // This keeps the shadow
+                              ),
                               icon: Icon(Icons.grid_view_rounded, size: 60),
                               onPressed: () => _goTo(context, '/categories'),
                               label: Text('Browse All Products', style: TextStyle(fontSize: 50)),
                             ),
                           ),
                           const SizedBox(height: 20),
-                          SizedBox(
-                            width: 700,
+                          SizedBox(                     
+                            width: 700, height: 150,
                             child: ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                elevation: 6, // This keeps the shadow
+                              ),
                               icon: Icon(Icons.map_rounded, size: 60),
                               onPressed: () => _goTo(context, '/map'),
                               label: Text('Find Product on Map', style: TextStyle(fontSize: 50)),
@@ -172,8 +184,14 @@ class _HomePageState extends State<HomePage> {
                           ),
                           const SizedBox(height: 20),
                           SizedBox(
-                            width: 700,
+                            width: 700, height: 150,
                             child: ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                elevation: 6, // This keeps the shadow
+                              ),
                               icon: Icon(Icons.shopping_cart_rounded, size: 60),
                               onPressed: () => _goTo(context, '/cart'),
                               label: Text('View Your Cart', style: TextStyle(fontSize: 50)),
@@ -181,14 +199,19 @@ class _HomePageState extends State<HomePage> {
                           ),
                           const SizedBox(height: 20),
                           SizedBox(
-                            width: 700,
+                            width: 700, height: 150,
                             child: ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                foregroundColor: Colors.white,
+                                backgroundColor: Theme.of(context).primaryColor,                                
+                                elevation: 6, // This keeps the shadow
+                              ),
                               icon: Icon(Icons.print_rounded, size: 60, color: Colors.white),
                               onPressed: () => _goTo(context, '/photo_upload'),
                               label: Text('Print Photos', style: TextStyle(fontSize: 50, color: Colors.white)),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Theme.of(context).colorScheme.secondary,
-                              ),
                             ),
                           ),
                         ],

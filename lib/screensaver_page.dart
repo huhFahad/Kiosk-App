@@ -47,7 +47,7 @@ class _ScreensaverPageState extends State<ScreensaverPage> {
       );
 
       await _player.open(
-        Media('asset://assets/videos/screensaver_bg.mp4'),
+        Media('asset://assets/videos/ad_1.mp4'),
       );
       await _player.setVolume(0.0);
       await _player.setPlaylistMode(PlaylistMode.loop);
