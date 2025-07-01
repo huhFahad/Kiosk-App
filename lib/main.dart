@@ -2,13 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
-import 'package:media_kit/media_kit.dart';
-
-import 'package:window_manager/window_manager.dart';
 
 import 'models/cart_model.dart';
+import 'loading_page.dart';
 import 'categories_page.dart';
 import 'products_list_page.dart';
 import 'order_confirmation_page.dart';
@@ -36,24 +33,7 @@ import 'widgets/inactivity_detector.dart';
 import 'notifiers/settings_notifier.dart';
 import 'theme/theme_notifier.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  // windowManager.waitUntilReadyToShow(const WindowOptions(fullScreen: true));
-  windowManager.waitUntilReadyToShow(
-    const WindowOptions(
-      // fullScreen: true,
-      titleBarStyle: TitleBarStyle.hidden,
-      alwaysOnTop: false,
-    )
-  );
-  
-  MediaKit.ensureInitialized();
-  await dotenv.load(fileName: ".env");
-  final String encryptionKey = dotenv.env['ENCRYPTION_KEY'] ?? 'd3v3l0pm3ntK3y16';
-  if (encryptionKey.length != 16) {
-    throw Exception('Encryption key must be 16 characters long.');
-  }
-
+void main() {
   runApp(
     Phoenix(
       child: MultiProvider(
@@ -82,8 +62,9 @@ class KioskApp extends StatelessWidget {
       title: 'Retail Kiosk',
       theme: themeNotifier.currentTheme,
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: '/loading',
       routes: {
+        '/loading': (context) => LoadingPage(),
         '/': (context) => HomePage(),
         '/categories': (context) => CategoriesPage(),
         '/products': (context) => ProductsListPage(),

@@ -26,7 +26,7 @@ PreferredSizeWidget CommonAppBar({
           alignment: Alignment.centerLeft,
           child: IconButton(
             icon: Icon(Icons.arrow_back_ios_rounded),
-            iconSize: 70, 
+            iconSize: 40, 
             onPressed: () => Navigator.of(context).pop(),
             tooltip: 'Back',
           ),
@@ -49,7 +49,7 @@ PreferredSizeWidget CommonAppBar({
             if (showHomeButton)
               IconButton(
                 icon: Icon(Icons.home_outlined),
-                iconSize: 70,
+                iconSize: 40,
                 tooltip: 'Go to Home',
                 onPressed: () {
                   Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
@@ -71,7 +71,7 @@ PreferredSizeWidget CommonAppBar({
             if (showSaveButton)
               IconButton(
                 icon: Icon(Icons.save_outlined),
-                iconSize: 70,
+                iconSize: 40,
                 tooltip: 'Save',
                 onPressed: onSavePressed,
               ),
@@ -98,7 +98,7 @@ class _CartBadge extends StatelessWidget {
             children: [cart.itemCount == 0
               ? IconButton(
                   icon: const Icon(Icons.shopping_cart_outlined),
-                  iconSize: 70,
+                  iconSize: 40,
                   tooltip: 'View Cart',
                   onPressed: () {
                     Navigator.pushNamed(context, '/cart');
@@ -106,7 +106,7 @@ class _CartBadge extends StatelessWidget {
                 )
               : IconButton(
                   icon: const Icon(Icons.shopping_cart),
-                  iconSize: 70,
+                  iconSize: 40,
                   tooltip: 'View Cart',
                   onPressed: () {
                     Navigator.pushNamed(context, '/cart');

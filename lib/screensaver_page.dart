@@ -160,16 +160,15 @@ class _ScreensaverPageState extends State<ScreensaverPage> {
         children: [
           Positioned(
             bottom: 10,
-            right: 33,
             child: Shimmer.fromColors(
               highlightColor: Colors.blueAccent,
               baseColor: const Color.fromARGB(255, 255, 0, 0),
               period: Duration(seconds: 3),
               child: Text(
-                'Welcome! Touch to Begin',
+                'Welcome!\nTouch to Begin',
                 style: TextStyle(
                   fontFamily: 'HighMount',
-                  fontSize: 60,
+                  fontSize: 40,
                   color:Colors.white.withAlpha(230),
                 ),
               )
