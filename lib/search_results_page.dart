@@ -76,7 +76,7 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
                   controller: _searchController,
                   autofocus: false, // Don't autofocus on page load
                   decoration: InputDecoration(
-                    hintText: 'Refine your search or enter a new one...',
+                    hintText: 'Search any products...',
                     prefixIcon: const Icon(Icons.search),
                     suffixIcon: _searchController.text.isNotEmpty
                       ? IconButton(

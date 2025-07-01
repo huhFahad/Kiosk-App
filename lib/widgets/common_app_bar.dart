@@ -16,7 +16,8 @@ PreferredSizeWidget CommonAppBar({
 }) {
   final canPop = Navigator.of(context).canPop();
   
-  const double actionZoneWidth = 237.2;
+  // const double actionZoneWidth = 237.2;
+  const double actionZoneWidth = 65;
 
   return AppBar(
     leadingWidth: actionZoneWidth, 
@@ -26,7 +27,7 @@ PreferredSizeWidget CommonAppBar({
           alignment: Alignment.centerLeft,
           child: IconButton(
             icon: Icon(Icons.arrow_back_ios_rounded),
-            iconSize: 40, 
+            iconSize: 30, 
             onPressed: () => Navigator.of(context).pop(),
             tooltip: 'Back',
           ),
@@ -37,11 +38,15 @@ PreferredSizeWidget CommonAppBar({
     title: Text(
       title,
       overflow: TextOverflow.ellipsis,
+      style: const TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+      ),
     ),
 
     actions: [
       Container(
-        width: actionZoneWidth,
+        // width: actionZoneWidth,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -49,7 +54,7 @@ PreferredSizeWidget CommonAppBar({
             if (showHomeButton)
               IconButton(
                 icon: Icon(Icons.home_outlined),
-                iconSize: 40,
+                iconSize: 30,
                 tooltip: 'Go to Home',
                 onPressed: () {
                   Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
@@ -71,14 +76,14 @@ PreferredSizeWidget CommonAppBar({
             if (showSaveButton)
               IconButton(
                 icon: Icon(Icons.save_outlined),
-                iconSize: 40,
+                iconSize: 30,
                 tooltip: 'Save',
                 onPressed: onSavePressed,
               ),
             
             if (extraActions != null) ...extraActions,
 
-            const SizedBox(width: 30),
+            // const SizedBox(width: 30),
           ],
         ),
       ),
@@ -98,7 +103,7 @@ class _CartBadge extends StatelessWidget {
             children: [cart.itemCount == 0
               ? IconButton(
                   icon: const Icon(Icons.shopping_cart_outlined),
-                  iconSize: 40,
+                  iconSize: 30,
                   tooltip: 'View Cart',
                   onPressed: () {
                     Navigator.pushNamed(context, '/cart');
@@ -106,7 +111,7 @@ class _CartBadge extends StatelessWidget {
                 )
               : IconButton(
                   icon: const Icon(Icons.shopping_cart),
-                  iconSize: 40,
+                  iconSize: 30,
                   tooltip: 'View Cart',
                   onPressed: () {
                     Navigator.pushNamed(context, '/cart');

@@ -29,8 +29,8 @@ class ProductListItem extends StatelessWidget {
             // --- Image ---
             ProductImageView(
               imagePath: product.image,
-              width: 240,
-              height: 240,
+              width: 100,
+              height: 100,
             ),
             const SizedBox(width: 16),
             

@@ -356,22 +356,13 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
+                Text(
                       '© ${DateTime.now().year} Centelon IT Solutions LLP\nAuthor: fahad.kareem@centelon.com',
                       style: const TextStyle(fontSize: 12, color: Colors.grey),
                     ),
-                    SizedBox(
-                      width: 100,
-                      height: 50,
-                      child: TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text('CLOSE', style: TextStyle(fontSize: 18)),
-                      ),
-                    ),
-                  ],
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('CLOSE', style: TextStyle(fontSize: 18)),
                 ),
               ],
             ),
@@ -556,7 +547,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
     if (_currentStoreMapPath == null || _currentStoreMapPath!.isEmpty) {
       return ElevatedButton(
         onPressed: _changeStoreMap,
-        child: Text('Upload', style: TextStyle(fontSize: 20),),
+        child: Text('Upload', style: TextStyle(fontSize: 15),),
       );
     }
     

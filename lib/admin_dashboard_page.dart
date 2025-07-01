@@ -7,11 +7,11 @@ class AdminDashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Admin Dashboard'),
+        title: Text('Admin Dashboard', style: TextStyle(fontSize: 30)),
         automaticallyImplyLeading: false, // Prevents back button
         actions: [
           IconButton(
-            icon: Icon(Icons.exit_to_app),
+            icon: Icon(Icons.exit_to_app, size: 35,),
             tooltip: 'Exit Admin Mode',
             onPressed: () {
               // Navigate back to home and remove all admin pages from history
@@ -60,7 +60,7 @@ class AdminDashboardPage extends StatelessWidget {
           children: [
             Icon(icon, size: 50, color: Theme.of(context).primaryColor,),
             SizedBox(height: 10),
-            Text(title, textAlign: TextAlign.center, style: TextStyle(fontSize: 40)),
+            Text(title, textAlign: TextAlign.center, style: TextStyle(fontSize: 15)),
           ],
         ),
       ),

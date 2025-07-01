@@ -153,7 +153,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           const SizedBox(height: 20),
                           SizedBox(
-                            width: 700, height: 150,
+                            width: 300, height: 100,
                             child: ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
@@ -161,14 +161,14 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 elevation: 6, // This keeps the shadow
                               ),
-                              icon: Icon(Icons.grid_view_rounded, size: 60),
+                              icon: Icon(Icons.grid_view_rounded, size: 35),
                               onPressed: () => _goTo(context, '/categories'),
-                              label: Text('Browse All Products', style: TextStyle(fontSize: 20)),
+                              label: Text('Browse All Products', style: TextStyle(fontSize: 25)),
                             ),
                           ),
                           const SizedBox(height: 20),
                           SizedBox(                     
-                            width: 700, height: 150,
+                            width: 300, height: 100,
                             child: ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
@@ -176,14 +176,14 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 elevation: 6, // This keeps the shadow
                               ),
-                              icon: Icon(Icons.map_rounded, size: 60),
+                              icon: Icon(Icons.map_rounded, size: 35),
                               onPressed: () => _goTo(context, '/map'),
-                              label: Text('Find Product on Map', style: TextStyle(fontSize: 20)),
+                              label: Text('Find Product on Map', style: TextStyle(fontSize: 25)),
                             ),
                           ),
                           const SizedBox(height: 20),
                           SizedBox(
-                            width: 700, height: 150,
+                            width: 300, height: 100,
                             child: ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
@@ -191,14 +191,14 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 elevation: 6, // This keeps the shadow
                               ),
-                              icon: Icon(Icons.shopping_cart_rounded, size: 60),
+                              icon: Icon(Icons.shopping_cart_rounded, size: 35),
                               onPressed: () => _goTo(context, '/cart'),
-                              label: Text('View Your Cart', style: TextStyle(fontSize: 20)),
+                              label: Text('View Your Cart', style: TextStyle(fontSize: 25)),
                             ),
                           ),
                           const SizedBox(height: 20),
                           SizedBox(
-                            width: 700, height: 150,
+                            width: 300, height: 100,
                             child: ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
@@ -208,9 +208,9 @@ class _HomePageState extends State<HomePage> {
                                 backgroundColor: Theme.of(context).primaryColor,                                
                                 elevation: 6, // This keeps the shadow
                               ),
-                              icon: Icon(Icons.print_rounded, size: 60, color: Colors.white),
+                              icon: Icon(Icons.print_rounded, size: 35, color: Colors.white),
                               onPressed: () => _goTo(context, '/photo_upload'),
-                              label: Text('Print Photos', style: TextStyle(fontSize: 20, color: Colors.white)),
+                              label: Text('Print Photos', style: TextStyle(fontSize: 25, color: Colors.white)),
                             ),
                           ),
                         ],
