@@ -114,7 +114,6 @@ class _HomePageState extends State<HomePage> {
                               color: Colors.black,
                               fontSize: 60,
                               fontWeight: FontWeight.normal,
-                              fontFamily: 'Times New Roman',
                             ),
                           ),
                           const SizedBox(height: 40),

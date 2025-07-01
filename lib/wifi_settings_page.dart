@@ -51,7 +51,7 @@ class _WifiSettingsPageState extends State<WifiSettingsPage> {
   Future<String?> _getConnectedSSID() async {
     try {
       var shell = Shell();
-      var result = await shell.run("nmcli -t -f active,ssid dev wifi");
+      var result = await shell.run("sudo nmcli -t -f active,ssid dev wifi");
       for (var line in result.first.stdout.toString().trim().split('\n')) {
         final parts = line.split(':');
         if (parts.length >= 2 && parts[0] == 'yes') {
@@ -74,7 +74,7 @@ class _WifiSettingsPageState extends State<WifiSettingsPage> {
       final connectedSSID = await _getConnectedSSID();
 
       var shell = Shell();
-      var result = await shell.run('nmcli -t -f SSID,SIGNAL device wifi list');
+      var result = await shell.run('sudo nmcli -t -f SSID,SIGNAL device wifi list');
       final output = result.first.stdout.toString();
       final lines = output.trim().split('\n');
 
@@ -137,7 +137,7 @@ class _WifiSettingsPageState extends State<WifiSettingsPage> {
   Future<void> _disconnectNetwork(String ssid) async {
     try {
       var shell = Shell();
-      await shell.run('nmcli connection down "$ssid"');
+      await shell.run('sudo nmcli connection down "$ssid"');
     } catch (e) {
       print("Error disconnecting from $ssid: $e");
     } finally {
@@ -165,10 +165,13 @@ class _WifiSettingsPageState extends State<WifiSettingsPage> {
 
     try {
       var shell = Shell();
-      await shell.run('nmcli connection delete "${network.ssid}"');
+      await shell.run('sudo nmcli connection delete "${network.ssid}"');
       await _dataService.forgetWifiPassword(network.ssid);
     } catch (e) {
       print('Could not forget network ${network.ssid}: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to forget ${network.ssid}.'), backgroundColor: Colors.red),
+      );
     } finally {
       _scanForNetworks(scrollToConnected: true);
     }

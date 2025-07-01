@@ -2,9 +2,11 @@
 
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:kiosk_app/services/data_service.dart';
+
 
 class ScreensaverPage extends StatefulWidget {
   const ScreensaverPage({Key? key}) : super(key: key);
@@ -127,21 +129,52 @@ class _ScreensaverPageState extends State<ScreensaverPage> {
   }
 
   Widget _buildOverlayContent() {
+    // return Center(
+    //   child: Column(
+    //     mainAxisAlignment: MainAxisAlignment.center,
+    //     children: [
+    //       Image.asset("assets/images/urban_rain_logo.png", width: 700, fit: BoxFit.contain),
+    //       const SizedBox(height: 32),
+    //       Container(
+    //         padding: const EdgeInsets.all(16.0),
+    //         decoration: BoxDecoration(
+    //           borderRadius: BorderRadius.circular(32.0),
+    //           color: Colors.white
+    //         ),
+    //         child: Shimmer.fromColors(
+    //           highlightColor: const Color.fromARGB(255, 255, 250, 155),
+    //           baseColor: const Color.fromARGB(150, 205, 200, 105),
+    //           child: Text(
+    //             'Welcome! Touch to Begin',
+    //             style: Theme.of(context).textTheme.displayLarge,
+    //             textAlign: TextAlign.center,
+    //           ),
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // );
+
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Stack(
         children: [
-          Image.asset("assets/images/urban_rain_logo.png", width: 700, fit: BoxFit.contain),
-          const SizedBox(height: 32),
-          Text(
-            'Welcome! Touch to Begin',
-            style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                  color: Colors.white,
-                  shadows: [
-                    Shadow(color: Colors.black.withOpacity(0.6), blurRadius: 8),
-                  ],
+          Positioned(
+            bottom: 10,
+            right: 33,
+            child: Shimmer.fromColors(
+              highlightColor: Colors.blueAccent,
+              baseColor: const Color.fromARGB(255, 255, 0, 0),
+              period: Duration(seconds: 3),
+              child: Text(
+                'Welcome! Touch to Begin',
+                style: TextStyle(
+                  fontFamily: 'HighMount',
+                  fontSize: 60,
+                  color:Colors.white.withAlpha(230),
                 ),
-            textAlign: TextAlign.center,
+              )
+              // child: Image.asset("assets/icons/Welcome!_Touch_to_begin.png", width: 300, fit: BoxFit.contain)
+            )
           ),
         ],
       ),
