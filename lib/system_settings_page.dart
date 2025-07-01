@@ -5,6 +5,7 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
+import 'package:app_settings/app_settings.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:kiosk_app/theme/theme_notifier.dart';
 import 'package:kiosk_app/notifiers/settings_notifier.dart'; 
@@ -466,7 +467,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                 title: 'Wi-Fi Settings',
                 subtitle: 'View available networks and connect.',
                 onTap: () {
-                  Navigator.pushNamed(context, '/admin/wifi');
+                  AppSettings.openAppSettings(type: AppSettingsType.wifi);
                 },
               ),
               _buildSettingsTile(

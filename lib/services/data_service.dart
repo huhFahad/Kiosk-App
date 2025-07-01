@@ -5,8 +5,8 @@ import 'dart:io';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:encrypt_shared_preferences/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart'; 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/product_model.dart';
 import '../models/category_model.dart';
 import '../models/frame_model.dart';
@@ -26,6 +26,8 @@ class DataService {
   static const _kioskLocationXKey = 'kiosk_location_x';
   static const _kioskLocationYKey = 'kiosk_location_y';
   static const _printerNameKey = 'printer_name';
+
+  final _secureStorage = const FlutterSecureStorage();
 
   // --- INACTIVITY & SCREENSAVER SETTINGS ---
 
@@ -365,13 +367,11 @@ class DataService {
   // ----- Admin Pin ----
 
   Future<String> getAdminPin() async {
-    final prefs = EncryptedSharedPreferences.getInstance();
-    return prefs.getString(_adminPinKey) ?? '1234';
+    return await _secureStorage.read(key: _adminPinKey) ?? '1234';
   }
 
   Future<void> saveAdminPin(String newPin) async {
-    final prefs = EncryptedSharedPreferences.getInstance();
-    await prefs.setString(_adminPinKey, newPin);
+    await _secureStorage.write(key: _adminPinKey, value: newPin);
   }
 
   // ----- Theme Colors ------

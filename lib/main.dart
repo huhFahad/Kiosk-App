@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:encrypt_shared_preferences/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:media_kit/media_kit.dart';
@@ -54,7 +53,6 @@ void main() async {
   if (encryptionKey.length != 16) {
     throw Exception('Encryption key must be 16 characters long.');
   }
-  await EncryptedSharedPreferences.initialize(encryptionKey);
 
   runApp(
     Phoenix(

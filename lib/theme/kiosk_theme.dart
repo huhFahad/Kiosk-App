@@ -6,7 +6,7 @@ class KioskTheme {
   // --- BASE SIZES ---
   // We can tweak these base values to scale the whole app up or down.
   static const double _baseFontSize = 18.0;
-  static const double _scale = 1.4; // A multiplier to make everything bigger
+  static const double _scale = 1.0; // A multiplier to make everything bigger
 
   // --- TEXT THEME ---
   static TextTheme get textTheme {
