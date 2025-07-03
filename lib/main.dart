@@ -1,5 +1,7 @@
 // lib/main.dart
 
+import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
@@ -26,14 +28,19 @@ import 'admin_order_detail_page.dart';
 import 'admin_map_picker_page.dart';
 import 'system_settings_page.dart';
 import 'wifi_settings_page.dart';
-import 'printer_settings_page.dart';
 import 'screensaver_page.dart';
 import 'thank_you_page.dart';
 import 'widgets/inactivity_detector.dart';
 import 'notifiers/settings_notifier.dart';
+import 'theme/kiosk_theme.dart';
 import 'theme/theme_notifier.dart';
 
 void main() {
+  final frames = ['⣾', '⣽', '⣻', '⢿', '⡿', '⣟', '⣯', '⣷'];
+  int i = 0;
+  Timer.periodic(Duration(milliseconds: 100), (timer) {
+    stdout.write('\r${frames[i++ % frames.length]} Loading...');
+  });
   runApp(
     Phoenix(
       child: MultiProvider(
@@ -56,6 +63,9 @@ class KioskApp extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final themeNotifier = Provider.of<ThemeNotifier>(context);
+    
+    final screenWidth = MediaQuery.of(context).size.width;
+    KioskTheme.setScaleFromWidth(screenWidth);
 
     return MaterialApp(
       navigatorKey: navigatorKey,
@@ -85,7 +95,6 @@ class KioskApp extends StatelessWidget {
         '/admin/settings': (context) => SystemSettingsPage(),
         '/admin/map_picker': (context) => AdminMapPickerPage(),
         '/admin/wifi': (context) => WifiSettingsPage(),
-        '/admin/printers': (context) => PrinterSettingsPage(),
         '/screensaver': (context) => ScreensaverPage(),
         '/thank_you': (context) => ThankYouPage(),
       },

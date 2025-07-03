@@ -1,6 +1,7 @@
 // lib/widgets/quantity_control_widget.dart
 
 import 'package:flutter/material.dart';
+import 'package:kiosk_app/theme/kiosk_theme.dart';
 import 'package:provider/provider.dart';
 import '../models/cart_model.dart';
 import '../models/product_model.dart';
@@ -15,55 +16,73 @@ class QuantityControlWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // We use a Consumer here so that ONLY this little widget rebuilds
-    // when the cart changes, not the entire product list page. This is efficient.
+    final scale = KioskTheme.scale;
+
     return Consumer<CartModel>(
       builder: (context, cart, child) {
-        // Find the specific item in the cart to get its quantity
         final cartItem = cart.findItemById(product.id);
         final int quantity = cartItem?.quantity ?? 0;
 
-        // If the quantity is 0, show the simple "Add" button.
         if (quantity == 0) {
-          return ElevatedButton(
-            onPressed: () {
-              cart.add(product);
-            },
-            child: Text('Add'),
+          return SizedBox(
+            width: 80 * scale,
+            height: 45 * scale,
+            child: ElevatedButton(
+              style: ButtonStyle(
+                padding: WidgetStateProperty.all(EdgeInsets.zero),
+                shape: WidgetStateProperty.all(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    side: BorderSide(
+                      color: Theme.of(context).primaryColor,
+                      width: 1.6 * scale,
+                    ),
+                  ),
+                ),
+              ),
+              onPressed: () {
+                cart.add(product);
+              },
+              child: Center(
+                child: Text(
+                  'Add',
+                  style: TextStyle(fontSize: 16 * scale), 
+                ),
+              ),
+            ),
           );
         }
 
-        // If the quantity is > 0, show the +/- controls.
         return Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Theme.of(context).primaryColor.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(30),
+            color: Theme.of(context).primaryColor.withOpacity(0.15),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               // Decrease quantity button
               IconButton(
-                icon: Icon(Icons.remove, color: Theme.of(context).primaryColor,),
+                icon: Icon(Icons.remove, color: Theme.of(context).primaryColor, size: 20 * scale,),
                 onPressed: () {
                   if (cartItem != null) {
                     cart.decreaseQuantity(cartItem);
                   }
                 },
-                splashRadius: 20,
+                splashRadius: 10 * scale,
               ),
               // The quantity display
               Text(
                 quantity.toString(),
-                style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 20 * scale, fontWeight: FontWeight.bold),
               ),
               // Increase quantity button
               IconButton(
-                icon: Icon(Icons.add, color: Theme.of(context).primaryColor,),
+                icon: Icon(Icons.add, color: Theme.of(context).primaryColor, size: 20 * scale),
                 onPressed: () {
                   cart.add(product);
                 },
-                splashRadius: 20,
+                splashRadius: 10 * scale,
               ),
             ],
           ),

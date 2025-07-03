@@ -1,11 +1,9 @@
 // lib/map_page.dart
 import 'dart:io';
-import 'dart:ui' as ui;
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:kiosk_app/models/product_model.dart';
-import 'package:kiosk_app/widgets/common_app_bar.dart';
 import 'package:kiosk_app/services/data_service.dart';
+import 'package:kiosk_app/widgets/common_app_bar.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -17,76 +15,82 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   final TransformationController _transformationController = TransformationController();
   final DataService _dataService = DataService();
-  
-  bool _isLoading = true;
-  ui.Image? _mapUiImage;
+  final GlobalKey _imageKey = GlobalKey();
 
+  String? _customMapPath;
   final String _defaultMapPath = 'assets/images/placeholder_map.png';
 
-  // We'll store the pin's position here after calculating it
   Offset? _productPinPosition;
-
   Offset? _kioskPinPosition;
+  bool _arePinsCalculated = false; // A flag to prevent repeated calculations
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadDataAndCalculatePositions();
-    });
+    // Start the process of loading paths and then calculating positions
+    _initializeMap();
+  }
+
+  Future<void> _initializeMap() async {
+    // First, load the path to the map image
+    final path = await _dataService.getStoreMapPath();
+    if (mounted) {
+      setState(() {
+        _customMapPath = path;
+      });
+      // After the state is set and the image widget is in the tree,
+      // start trying to calculate the pin positions.
+      WidgetsBinding.instance.addPostFrameCallback((_) => _calculatePinPositions());
+    }
   }
   
-  Future<void> _loadDataAndCalculatePositions() async {
-    if (!mounted) return;
-    setState(() { _isLoading = true; });
+  // This is the new, robust calculation method
+  void _calculatePinPositions() async {
+    // If we've already successfully calculated the pins, don't do it again.
+    if (_arePinsCalculated || !mounted) return;
 
-    // --- Step 1: Determine which map path to use ---
-    final customPath = await _dataService.getStoreMapPath();
-    final bool useCustomMap = customPath != null && customPath.isNotEmpty;
-    final imagePath = useCustomMap ? customPath : _defaultMapPath;
+    // Find the RenderBox of our Image widget using its key
+    final imageContext = _imageKey.currentContext;
+    if (imageContext == null) {
+      // If the context isn't available yet, the widget hasn't been laid out.
+      // We schedule this function to run again on the next frame.
+      WidgetsBinding.instance.addPostFrameCallback((_) => _calculatePinPositions());
+      return;
+    }
 
-    // --- Step 2: Load that image data and get its dimensions ---
-    final imageCompleter = Completer<ui.Image>();
-    late ImageStreamListener listener;
+    final imageBox = imageContext.findRenderObject() as RenderBox;
+    // Also check if it has a size yet.
+    if (!imageBox.hasSize) {
+      // If not, try again on the next frame.
+      WidgetsBinding.instance.addPostFrameCallback((_) => _calculatePinPositions());
+      return;
+    }
     
-    ImageStream stream = useCustomMap
-      ? FileImage(File(imagePath)).resolve(const ImageConfiguration())
-      : AssetImage(imagePath).resolve(const ImageConfiguration());
-
-    listener = ImageStreamListener((ImageInfo imageInfo, bool synchronousCall) {
-      // Once the image is decoded, complete the future and clean up the listener
-      imageCompleter.complete(imageInfo.image);
-      stream.removeListener(listener);
-    });
+    // --- If we've reached this point, the image is guaranteed to have a size ---
+    final imageSize = imageBox.size;
     
-    stream.addListener(listener);
-    final loadedImage = await imageCompleter.future;
-
-    // --- Step 3: Now that we have the image size, calculate pin positions ---
+    // Get the data needed for the pins
     final Product? product = ModalRoute.of(context)?.settings.arguments as Product?;
     final kioskLocation = await _dataService.getKioskLocation();
-    
-    final imageSize = Size(loadedImage.width.toDouble(), loadedImage.height.toDouble());
 
+    // Calculate position for the product pin
     Offset? productPinPos;
     if (product != null && product.mapX >= 0 && product.mapY >= 0) {
       productPinPos = Offset(imageSize.width * product.mapX, imageSize.height * product.mapY);
     }
     
+    // Calculate position for the kiosk pin
     Offset? kioskPinPos;
     if (kioskLocation != null) {
       kioskPinPos = Offset(imageSize.width * kioskLocation.dx, imageSize.height * kioskLocation.dy);
     }
 
-    // --- Step 4: Update state with all new data to trigger a final rebuild ---
-    if(mounted) {
-      setState(() {
-        _mapUiImage = loadedImage;
-        _productPinPosition = productPinPos;
-        _kioskPinPosition = kioskPinPos;
-        _isLoading = false; // Turn off the loading indicator
-      });
-    }
+    // Update the state with the final, correct positions
+    setState(() {
+      _productPinPosition = productPinPos;
+      _kioskPinPosition = kioskPinPos;
+      _arePinsCalculated = true; // Mark as done!
+    });
   }
 
   @override
@@ -102,64 +106,65 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     final Product? product = ModalRoute.of(context)?.settings.arguments as Product?;
-    
+    final bool useCustomMap = _customMapPath != null && _customMapPath!.isNotEmpty;
+
     return Scaffold(
       appBar: CommonAppBar(context: context, title: product != null ? 'Location for ${product.name}' : 'Store Map'),
-      body: _isLoading
-        ? const Center(child: CircularProgressIndicator())
-        : InteractiveViewer(
-            transformationController: _transformationController,
-            boundaryMargin: const EdgeInsets.all(double.infinity),
-            minScale: 0.5,
-            maxScale: 4.0,
-            child: Center(
-              child: Stack(
-                children: [
-                  // Layer 1: The map image, now drawn efficiently with RawImage
-                  if (_mapUiImage != null)
-                    RawImage(image: _mapUiImage),
-                  
-                  // Layer 2: The "You Are Here" pin (BLUE)
-                  if (_kioskPinPosition != null)
-                    Positioned(
-                      left: _kioskPinPosition!.dx,
-                      top: _kioskPinPosition!.dy,
-                      child: Transform.translate(
-                        offset: const Offset(-24, -24),
-                        child: const Tooltip(
-                          message: 'You Are Here',
-                          child: Icon(Icons.my_location, color: Colors.blue, size: 48),
-                        ),
-                      ),
-                    ),
+      body: InteractiveViewer(
+        transformationController: _transformationController,
+        boundaryMargin: const EdgeInsets.all(double.infinity),
+        minScale: 0.5,
+        maxScale: 4.0,
+        child: Center(
+          child: Stack(
+            children: [
+              // The Map Image with the key
+              if (useCustomMap)
+                Image.file(File(_customMapPath!), key: _imageKey, errorBuilder: (c, e, s) => Image.asset(_defaultMapPath, key: _imageKey))
+              else
+                Image.asset(_defaultMapPath, key: _imageKey),
+              
+              // Show a loader only while we are waiting for the pins to be calculated
+              if (!_arePinsCalculated)
+                const Center(child: CircularProgressIndicator()),
 
-                  // Layer 3: The Product pin (RED)
-                  if (_productPinPosition != null)
-                    Positioned(
-                      left: _productPinPosition!.dx,
-                      top: _productPinPosition!.dy,
-                      child: Transform.translate(
-                        offset: const Offset(-24, -48),
-                        child: Tooltip(
-                          message: product?.name ?? 'Product Location',
-                          child: Icon(
-                            Icons.location_on,
-                            color: Colors.red,
-                            size: 48,
-                            shadows: [Shadow(color: const ui.Color.fromARGB(255, 255, 255, 255).withOpacity(1.0), blurRadius: 10)],
-                          ),
-                        ),
+              // The You Are Here Pin
+              if (_kioskPinPosition != null)
+                Positioned(
+                  left: _kioskPinPosition!.dx,
+                  top: _kioskPinPosition!.dy,
+                  child: Transform.translate(
+                    offset: const Offset(-24, -24),
+                    child: const Tooltip(
+                      message: 'You Are Here',
+                      child: Icon(Icons.my_location, shadows:[Shadow(color: Colors.white, blurRadius: 10.0)], color: Colors.blue, size: 48),
+                    ),
+                  ),
+                ),
+
+              // The Product Pin
+              if (_productPinPosition != null)
+                Positioned(
+                  left: _productPinPosition!.dx,
+                  top: _productPinPosition!.dy,
+                  child: Transform.translate(
+                    offset: const Offset(-24, -43),
+                    child: Tooltip(
+                      message: product?.name ?? 'Product Location',
+                      child: Icon(
+                        Icons.location_on,
+                        color: Colors.red,
+                        shadows: [Shadow(color: Colors.white, blurRadius: 10.0)],
+                        size: 48,
                       ),
                     ),
-                ],
-              ),
-            ),
+                  ),
+                ),
+            ],
           ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _resetView,
-        tooltip: 'Reset View',
-        child: const Icon(Icons.center_focus_strong),
+        ),
       ),
+      floatingActionButton: FloatingActionButton(onPressed: _resetView, child: const Icon(Icons.center_focus_strong)),
     );
   }
 }

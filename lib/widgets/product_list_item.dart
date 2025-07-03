@@ -1,14 +1,13 @@
 // lib/widgets/product_list_item.dart
 
 import 'package:flutter/material.dart';
-import 'package:kiosk_app/admin_product_list_page.dart'; // For ProductImageView
+import 'package:kiosk_app/admin_product_list_page.dart';
 import 'package:kiosk_app/models/product_model.dart';
+import 'package:kiosk_app/theme/kiosk_theme.dart';
 import 'package:kiosk_app/widgets/quantity_control_widget.dart';
 
 class ProductListItem extends StatelessWidget {
   final Product product;
-  // We can add a flag to show/hide admin controls if needed in the future,
-  // but for now, we'll focus on the customer view.
 
   const ProductListItem({
     Key? key,
@@ -17,22 +16,20 @@ class ProductListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // We use the theme to ensure consistent sizing and styling
-    final textTheme = Theme.of(context).textTheme;
+    final scale = KioskTheme.scale;
 
     return Card(
-      // The global CardTheme in kiosk_theme.dart will handle margin, shape, etc.
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: EdgeInsets.all(8.0 * scale),
         child: Row(
           children: [
             // --- Image ---
             ProductImageView(
               imagePath: product.image,
-              width: 100,
-              height: 100,
+              width: 200 * scale,
+              height: 200 * scale,
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: 15 * scale),
             
             // --- Text Details (Name, Price) ---
             Expanded(
@@ -41,33 +38,42 @@ class ProductListItem extends StatelessWidget {
                 children: [
                   Text(
                     product.name,
-                    style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 22 * scale,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 5),
+                  SizedBox(height: 5 * scale),
                   Text(
                     '₹${product.price.toStringAsFixed(2)} ${product.unit}',
-                    style: textTheme.bodyMedium,
+                    style: TextStyle(
+                      fontSize: 18 * scale,
+                      color: Colors.black54,
+                    )
                   ),
                 ],
               ),
             ),
-            const SizedBox(width: 16, height: 100),
+            SizedBox(width: 16 * scale, height: 100 * scale),
 
             // --- Action Controls (Map, Quantity) in a Row ---
-            Row(
+            Column(
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.map_outlined),
+                  icon: Icon(Icons.map_outlined, size: 35 * scale,),
                   tooltip: 'Find on Map',
                   onPressed: () {
                     final product = this.product;
                     Navigator.pushNamed(context, '/map', arguments: product);
                   },
                 ),
-                const SizedBox(width: 4),
+                SizedBox(height: 4 * scale),
                 QuantityControlWidget(product: product),
               ],
             ),

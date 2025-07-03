@@ -14,27 +14,23 @@ class AdminMapPickerPage extends StatefulWidget {
 class _AdminMapPickerPageState extends State<AdminMapPickerPage> {
   final DataService _dataService = DataService();
   final TransformationController _transformationController = TransformationController();
-  final GlobalKey _mapKey = GlobalKey();
+  final GlobalKey _imageKey = GlobalKey(); // The key for the image itself
 
   String? _customMapPath;
   final String _defaultMapPath = 'assets/images/placeholder_map.png';
 
-  // State to hold the temporary pin location
-  Offset? _tappedPosition;
+  // This will store the tap position relative to the IMAGE WIDGET, in pixels.
+  Offset? _pinPositionOnImage;
 
   @override
   void initState() {
     super.initState();
     _loadMapPath();
   }
-  
+
   Future<void> _loadMapPath() async {
     final path = await _dataService.getStoreMapPath();
-    if (mounted) {
-      setState(() {
-        _customMapPath = path;
-      });
-    }
+    if (mounted) setState(() => _customMapPath = path);
   }
 
   @override
@@ -43,87 +39,109 @@ class _AdminMapPickerPageState extends State<AdminMapPickerPage> {
     super.dispose();
   }
 
-  void _onTapUp(TapUpDetails details) {
-    // Get the position of the tap within the GestureDetector
-    final tapPosition = details.localPosition;
-    
-    // We also need the current transformation (zoom/pan) of the InteractiveViewer
-    // to correctly map the screen tap to a point on the image.
-    // This requires converting from screen coordinates to scene (image) coordinates.
-    final scenePos = _transformationController.toScene(tapPosition);
+  void _handleTap(TapUpDetails details) {
+    // Get the RenderBox of the image itself using our key
+    final imageContext = _imageKey.currentContext;
+    if (imageContext == null) return;
+    final imageBox = imageContext.findRenderObject() as RenderBox;
 
+    // `details.globalPosition` is the tap position on the entire screen.
+    // `globalToLocal` converts this screen coordinate into a coordinate
+    // that is relative to the top-left corner of our Image widget.
+    final localPosition = imageBox.globalToLocal(details.globalPosition);
+
+    // Now we have the exact (x, y) tap position on the image itself.
     setState(() {
-      _tappedPosition = scenePos;
+      _pinPositionOnImage = localPosition;
     });
   }
 
   void _confirmLocation() {
-    if (_tappedPosition == null) return;
+    if (_pinPositionOnImage == null) return;
     
-    // Get the total size of the map image widget
-    final RenderBox? renderBox = _mapKey.currentContext?.findRenderObject() as RenderBox?;
-    if (renderBox == null || !renderBox.hasSize) return;
+    // Get the actual pixel size of the rendered image widget.
+    final imageContext = _imageKey.currentContext;
+    if (imageContext == null) return;
+    final imageBox = imageContext.findRenderObject() as RenderBox;
+    final imageSize = imageBox.size;
 
-    final imageSize = renderBox.size;
+    // The pin position is already in the image's local coordinate system,
+    // so the calculation is now direct and accurate.
+    final double relativeX = _pinPositionOnImage!.dx / imageSize.width;
+    final double relativeY = _pinPositionOnImage!.dy / imageSize.height;
 
-    // Calculate the relative coordinates (0.0 to 1.0)
-    final double relativeX = _tappedPosition!.dx / imageSize.width;
-    final double relativeY = _tappedPosition!.dy / imageSize.height;
-
-    // Pop the page and return the coordinates as a result
-    Navigator.of(context).pop({'x': relativeX, 'y': relativeY});
+    // Check if the tap was within the image bounds before returning.
+    if (relativeX >= 0 && relativeX <= 1 && relativeY >= 0 && relativeY <= 1) {
+      Navigator.of(context).pop({'x': relativeX, 'y': relativeY});
+    } else {
+      // This should rarely happen now, but it's a good safety check.
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please tap directly on the map.'))
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final bool useCustomMap = _customMapPath != null && _customMapPath!.isNotEmpty;
-    
-    return Scaffold(
-      appBar: CommonAppBar(context: context, title: 'Tap to Set Product Location', showCartButton: false, showHomeButton: false),
-      body: Stack(
-        children: [
-          InteractiveViewer(
-            transformationController: _transformationController,
-            minScale: 0.2,
-            maxScale: 5.0,
-            // The child is our map inside a GestureDetector
-            child: GestureDetector(
-              onTapUp: _onTapUp,
-              child: Stack(
-                children: [
-                  // The map image with our GlobalKey
-                  if (useCustomMap)
-                    Image.file(File(_customMapPath!), key: _mapKey)
-                  else
-                    Image.asset(_defaultMapPath, key: _mapKey),
 
-                  // Show a pin at the tapped location
-                  if (_tappedPosition != null)
-                    Positioned(
-                      left: _tappedPosition!.dx - 24, // Center the pin
-                      top: _tappedPosition!.dy - 48, // Offset for the pin's tip
-                      child: Icon(Icons.location_on, color: Colors.blue, size: 48),
-                    )
-                ],
+    return Scaffold(
+      appBar: CommonAppBar(context: context, title: 'Tap to Set Location'),
+      body: Column(
+        children: [
+          Expanded(
+            child: Container(
+              color: Colors.grey.shade800,
+              // We use a GestureDetector on the whole area to capture taps
+              child: GestureDetector(
+                onTapUp: _handleTap,
+                child: InteractiveViewer(
+                  transformationController: _transformationController,
+                  minScale: 0.2,
+                  maxScale: 5.0,
+                  boundaryMargin: const EdgeInsets.all(200.0),
+                  child: Center(
+                    // The Stack allows us to layer the pin on the image
+                    child: Stack(
+                      children: [
+                        // The map image with the all-important GlobalKey
+                        if (useCustomMap)
+                          Image.file(File(_customMapPath!), key: _imageKey)
+                        else
+                          Image.asset(_defaultMapPath, key: _imageKey),
+
+                        // The pin is positioned relative to the Stack (which is the image size)
+                        if (_pinPositionOnImage != null)
+                          Positioned(
+                            left: _pinPositionOnImage!.dx,
+                            top: _pinPositionOnImage!.dy,
+                            child: Transform.translate(
+                              offset: const Offset(-24, -43),
+                              child: const IgnorePointer(
+                                child: Icon(
+                                  Icons.location_on,
+                                  color: Colors.blue,
+                                  size: 48,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
           
-          // "Confirm" button at the bottom
-          if (_tappedPosition != null)
-            Positioned(
-              bottom: 30,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: ElevatedButton.icon(
-                  icon: Icon(Icons.check_circle),
-                  label: Text('Confirm This Location'),
-                  onPressed: _confirmLocation,
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                  ),
-                ),
+          // The confirm button appears only after a tap
+          if (_pinPositionOnImage != null)
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.check_circle),
+                label: const Text('Confirm This Location'),
+                onPressed: _confirmLocation,
               ),
             )
         ],

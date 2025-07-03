@@ -117,12 +117,12 @@ class _AdminTemplateListPageState extends State<AdminTemplateListPage> {
 
           final templates = snapshot.data!;
           return GridView.builder(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(8.0),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 16.0,
-              mainAxisSpacing: 16.0,
-              childAspectRatio: 0.75,
+              crossAxisCount: 2, // 2 frames per row
+              crossAxisSpacing: 8.0,
+              mainAxisSpacing: 8.0,
+              childAspectRatio: 0.6, // Adjust to make cards taller or shorter
             ),
             itemCount: templates.length,
             itemBuilder: (context, index) {

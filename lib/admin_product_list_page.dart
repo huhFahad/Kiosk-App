@@ -20,35 +20,29 @@ class _AdminProductListPageState extends State<AdminProductListPage> {
   late Future<List<Product>> _productsFuture;
 
   void _editCategory(BuildContext context, String categoryName) async {
-    // First, get the category data to pass to the dialog
     final allCategories = await _dataService.readCategories();
     Category categoryToEdit = allCategories.firstWhere(
       (c) => c.name == categoryName,
       orElse: () => Category(name: categoryName, imagePath: ''),
     );
 
-    // Show our new custom dialog and wait for the result
     final result = await showDialog<Map<String, String>>(
       context: context,
       builder: (ctx) => EditCategoryDialog(category: categoryToEdit),
     );
 
-    // If the user saved the dialog, result will not be null
     if (result != null) {
       try {
-        // Show a loading indicator
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Updating category and products...'))
         );
         
-        // Call our new, powerful service method
         await _dataService.updateCategory(
           oldName: result['oldName']!,
           newName: result['newName']!,
           newImagePath: result['newImagePath']!,
         );
         
-        // Refresh the entire product list to see the changes
         _refreshProducts();
 
       } catch (e) {
@@ -61,7 +55,43 @@ class _AdminProductListPageState extends State<AdminProductListPage> {
     }
   }
 
-  // State for Search Functionality ---
+  void _editSubCategory(BuildContext context, String categoryName, String oldSubCategoryName) async {
+    final nameController = TextEditingController(text: oldSubCategoryName);
+    
+    final newName = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Rename Sub-category'),
+        content: TextField(
+          controller: nameController,
+          autofocus: true,
+          decoration: InputDecoration(labelText: 'New sub-category name'),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(ctx).pop(), child: Text('Cancel')),
+          ElevatedButton(onPressed: () => Navigator.of(ctx).pop(nameController.text), child: Text('Save')),
+        ],
+      ),
+    );
+
+    if (newName != null && newName.isNotEmpty && newName != oldSubCategoryName) {
+      try {
+        await _dataService.updateSubCategory(
+          categoryName: categoryName,
+          oldSubCategoryName: oldSubCategoryName,
+          newSubCategoryName: newName,
+        );
+        _refreshProducts();
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error updating sub-category: $e'), backgroundColor: Colors.red),
+          );
+        }
+      }
+    }
+  }
+
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
 
@@ -70,7 +100,6 @@ class _AdminProductListPageState extends State<AdminProductListPage> {
     super.initState();
     _productsFuture = _dataService.readProducts();
 
-    // Add a listener to the search controller to update the UI on text change
     _searchController.addListener(() {
       setState(() {
         _searchQuery = _searchController.text;
@@ -78,7 +107,6 @@ class _AdminProductListPageState extends State<AdminProductListPage> {
     });
   }
 
-  // Remember to dispose of the controller!
   @override
   void dispose() {
     _searchController.dispose();
@@ -87,7 +115,6 @@ class _AdminProductListPageState extends State<AdminProductListPage> {
 
   void _refreshProducts() {
     setState(() {
-      // Clear search when refreshing
       _searchController.clear();
       _productsFuture = _dataService.readProducts();
     });
@@ -227,21 +254,21 @@ class _AdminProductListPageState extends State<AdminProductListPage> {
               final categoryName = sortedCategories[categoryIndex];
               final subCategoryMap = groupedProducts[categoryName]!;
               final sortedSubCategories = subCategoryMap.keys.toList()..sort();
+              final int totalProductsInCategory = subCategoryMap.values.fold(0, (sum, productList) => sum + productList.length);
 
               // --- OUTER EXPANSION TILE (FOR CATEGORY) ---
               return Card(
                 margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                 elevation: 4,
                 child: ExpansionTile(
-                  // Initially expanded if there's a search query, to show results
                   key: Key('$categoryName$_searchQuery'), 
                   initiallyExpanded: _searchQuery.isNotEmpty,
                   title: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        categoryName, // We can calculate total products if needed
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
+                        '$categoryName ($totalProductsInCategory)',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
                       ),
                       IconButton(
                         icon: Icon(Icons.edit_note, color: Colors.grey.shade700),
@@ -256,26 +283,34 @@ class _AdminProductListPageState extends State<AdminProductListPage> {
 
                     // --- INNER EXPANSION TILE (FOR SUB-CATEGORY) ---
                     return Padding(
-                      padding: const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 16.0),
+                      padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 4.0),
                       child: ExpansionTile(
                         key: Key('$categoryName$subCategoryName$_searchQuery'),
                         initiallyExpanded: _searchQuery.isNotEmpty,
-                        title: 
-                          Text(
-                            '$subCategoryName (${productsInSubCategory.length})',
-                            style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
-                          ),
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '$subCategoryName (${productsInSubCategory.length})',
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.edit, color: Colors.grey.shade600, size: 20),
+                              tooltip: 'Rename Sub-category',
+                              onPressed: () => _editSubCategory(context, categoryName, subCategoryName),
+                            ),
+                          ],
+                        ),
                         children: productsInSubCategory.map((product) {
-                          // This is the final product list tile
                           return ListTile(
                             leading: ProductImageView(imagePath: product.image),
                             title: Text(product.name,
-                              style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+                              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
                               ),
                             subtitle: 
                               Text(
                                 'Price: ₹${product.price.toStringAsFixed(2)}',
-                                style: TextStyle(fontSize: 23, fontWeight: FontWeight.w500),
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                               ),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,

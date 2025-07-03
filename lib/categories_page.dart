@@ -3,19 +3,20 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'models/product_model.dart';
-import 'models/category_model.dart'; // Import Category model
+import 'models/category_model.dart';
 import 'services/data_service.dart';
-import '../widgets/common_app_bar.dart'; 
+import 'theme/kiosk_theme.dart';
+import 'widgets/common_app_bar.dart'; 
 
 class CategoriesPage extends StatelessWidget {
   final DataService _dataService = DataService();
+  final scale = KioskTheme.scale;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonAppBar(context: context, title: 'All Categories'),
       body: FutureBuilder<Map<String, dynamic>>(
-        // Use a Future.wait to load both products and categories at once
         future: _loadData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -33,13 +34,13 @@ class CategoriesPage extends StatelessWidget {
           final categories = allProducts.map((p) => p.category).toSet().toList();
 
           return Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(8.0 * scale),
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                crossAxisSpacing: 16.0,
-                mainAxisSpacing: 16.0,
-                childAspectRatio: 0.9, // Adjust for image
+                crossAxisSpacing: 3.0 * scale,
+                mainAxisSpacing: 6.0 * scale,
+                childAspectRatio: 0.8 * scale, // Adjust for image
               ),
               itemCount: categories.length,
               itemBuilder: (context, index) {
@@ -66,10 +67,10 @@ class CategoriesPage extends StatelessWidget {
                           child: _buildCategoryImage(categoryData.imagePath),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(12.0),
+                          padding: EdgeInsets.all(4.0 * scale),
                           child: Text(
                             categoryName,
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 22 * scale, fontFamily: 'Mundial-Sans', fontWeight: FontWeight.normal),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -85,17 +86,15 @@ class CategoriesPage extends StatelessWidget {
     );
   }
 
-  // Helper to load both sets of data
   Future<Map<String, dynamic>> _loadData() async {
     final products = await _dataService.readProducts();
     final categories = await _dataService.readCategories();
     return {'products': products, 'categories': categories};
   }
 
-  // Helper to display the image (asset or file)
   Widget _buildCategoryImage(String imagePath) {
     if (imagePath.isEmpty) {
-      return Icon(Icons.category, size: 80, color: Colors.grey);
+      return Icon(Icons.category, size: 100 * scale, color: Colors.grey);
     }
     final isAsset = imagePath.startsWith('assets/');
     return isAsset

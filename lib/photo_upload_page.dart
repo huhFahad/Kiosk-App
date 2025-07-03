@@ -60,8 +60,13 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
                 if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
                 final templates = snapshot.data!;
                 return GridView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 16.0, mainAxisSpacing: 16.0, childAspectRatio: 0.75),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, 
+                    crossAxisSpacing: 16.0, 
+                    mainAxisSpacing: 8.0, 
+                    childAspectRatio: 0.6
+                  ),
                   itemCount: templates.length,
                   itemBuilder: (context, index) {
                     final template = templates[index];

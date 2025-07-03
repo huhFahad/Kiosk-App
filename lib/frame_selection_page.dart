@@ -52,8 +52,13 @@ class _FrameSelectionPageState extends State<FrameSelectionPage> {
           if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
           final frames = snapshot.data!;
           return GridView.builder(
-            padding: const EdgeInsets.all(16.0),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 16.0, mainAxisSpacing: 16.0, childAspectRatio: 0.75),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, 
+              crossAxisSpacing: 16.0, 
+              mainAxisSpacing: 8.0, 
+              childAspectRatio: 0.6
+            ),            
             itemCount: frames.length,
             itemBuilder: (context, index) {
               final frame = frames[index];

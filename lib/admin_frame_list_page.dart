@@ -64,12 +64,12 @@ class _AdminFrameListPageState extends State<AdminFrameListPage> {
 
           final frames = snapshot.data!;
           return GridView.builder(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(8.0),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3, // 2 frames per row
-              crossAxisSpacing: 16.0,
-              mainAxisSpacing: 16.0,
-              childAspectRatio: 0.75, // Adjust to make cards taller or shorter
+              crossAxisCount: 2, // 2 frames per row
+              crossAxisSpacing: 8.0,
+              mainAxisSpacing: 8.0,
+              childAspectRatio: 0.6, // Adjust to make cards taller or shorter
             ),
             itemCount: frames.length,
             itemBuilder: (context, index) {

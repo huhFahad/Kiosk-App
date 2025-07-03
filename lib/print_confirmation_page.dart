@@ -1,12 +1,9 @@
 // lib/print_confirmation_page.dart
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:kiosk_app/services/data_service.dart';
-import 'package:kiosk_app/widgets/common_app_bar.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:process_run/shell.dart';
+import 'package:kiosk_app/widgets/common_app_bar.dart';
 
 class PrintConfirmationPage extends StatefulWidget {
   const PrintConfirmationPage({Key? key}) : super(key: key);
@@ -16,7 +13,6 @@ class PrintConfirmationPage extends StatefulWidget {
 }
 
 class _PrintConfirmationPageState extends State<PrintConfirmationPage> {
-  final DataService _dataService = DataService();
   Uint8List? _imageBytes;
 
   @override
@@ -31,71 +27,45 @@ class _PrintConfirmationPageState extends State<PrintConfirmationPage> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (ctx) => const Center(child: CircularProgressIndicator()),
+      builder: (ctx) => const Dialog(child: Padding(padding: EdgeInsets.all(20), child: Row(children: [CircularProgressIndicator(), SizedBox(width: 20), Text("Preparing Print...")]))),
     );
 
-    bool success = false;
-    String errorMessage = 'An unknown error occurred.';
-
     try {
-      // 1. Get the saved printer name
-      final String? printerName = await _dataService.getPrinterName();
-      if (printerName == null || printerName.isEmpty) {
-        throw Exception('No printer configured in settings.');
-      }
-      
-      // --- STEP 2: GENERATE A PDF IN MEMORY ---
-      // This uses the printing package's strength without showing a dialog.
+      // --- PDF CREATION LOGIC ---
+      // 1. Create a new PDF Document
       final doc = pw.Document();
+      // 2. Create a PDF-compatible image from our raw image bytes
       final image = pw.MemoryImage(imageBytes);
-      
+      // 3. Add a page to the document and place the image on it
       doc.addPage(pw.Page(
-        // We can control page orientation and format here if needed
+        // We can add page format options here if needed later
         build: (pw.Context context) {
           return pw.Center(
             child: pw.Image(image),
           );
         },
       ));
+      // 4. Get the raw byte data of the generated PDF
+      final Uint8List pdfData = await doc.save();
+      // --- END OF PDF CREATION ---
+
+      // 5. Pass the VALID PDF data to the printing package
+      final success = await Printing.layoutPdf(
+        onLayout: (format) async => pdfData, // Use the new pdfData
+      );
       
-      // This gives us the raw bytes of the generated PDF file
-      final Uint8List pdfBytes = await doc.save();
-
-      // --- STEP 3: SAVE THE PDF TO A TEMPORARY FILE ---
-      final tempDir = await getTemporaryDirectory();
-      final tempFile = File('${tempDir.path}/to_print.pdf'); // Save as .pdf
-      await tempFile.writeAsBytes(pdfBytes);
-
-      // --- STEP 4: SEND THE PDF FILE TO THE PRINTER USING LP ---
-      var shell = Shell();
-      var result = await shell.run('lp -d "$printerName" "${tempFile.path}"');
-
-      if (result.first.exitCode == 0) {
-        success = true;
-      } else {
-        errorMessage = result.first.stderr as String;
-      }
-
-      // 5. Clean up the temporary file
-      await tempFile.delete();
-
-    } catch (e) {
-      errorMessage = e.toString();
-      print("Printing failed: $e");
-    } finally {
-      if (mounted) Navigator.of(context).pop();
-
-      if (success) {
-        if (mounted) Navigator.of(context).pushNamedAndRemoveUntil('/thank_you', (route) => false);
-      } else {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Printing Failed: $errorMessage'), backgroundColor: Colors.red),
-          );
+      if (context.mounted) {
+        Navigator.of(context).pop(); // Close loading dialog
+        if (success) {
+          Navigator.of(context).pushNamedAndRemoveUntil('/thank_you', (route) => false);
         }
       }
+    } catch (e) {
+      if (context.mounted) Navigator.of(context).pop();
+      print("Printing failed: $e");
     }
-    }
+  }
+  
 
   @override
   Widget build(BuildContext context) {

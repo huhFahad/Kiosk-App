@@ -163,7 +163,6 @@ class DataService {
       allProducts.add(newProductWithId);
     }
 
-    // Write the entire updated list back to the file.
     await writeProducts(allProducts);
   }
 
@@ -220,7 +219,6 @@ class DataService {
         imagePath: newImagePath,
       );
     } else {
-      // This case handles creating a new category entry.
       allCategories.add(Category(name: newName, imagePath: newImagePath));
     }
     
@@ -229,21 +227,36 @@ class DataService {
     if (oldName != newName) {
       final allProducts = await readProducts();
       
-      // Create a new list of updated products.
       final updatedProducts = allProducts.map((product) {
         if (product.category == oldName) {
-          // If the category matches, return a new Product instance
-          // with the category updated.
           return product.copyWith(category: newName);
         } else {
-          // Otherwise, return the original, unchanged product.
           return product;
         }
       }).toList();
       
-      // Save the new list of products.
       await writeProducts(updatedProducts);
     }
+  }
+
+  Future<void> updateSubCategory({
+    required String categoryName, 
+    required String oldSubCategoryName,
+    required String newSubCategoryName,
+    }) async {
+    if (oldSubCategoryName == newSubCategoryName) return;
+
+    final allProducts = await readProducts();
+
+    final updatedProducts = allProducts.map((product) {
+      if (product.category == categoryName && product.subcategory == oldSubCategoryName) {
+        return product.copyWith(subcategory: newSubCategoryName);
+      } else {
+        return product;
+      }
+    }).toList();
+
+    await writeProducts(updatedProducts);
   }
 
   // --- FRAME DATA HANDLING ---

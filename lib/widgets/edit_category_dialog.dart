@@ -47,7 +47,6 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
   void _onSave() async {
     String finalImagePath = _imagePath ?? '';
     if (_imageFile != null) {
-      // If a new image was picked, copy it to the app's directory
       try {
         finalImagePath = await _dataService.saveImage(_imageFile!);
       } catch (e) {
@@ -72,7 +71,7 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center ,
           children: [
             // Name field
             Text('Category Name', style: Theme.of(context).textTheme.labelLarge),
@@ -80,7 +79,7 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
             TextField(
               controller: _nameController,
               decoration: InputDecoration(
-                border: OutlineInputBorder(),
+                enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey,), borderRadius: BorderRadius.circular(15)),
                 hintText: 'Enter category name',
               ),
             ),

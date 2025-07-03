@@ -21,8 +21,9 @@ class _LoadingPageState extends State<LoadingPage> {
   }
 
   Future<void> _initializeApp() async {
+    final startTime = DateTime.now(); // Mark the start
+
     try {
-      // Perform all our async initialization here
       MediaKit.ensureInitialized();
       await dotenv.load(fileName: ".env");
 
@@ -32,22 +33,20 @@ class _LoadingPageState extends State<LoadingPage> {
           throw Exception('Encryption key must be 16 characters long.');
         }
       }
-      
-      // Give it a small delay to ensure everything settles
-      await Future.delayed(const Duration(milliseconds: 500));
 
-      // When initialization is complete, replace this loading page
-      // with the HomePage so the user can't go "back" to it.
+      final elapsed = DateTime.now().difference(startTime);
+      final delay = Duration(seconds: 5) - elapsed;
+
+      if (delay > Duration.zero) {
+        await Future.delayed(delay); // Ensure at least 2 seconds
+      }
+
       if (mounted) {
         Navigator.of(context).pushReplacementNamed('/');
       }
 
     } catch (e) {
-      // If something goes wrong, show an error message
       if (mounted) {
-        // You could navigate to an error page or show a dialog
-        print("FATAL INITIALIZATION ERROR: $e");
-        // For now, we'll just show it on the loading screen
         setState(() {
           _errorMessage = e.toString();
         });
@@ -66,11 +65,12 @@ class _LoadingPageState extends State<LoadingPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Your store logo or a Flutter logo
-            const FlutterLogo(size: 100),
-            const SizedBox(height: 32),
-            const CircularProgressIndicator(),
-            const SizedBox(height: 16),
-            const Text('Initializing...'),
+            // const FlutterLogo(size: 100),
+            Image.asset("assets/icons/loading.gif", width: 200, height: 200),
+            // const SizedBox(height: 32),
+            // const CircularProgressIndicator(),
+            // const SizedBox(height: 16),
+            // const Text('Initializing...'),
             if (_errorMessage != null) ...[
               const SizedBox(height: 24),
               Padding(

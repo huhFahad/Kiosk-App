@@ -1,16 +1,12 @@
 // lib/products_list_page.dart
 
 import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
+import 'theme/kiosk_theme.dart';
 import 'models/product_model.dart';
-// import 'models/cart_model.dart';
 import 'widgets/common_app_bar.dart';
-// import 'widgets/quantity_control_widget.dart';
-// import 'admin_product_list_page.dart'; // For ProductImageView
 import 'widgets/product_list_item.dart';
 import 'widgets/proceed_to_cart_widget.dart';
 
-// An enum to define our sorting options cleanly
 enum ProductSortOption { Default, PriceHighToLow, PriceLowToHigh }
 
 class ProductsListPage extends StatefulWidget {
@@ -19,7 +15,6 @@ class ProductsListPage extends StatefulWidget {
 }
 
 class _ProductsListPageState extends State<ProductsListPage> {
-  // State variables for filters and sorting
   String selectedSubcategory = 'All';
   ProductSortOption _sortOption = ProductSortOption.Default;
   final TextEditingController _searchController = TextEditingController();
@@ -28,7 +23,6 @@ class _ProductsListPageState extends State<ProductsListPage> {
   @override
   void initState() {
     super.initState();
-    // Add a listener to the search controller to update the UI when text changes
     _searchController.addListener(() {
       setState(() {
         _searchQuery = _searchController.text;
@@ -38,18 +32,18 @@ class _ProductsListPageState extends State<ProductsListPage> {
 
   @override
   void dispose() {
-    // IMPORTANT: Clean up the controller
     _searchController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final scale = KioskTheme.scale;
     final arguments = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     final String categoryName = arguments['category'];
     final List<Product> allProducts = arguments['products'];
     
-    final double defaultFontSize = Theme.of(context).textTheme.bodyLarge?.fontSize ?? 24.0;
+    final double defaultFontSize = Theme.of(context).textTheme.bodyLarge?.fontSize ?? 24.0 * scale;
 
     final productsInMainCategory = allProducts.where((p) => p.category == categoryName).toList();
     final subcategories = ['All', ...productsInMainCategory.map((p) => p.subcategory).toSet().toList()];
@@ -61,16 +55,14 @@ class _ProductsListPageState extends State<ProductsListPage> {
 
     // --- SEARCH FILTERING ---
     final searchFilteredProducts = _searchQuery.isEmpty
-      ? subCategoryFilteredProducts // If search is empty, use the list from the previous step
+      ? subCategoryFilteredProducts
       : subCategoryFilteredProducts.where((product) {
-          // Filter by product name or tags
           final nameMatch = product.name.toLowerCase().contains(_searchQuery.toLowerCase());
           final tagMatch = product.tags.any((tag) => tag.toLowerCase().contains(_searchQuery.toLowerCase()));
           return nameMatch || tagMatch;
         }).toList();
 
     // --- SORTING LOGIC ---
-    // Create a mutable copy to sort
     List<Product> sortedProducts = List.from(searchFilteredProducts);
     switch (_sortOption) {
       case ProductSortOption.PriceHighToLow:
@@ -80,7 +72,6 @@ class _ProductsListPageState extends State<ProductsListPage> {
         sortedProducts.sort((a, b) => a.price.compareTo(b.price));
         break;
       case ProductSortOption.Default:
-        // Do nothing, keep original order
         break;
     }
 
@@ -92,7 +83,7 @@ class _ProductsListPageState extends State<ProductsListPage> {
             children: [
               // --- Sub-category Filter Bar ---
               Container(
-                padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+                padding: EdgeInsets.symmetric(vertical: 10.0 * scale, horizontal: 8.0 * scale),
                 child: SizedBox(
                   // height: 40.0,
                   height: defaultFontSize * 2.5,
@@ -102,7 +93,7 @@ class _ProductsListPageState extends State<ProductsListPage> {
                     itemBuilder: (context, index) {
                       final subcategory = subcategories[index];
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        padding: EdgeInsets.symmetric(horizontal: 4.0 * scale),
                         child: ChoiceChip(
                           label: Text(subcategory),
                           selected: selectedSubcategory == subcategory,
@@ -120,11 +111,13 @@ class _ProductsListPageState extends State<ProductsListPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                padding: EdgeInsets.symmetric(horizontal: 16.0 * scale, vertical: 8.0 * scale),
                 child: TextField(
+                  style: TextStyle(fontSize: 16 * scale),
                   controller: _searchController,
                   decoration: InputDecoration(
                     hintText: 'Search within "$categoryName"',
+                    hintStyle: TextStyle(fontSize: 16 * scale),
                     prefixIcon: const Icon(Icons.search),
                     suffixIcon: _searchQuery.isNotEmpty
                         ? IconButton(
@@ -133,42 +126,43 @@ class _ProductsListPageState extends State<ProductsListPage> {
                           )
                         : null,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0),
+                      borderRadius: BorderRadius.circular(100.0),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                    contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 20 * scale),
                   ),
                 ),
               ),
               // --- Sort Options Bar ---
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                padding: EdgeInsets.symmetric(horizontal: 12.0 * scale, vertical: 8.0 * scale),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text("Sort by:", style: TextStyle(fontWeight: FontWeight.bold)),
-                    SizedBox(width: 8),
+                    // Text("Sort by:", style: TextStyle(fontWeight: FontWeight.bold)),
+                    Icon(Icons.sort,),
+                    SizedBox(width: 4 * scale),
                     ChoiceChip(
-                      label: Text('Price: High-Low'),
+                      label: Text('Price: High-Low', style: TextStyle(fontSize: 16 * scale),),
                       selected: _sortOption == ProductSortOption.PriceHighToLow,
                       onSelected: (_) => setState(() => _sortOption = ProductSortOption.PriceHighToLow),
                     ),
                     SizedBox(width: 8),
                     ChoiceChip(
-                      label: Text('Price: Low-High'),
+                      label: Text('Price: Low-High', style: TextStyle(fontSize: 16 * scale),),
                       selected: _sortOption == ProductSortOption.PriceLowToHigh,
                       onSelected: (_) => setState(() => _sortOption = ProductSortOption.PriceLowToHigh),
                     ),
                   ],
                 ),
               ),
-              Divider(),
+              // Divider(),
               // --- Product List ---
               Expanded(
                 child: ListView.builder(
-                  padding: EdgeInsets.all(12),
-                  itemCount: sortedProducts.length, // Use the sorted list
+                  padding: EdgeInsets.all(4 * scale),
+                  itemCount: sortedProducts.length, 
                   itemBuilder: (context, index) {
-                    final product = sortedProducts[index]; // Use the sorted list
+                    final product = sortedProducts[index]; 
                     return ProductListItem(product: product);
                   },
                 ),

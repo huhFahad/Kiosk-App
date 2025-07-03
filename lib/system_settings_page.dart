@@ -25,7 +25,6 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
   final _dataService = DataService();
   String? _currentScreensaverPath;
   String? _currentStoreMapPath;
-  String? _currentPrinterName;
 
   @override
   void initState() {
@@ -35,13 +34,11 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
 
   Future<void> _loadCurrentSettings() async {
     final path = await _dataService.getScreensaverImagePath();
-    final mapPath = await _dataService.getStoreMapPath(); 
-    final printerName = await _dataService.getPrinterName(); 
+    final mapPath = await _dataService.getStoreMapPath();  
     if (mounted) {
       setState(() {
         _currentScreensaverPath = path;
         _currentStoreMapPath = mapPath;
-        _currentPrinterName = printerName;
       });
     }
   }
@@ -59,7 +56,13 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
         content: TextField(
           controller: controller,
           keyboardType: TextInputType.number,
-          decoration: InputDecoration(labelText: 'Seconds until screensaver appears'),
+          decoration: InputDecoration(
+            labelText: 'Seconds until screensaver appears',
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey,), 
+              borderRadius: BorderRadius.circular(15)
+            ),
+          ),
         ),
         actions: [
           TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('Cancel')),
@@ -177,21 +180,40 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                 TextFormField(
                   controller: currentPinController,
                   obscureText: true,
-                  decoration: InputDecoration(labelText: 'Current PIN',  constraints: BoxConstraints(minWidth: 400)),
+                  decoration: InputDecoration(
+                    labelText: 'Current PIN',  
+                    constraints: BoxConstraints(minWidth: 400),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey,), 
+                      borderRadius: BorderRadius.circular(15)
+                    ),
+                  ),
                   validator: (v) => v!.isEmpty ? 'Required' : null,
                 ),
                 SizedBox(height: 20),
                 TextFormField(
                   controller: newPinController,
                   obscureText: true,
-                  decoration: InputDecoration(labelText: 'New PIN'),
+                  decoration: InputDecoration(
+                    labelText: 'New PIN',
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey,), 
+                      borderRadius: BorderRadius.circular(15)
+                    ),
+                  ),
                   validator: (v) => (v?.length ?? 0) < 4 ? 'Min 4 digits' : null,
                 ),
                 SizedBox(height: 7),
                 TextFormField(
                   controller: confirmPinController,
                   obscureText: true,
-                  decoration: InputDecoration(labelText: 'Confirm New PIN'),
+                  decoration: InputDecoration(
+                    labelText: 'Confirm New PIN',
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey,), 
+                      borderRadius: BorderRadius.circular(15)
+                    ),
+                  ),
                   validator: (v) => v != newPinController.text ? 'PINs do not match' : null,
                 ),
               ],
@@ -330,7 +352,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(20.0),
               border: Border.all(
-                color: Theme.of(context).primaryColorLight, // Border color
+                color: Theme.of(context).primaryColor.withAlpha(50), // Border color
                 width: 30.0, // Border width
               ),
             ),
@@ -347,7 +369,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                 const SizedBox(height: 16),
                 Text(
                   'Retail Kiosk App',
-                  style: Theme.of(context).textTheme.headlineSmall,
+                  style: TextStyle(fontFamily: 'School-Notes', fontWeight: FontWeight.bold, fontSize: 24, color: Colors.black),
                 ),
                 Text('Version: ${packageInfo.version}'),
                 const SizedBox(height: 24),
@@ -357,9 +379,10 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                      '© ${DateTime.now().year} Centelon IT Solutions LLP\nAuthor: fahad.kareem@centelon.com',
-                      style: const TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
+                  '© ${DateTime.now().year} Centelon IT Solutions LLP\nAuthor: fahad.kareem@centelon.com',
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+                const SizedBox(height: 16),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
                   child: const Text('CLOSE', style: TextStyle(fontSize: 18)),
@@ -393,7 +416,6 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                 secondary: Icon(Icons.slideshow),
               ),
               if (settingsNotifier.isScreensaverEnabled) ...[
-                const Divider(),
                 _buildSettingsTile(
                   icon: Icons.image,
                   title: 'Change Screensaver Image',
@@ -459,17 +481,6 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                 subtitle: 'View available networks and connect.',
                 onTap: () {
                   AppSettings.openAppSettings(type: AppSettingsType.wifi);
-                },
-              ),
-              _buildSettingsTile(
-                icon: Icons.print,
-                title: 'Printer Settings',
-                subtitle: 'Current Printer: ${_currentPrinterName ?? 'System Default'}',
-                onTap: () {
-                  // Navigate and then refresh the settings when we come back
-                  Navigator.pushNamed(context, '/admin/printers').then((_) {
-                    _loadCurrentSettings();
-                  });
                 },
               ),
 

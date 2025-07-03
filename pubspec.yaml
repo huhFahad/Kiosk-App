@@ -60,10 +60,18 @@ dependencies:
   media_kit_libs_android_video: ^1.3.7
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.13.1
+
   flutter_test:
     sdk: flutter
+
   build_runner: ^2.1.11
   json_serializable: ^6.2.0
+
+# flutter_icons:
+#   android: true
+#   ios: true
+#   image_path: "assets/icons/app_icon.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -93,6 +101,35 @@ flutter:
     - family: HighMount
       fonts:
         - asset: assets/fonts/HighMount.otf
+    - family: School-Notes
+      fonts:
+        - asset: assets/fonts/School-Notes.otf
+    - family: Rakoya
+      fonts:
+        - asset: assets/fonts/Rakoya.ttf
+    - family: Handful_Summer
+      fonts:
+        - asset: assets/fonts/Handful_Summer.otf
+    - family: RoyaleMilano
+      fonts:
+        - asset: assets/fonts/RoyaleMilano-Regular.otf
+        - asset: assets/fonts/RoyaleMilano-RegularItalic.otf
+    - family: Mundial-Sans
+      fonts:
+        - asset: assets/fonts/Mundial-Sans/Fontspring-DEMO-1-mundial-hair-italic-tty.otf
+        - asset: assets/fonts/Mundial-Sans/Fontspring-DEMO-1-mundial-hair-tty.otf
+        - asset: assets/fonts/Mundial-Sans/Fontspring-DEMO-2-mundial-thin-italic-tty.otf
+        - asset: assets/fonts/Mundial-Sans/Fontspring-DEMO-2-mundial-thin-tty.otf
+        - asset: assets/fonts/Mundial-Sans/Fontspring-DEMO-3-mundial-light-italic-tty.otf
+        - asset: assets/fonts/Mundial-Sans/Fontspring-DEMO-3-mundial-light-tty.otf
+        - asset: assets/fonts/Mundial-Sans/Fontspring-DEMO-4-mundial-regular-italic-tty.otf
+        - asset: assets/fonts/Mundial-Sans/Fontspring-DEMO-4-mundial-regular-tty.otf
+        - asset: assets/fonts/Mundial-Sans/Fontspring-DEMO-5-mundial-demibold-italic-tty.otf
+        - asset: assets/fonts/Mundial-Sans/Fontspring-DEMO-5-mundial-demibold-tty.otf
+        - asset: assets/fonts/Mundial-Sans/Fontspring-DEMO-6-mundial-bold-italic-tty.otf
+        - asset: assets/fonts/Mundial-Sans/Fontspring-DEMO-6-mundial-bold-tty.otf
+        - asset: assets/fonts/Mundial-Sans/Fontspring-DEMO-7-mundial-black-italic-tty.otf
+        - asset: assets/fonts/Mundial-Sans/Fontspring-DEMO-7-mundial-black-tty.otf
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

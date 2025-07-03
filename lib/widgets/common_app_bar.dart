@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:kiosk_app/models/cart_model.dart';
 import 'package:provider/provider.dart';
+import 'package:kiosk_app/theme/kiosk_theme.dart';
 
 typedef VoidCallback = void Function();
 
@@ -15,9 +16,10 @@ PreferredSizeWidget CommonAppBar({
   List<Widget>? extraActions,
 }) {
   final canPop = Navigator.of(context).canPop();
+  final scale = KioskTheme.scale;
   
-  // const double actionZoneWidth = 237.2;
-  const double actionZoneWidth = 65;
+  // double actionZoneWidth = 237.2;
+  double actionZoneWidth = 60 * scale;
 
   return AppBar(
     leadingWidth: actionZoneWidth, 
@@ -27,7 +29,7 @@ PreferredSizeWidget CommonAppBar({
           alignment: Alignment.centerLeft,
           child: IconButton(
             icon: Icon(Icons.arrow_back_ios_rounded),
-            iconSize: 30, 
+            iconSize: 45 * scale, 
             onPressed: () => Navigator.of(context).pop(),
             tooltip: 'Back',
           ),
@@ -38,8 +40,8 @@ PreferredSizeWidget CommonAppBar({
     title: Text(
       title,
       overflow: TextOverflow.ellipsis,
-      style: const TextStyle(
-        fontSize: 24,
+      style: TextStyle(
+        fontSize: 32 * scale,
         fontWeight: FontWeight.bold,
       ),
     ),
@@ -54,7 +56,7 @@ PreferredSizeWidget CommonAppBar({
             if (showHomeButton)
               IconButton(
                 icon: Icon(Icons.home_outlined),
-                iconSize: 30,
+                iconSize: 45 * scale,
                 tooltip: 'Go to Home',
                 onPressed: () {
                   Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
@@ -66,7 +68,7 @@ PreferredSizeWidget CommonAppBar({
             // if (showCartButton)
             //   IconButton(
             //     icon: Icon(Icons.shopping_cart_outlined),
-            //     iconSize: 70,
+            //     iconSize: 45 * scale,
             //     tooltip: 'View Cart',
             //     onPressed: () {
             //       Navigator.of(context).pushNamed('/cart');
@@ -76,14 +78,14 @@ PreferredSizeWidget CommonAppBar({
             if (showSaveButton)
               IconButton(
                 icon: Icon(Icons.save_outlined),
-                iconSize: 30,
+                iconSize: 45 * scale,
                 tooltip: 'Save',
                 onPressed: onSavePressed,
               ),
             
             if (extraActions != null) ...extraActions,
 
-            // const SizedBox(width: 30),
+            SizedBox(width: 10 * scale),
           ],
         ),
       ),
@@ -96,14 +98,15 @@ class _CartBadge extends StatelessWidget {
 
   @override
     Widget build(BuildContext context) {
+      final scale = KioskTheme.scale;
       return Consumer<CartModel>(
         builder: (context, cart, child) {
           return Stack(
             alignment: Alignment.center,
             children: [cart.itemCount == 0
               ? IconButton(
-                  icon: const Icon(Icons.shopping_cart_outlined),
-                  iconSize: 30,
+                  icon: Icon(Icons.shopping_cart_outlined),
+                  iconSize: 45 * scale,
                   tooltip: 'View Cart',
                   onPressed: () {
                     Navigator.pushNamed(context, '/cart');
@@ -111,7 +114,7 @@ class _CartBadge extends StatelessWidget {
                 )
               : IconButton(
                   icon: const Icon(Icons.shopping_cart),
-                  iconSize: 30,
+                  iconSize: 45 * scale,
                   tooltip: 'View Cart',
                   onPressed: () {
                     Navigator.pushNamed(context, '/cart');
@@ -127,24 +130,24 @@ class _CartBadge extends StatelessWidget {
                         key: const ValueKey('cartBadge'),
                         alignment: Alignment.topRight,
                         child: Padding(
-                          padding: const EdgeInsets.only(bottom: 44, left: 44),
+                          padding: EdgeInsets.only(bottom: 24 * scale, left: 24 * scale),
                           child: Container(
-                            padding: const EdgeInsets.all(2.0),
+                            padding: EdgeInsets.all(2.0 * scale),
                             decoration: BoxDecoration(
                               color: const Color.fromARGB(255, 255, 255, 255),
                               shape: BoxShape.circle,
-                              border: Border.all(color: Theme.of(context).primaryColor, width: 2),
+                              border: Border.all(color: Theme.of(context).primaryColor, width: 1.5 * scale),
                             ),
-                            constraints: const BoxConstraints(
-                              minWidth: 28,
-                              minHeight: 28,
+                            constraints: BoxConstraints(
+                              minWidth: 18 * scale,
+                              minHeight: 18 * scale,
                             ),
                             child: Center(
                               child: Text(
                                 '${cart.itemCount}',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Color.fromARGB(255, 0, 0, 0),
-                                  fontSize: 16,
+                                  fontSize: 10 * scale,
                                   fontWeight: FontWeight.bold,
                                 ),
                                 textAlign: TextAlign.center,

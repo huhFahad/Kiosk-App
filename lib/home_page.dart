@@ -1,6 +1,8 @@
 // lib/home_page.dart
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:kiosk_app/services/data_service.dart';
+import 'package:kiosk_app/theme/kiosk_theme.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -8,8 +10,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final scale = KioskTheme.scale;
   final _searchController = TextEditingController();
   final DataService _dataService = DataService();
+  Timer? _longPressTimer;
 
   @override
   void initState() {
@@ -22,6 +26,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     _searchController.dispose();
+    _longPressTimer?.cancel();
     super.dispose();
   }
   
@@ -100,26 +105,36 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset(
-                            "assets/images/urban_rain_logo.png",
-                            width: 700,
-                            // height: 500,
-                            fit: BoxFit.contain,
+                          GestureDetector(
+                            onLongPressStart: (_) {
+                              _longPressTimer = Timer(const Duration(seconds: 3), () {
+                                _showAdminPinDialog(context);
+                              });
+                            },
+                            onLongPressEnd: (_) {
+                              _longPressTimer?.cancel(); 
+                            },
+                            child: Image.asset(
+                              "assets/images/urban_rain_logo.png",
+                              width: 550 * scale,
+                              fit: BoxFit.contain,
+                            ),
                           ),
-                          const SizedBox(height: 20),
-                          const Text(
-                            'Welcome to Urban Rain',
+                          SizedBox(height: 25 * scale),
+                          Text(
+                            'Welcome to Urban Rain!',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.black,
-                              fontSize: 30,
-                              fontWeight: FontWeight.normal,
+                              fontSize: 50 * scale,
+                              fontFamily: 'Handful_Summer',
+                              // fontStyle: FontStyle.italic,
+                              // fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 40),
+                          SizedBox(height: 40 * scale),
                           SizedBox(
-                            width: 900,
-                            // This is now a standard, editable TextField
+                            width: 620 * scale,
                             child: TextField(
                               controller: _searchController,
                               textAlign: TextAlign.center,
@@ -146,71 +161,84 @@ class _HomePageState extends State<HomePage> {
                               onSubmitted: (_) => _executeSearch(context),
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          SizedBox(height: 20 * scale),
                           Text(
                             "or",
-                            style: TextStyle(color: Colors.grey.shade600, fontSize: 30),
+                            style: TextStyle(color: Colors.grey.shade600, fontSize: 20 * scale),
                           ),
-                          const SizedBox(height: 20),
+                          SizedBox(height: 20 * scale),
                           SizedBox(
-                            width: 300, height: 100,
+                            width: 390 * scale, height: 100 * scale,
                             child: ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
+                                  borderRadius: BorderRadius.circular(100),
                                 ),
-                                elevation: 6, // This keeps the shadow
+                                elevation: 6,
                               ),
-                              icon: Icon(Icons.grid_view_rounded, size: 35),
+                              icon: Icon(Icons.grid_view_rounded, size: 35 * scale),
                               onPressed: () => _goTo(context, '/categories'),
-                              label: Text('Browse All Products', style: TextStyle(fontSize: 25)),
+                              label: Text(
+                                'Browse All Products', 
+                                // 'BROWSE ALL PRODUCTS',
+                                style: TextStyle(
+                                  fontSize: 28 * scale,
+                                )
+                              ),
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          SizedBox(height: 20 * scale),
                           SizedBox(                     
-                            width: 300, height: 100,
+                            width: 390 * scale, height: 100 * scale,
                             child: ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
+                                  borderRadius: BorderRadius.circular(100),
                                 ),
-                                elevation: 6, // This keeps the shadow
+                                elevation: 6,
                               ),
-                              icon: Icon(Icons.map_rounded, size: 35),
+                              icon: Icon(Icons.map_rounded, size: 35 * scale),
                               onPressed: () => _goTo(context, '/map'),
-                              label: Text('Find Product on Map', style: TextStyle(fontSize: 25)),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          SizedBox(
-                            width: 300, height: 100,
-                            child: ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                                elevation: 6, // This keeps the shadow
+                              label: Text(
+                                'Find Product on Map',
+                                // 'FIND PRODUCT ON MAP', 
+                                style: TextStyle(
+                                  fontSize: 28 * scale,
+                                  // fontFamily: 'Rakoya',
+                                )
                               ),
-                              icon: Icon(Icons.shopping_cart_rounded, size: 35),
-                              onPressed: () => _goTo(context, '/cart'),
-                              label: Text('View Your Cart', style: TextStyle(fontSize: 25)),
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          SizedBox(height: 20 * scale),
                           SizedBox(
-                            width: 300, height: 100,
+                            width: 390 * scale, height: 100 * scale,
                             child: ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                elevation: 6,
+                              ),
+                              icon: Icon(Icons.shopping_cart_rounded, size: 35 * scale),
+                              onPressed: () => _goTo(context, '/cart'),
+                              label: Text('View Your Cart', style: TextStyle(fontSize: 28 * scale)),
+                            ),
+                          ),
+                          SizedBox(height: 20 * scale),
+                          SizedBox(
+                            width: 390 * scale, height: 100 * scale,
+                            child: ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(100),
                                 ),
                                 foregroundColor: Colors.white,
                                 backgroundColor: Theme.of(context).primaryColor,                                
-                                elevation: 6, // This keeps the shadow
+                                elevation: 6, 
                               ),
-                              icon: Icon(Icons.print_rounded, size: 35, color: Colors.white),
+                              icon: Icon(Icons.print_rounded, size: 35 * scale, color: Colors.white),
                               onPressed: () => _goTo(context, '/photo_upload'),
-                              label: Text('Print Photos', style: TextStyle(fontSize: 25, color: Colors.white)),
+                              label: Text('Print Photos', style: TextStyle(fontSize: 28 * scale, color: Colors.white)),
                             ),
                           ),
                         ],
@@ -221,16 +249,16 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          Positioned(
-            bottom: 10,
-            left: 10,
-            child: GestureDetector(
-              onLongPress: () => _showAdminPinDialog(context),
-              child: Icon(Icons.icecream_outlined, size: 50,
-                color: Colors.black.withOpacity(0.6),
-              ),
-            ),
-          ),
+          // Positioned(
+          //   bottom: 10,
+          //   left: 10,
+          //   child: GestureDetector(
+          //     onLongPress: () => _showAdminPinDialog(context),
+          //     child: Icon(Icons.icecream_outlined, size: 50 * scale,
+          //       color: Colors.black.withOpacity(0.6),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

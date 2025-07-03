@@ -7,7 +7,7 @@ class AdminDashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Admin Dashboard', style: TextStyle(fontSize: 30)),
+        title: Text('Admin Dashboard', style: TextStyle(fontSize: 25)),
         automaticallyImplyLeading: false, // Prevents back button
         actions: [
           IconButton(
@@ -23,9 +23,9 @@ class AdminDashboardPage extends StatelessWidget {
       body: GridView.count(
         crossAxisCount: 2,
         padding: EdgeInsets.all(16.0),
-        childAspectRatio: 1.2,
-        crossAxisSpacing: 16.0,
-        mainAxisSpacing: 16.0,
+        childAspectRatio: 1.0,
+        crossAxisSpacing: 6.0,
+        mainAxisSpacing: 12.0,
         children: [
           _buildDashboardCard(context, 'Manage Products', Icons.shopping_bag, () {
             Navigator.pushNamed(context, '/admin/products');

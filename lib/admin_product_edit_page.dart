@@ -174,7 +174,7 @@ class _AdminProductEditPageState extends State<AdminProductEditPage> {
   Widget _buildNameField() {
     return TextFormField(
       initialValue: _name,
-      decoration: InputDecoration(labelText: 'Product Name'),
+      decoration: InputDecoration(labelText: 'Product Name', enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey,), borderRadius: BorderRadius.circular(15)),),
       validator: (value) => value!.isEmpty ? 'Please enter a name' : null,
       onSaved: (value) => _name = value,
     );
@@ -192,7 +192,7 @@ class _AdminProductEditPageState extends State<AdminProductEditPage> {
 
     return DropdownButtonFormField<String>(
       value: currentValue,
-      decoration: InputDecoration(labelText: label),
+      decoration: InputDecoration(labelText: label, enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey,), borderRadius: BorderRadius.circular(15)),),
       items: dropdownItems.map((item) {
         if (item == _addNewValue) {
           return DropdownMenuItem(
@@ -245,7 +245,7 @@ class _AdminProductEditPageState extends State<AdminProductEditPage> {
           content: TextField(
             controller: controller,
             autofocus: true,
-            decoration: InputDecoration(hintText: 'Enter new $label name'),
+            decoration: InputDecoration(hintText: 'Enter new $label name', enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey,), borderRadius: BorderRadius.circular(15)),),
           ),
           actions: [
             TextButton(
@@ -267,7 +267,7 @@ class _AdminProductEditPageState extends State<AdminProductEditPage> {
   Widget _buildPriceField() {
     return TextFormField(
       initialValue: _price?.toString(),
-      decoration: InputDecoration(labelText: 'Price'),
+      decoration: InputDecoration(labelText: 'Price', enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey,), borderRadius: BorderRadius.circular(15)),),
       keyboardType: TextInputType.numberWithOptions(decimal: true),
       validator: (value) => (value!.isEmpty || double.tryParse(value) == null) ? 'Please enter a valid price' : null,
       onSaved: (value) => _price = double.tryParse(value!),
@@ -413,20 +413,22 @@ class _AdminProductEditPageState extends State<AdminProductEditPage> {
                       const Text('No location set.', style: TextStyle(fontStyle: FontStyle.italic)),
                   ],
                 ),                
-                SizedBox(height: 100),
+                SizedBox(height: 20),
+                Divider(),
                 TextFormField(
                   controller: _tagsController,
                   decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey,), borderRadius: BorderRadius.circular(15)),
                     labelText: 'Search Tags',
                     hintText: 'e.g., morning, breakfast, healthy, snack',
                     helperText: 'Enter tags separated by commas',
                   ),
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: _saveForm,
+                  style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 50), foregroundColor: Colors.white, backgroundColor: Theme.of(context).primaryColor),  
                   child: Padding(padding: const EdgeInsets.symmetric(vertical: 16.0), child: Text('Save Product')),
-                  style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 50)),
                 ),
               ],
             ),
