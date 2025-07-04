@@ -38,8 +38,8 @@ class KioskTheme {
   }
   
   // --- CARD THEME ---
-  static CardTheme get cardTheme {
-    return CardTheme(
+  static CardThemeData get cardTheme {
+    return CardThemeData(
       elevation: 4,
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       shape: RoundedRectangleBorder(
