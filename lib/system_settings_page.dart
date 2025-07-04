@@ -322,18 +322,18 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: Colors.transparent, // So the outer Container controls background
-          contentPadding: EdgeInsets.zero, // Remove default padding so our Container controls layout
+          backgroundColor: Colors.transparent,
+          contentPadding: EdgeInsets.zero,
           content: Container(
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(20.0),
               border: Border.all(
-                color: Theme.of(context).primaryColorLight, // Border color
-                width: 30.0, // Border width
+                color: Theme.of(context).primaryColorLight, 
+                width: 30.0, 
               ),
             ),
-            padding: const EdgeInsets.all(24.0), // Inner padding inside the border
+            padding: const EdgeInsets.all(24.0), 
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -401,7 +401,7 @@ class _SystemSettingsPageState extends State<SystemSettingsPage> {
                 secondary: Icon(Icons.slideshow),
               ),
               if (settingsNotifier.isScreensaverEnabled) ...[
-                const Divider(),
+                // const Divider(),
                 _buildSettingsTile(
                   icon: Icons.image,
                   title: 'Change Screensaver Image',

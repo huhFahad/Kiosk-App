@@ -1,4 +1,4 @@
-package com.example.kiosk_app
+package com.centelon.kiosk_app
 
 import io.flutter.embedding.android.FlutterActivity
 
