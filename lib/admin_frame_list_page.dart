@@ -1,6 +1,7 @@
 // lib/admin_frame_list_page.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:kiosk_app/theme/kiosk_theme.dart';
 import 'widgets/common_app_bar.dart'; 
 import 'models/frame_model.dart';
 import 'services/data_service.dart';
@@ -33,15 +34,40 @@ class _AdminFrameListPageState extends State<AdminFrameListPage> {
         builder: (ctx) => AdminFrameEditPage(frame: frame),
       ),
     ).then((didSaveChanges) {
-      // If the edit page pops with 'true', it means we should refresh.
       if (didSaveChanges == true) {
         _refreshFrames();
       }
     });
   }
 
+  void _showDeleteConfirmation(Frame frame) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Delete Frame?'),
+        content: Text('Are you sure you want to permanently delete the "${frame.name}" frame? This action cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.of(ctx).pop(); // Close dialog
+              await _dataService.deleteFrame(frame.id);
+              _refreshFrames(); // Refresh the list to show the change
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: Text('Yes, Delete'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final scale = KioskTheme.scale; 
     return Scaffold(
       appBar: CommonAppBar(
         context: context, 
@@ -65,18 +91,18 @@ class _AdminFrameListPageState extends State<AdminFrameListPage> {
           final frames = snapshot.data!;
           return GridView.builder(
             padding: const EdgeInsets.all(8.0),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, // 2 frames per row
-              crossAxisSpacing: 8.0,
-              mainAxisSpacing: 8.0,
-              childAspectRatio: 0.6, // Adjust to make cards taller or shorter
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, 
+              crossAxisSpacing: 8.0 * scale,
+              mainAxisSpacing: 8.0  * scale,
+              childAspectRatio: 0.6, 
             ),
             itemCount: frames.length,
             itemBuilder: (context, index) {
               final frame = frames[index];
               // --- EACH ITEM IS A CUSTOM CARD WIDGET ---
               return Card(
-                clipBehavior: Clip.antiAlias, // Ensures the image respects the card's rounded corners
+                clipBehavior: Clip.antiAlias, 
                 elevation: 4,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -84,13 +110,13 @@ class _AdminFrameListPageState extends State<AdminFrameListPage> {
                     // --- THE PREVIEW ---
                     Expanded(
                       child: Container(
-                        color: Colors.grey.shade200, // A background for the transparent parts
+                        color: Colors.grey.shade200,
                         child: _buildFrameThumbnail(frame.imagePath),
                       ),
                     ),
                     // --- FRAME NAME ---
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0 * scale),
                       child: Text(
                         frame.name,
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
@@ -116,8 +142,7 @@ class _AdminFrameListPageState extends State<AdminFrameListPage> {
                           IconButton(
                             icon: Icon(Icons.delete, color: Colors.red.shade700),
                             onPressed: () {
-                              // TODO: Implement delete with confirmation
-                              print('Deleting ${frame.name}');
+                              _showDeleteConfirmation(frame);
                             },
                             tooltip: 'Delete Frame',
                           ),

@@ -261,6 +261,25 @@ class DataService {
 
   // --- FRAME DATA HANDLING ---
 
+  Future<void> deleteFrame(String frameId) async {
+    final allFrames = await readFrames();
+    final frameToDelete = allFrames.firstWhere((f) => f.id == frameId, orElse: () => Frame(id: '', name: '', imagePath: ''));
+    if (frameToDelete.imagePath.isNotEmpty && !frameToDelete.imagePath.startsWith('assets/')) {
+      try {
+        final imageFile = File(frameToDelete.imagePath);
+        if (await imageFile.exists()) {
+          await imageFile.delete();
+          print('Deleted frame image file: ${frameToDelete.imagePath}');
+        }
+      } catch (e) {
+        print('Error deleting frame image file: $e');
+      }
+    }
+
+    allFrames.removeWhere((f) => f.id == frameId);
+    await saveFrames(allFrames);
+  }
+
   Future<File> get _localFramesFile async {
     final path = await _localPath;
     return File('$path/frames.json');

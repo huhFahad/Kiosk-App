@@ -1,20 +1,24 @@
 // lib/admin_dashboard_page.dart
 
 import 'package:flutter/material.dart';
+import 'package:kiosk_app/theme/kiosk_theme.dart';
+import 'package:kiosk_app/widgets/common_app_bar.dart';
 
 class AdminDashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final scale = KioskTheme.scale;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Admin Dashboard', style: TextStyle(fontSize: 25)),
-        automaticallyImplyLeading: false, // Prevents back button
-        actions: [
+      appBar: CommonAppBar(
+        context: context,
+        title: 'Admin Dashboard',
+        showCartButton: false,
+        showHomeButton: false,
+        extraActions: [
           IconButton(
-            icon: Icon(Icons.exit_to_app, size: 35,),
+            icon: Icon(Icons.exit_to_app, size: 45 * scale,),
             tooltip: 'Exit Admin Mode',
             onPressed: () {
-              // Navigate back to home and remove all admin pages from history
               Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
             },
           )
@@ -22,10 +26,10 @@ class AdminDashboardPage extends StatelessWidget {
       ),
       body: GridView.count(
         crossAxisCount: 2,
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0 * scale),
         childAspectRatio: 1.0,
-        crossAxisSpacing: 6.0,
-        mainAxisSpacing: 12.0,
+        crossAxisSpacing: 6.0 * scale,
+        mainAxisSpacing: 12.0 * scale,
         children: [
           _buildDashboardCard(context, 'Manage Products', Icons.shopping_bag, () {
             Navigator.pushNamed(context, '/admin/products');
@@ -51,6 +55,7 @@ class AdminDashboardPage extends StatelessWidget {
   }
 
   Widget _buildDashboardCard(BuildContext context, String title, IconData icon, VoidCallback onTap) {
+    final scale = KioskTheme.scale;
     return Card(
       elevation: 4,
       child: InkWell(
@@ -58,9 +63,9 @@ class AdminDashboardPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 50, color: Theme.of(context).primaryColor,),
-            SizedBox(height: 10),
-            Text(title, textAlign: TextAlign.center, style: TextStyle(fontSize: 15)),
+            Icon(icon, size: 100 * scale, color: Theme.of(context).primaryColor,),
+            SizedBox(height: 10 * scale),
+            Text(title, textAlign: TextAlign.center, style: TextStyle(fontSize: 22 * scale)),
           ],
         ),
       ),

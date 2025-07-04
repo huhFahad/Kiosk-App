@@ -1,6 +1,7 @@
 // lib/cart_page.dart
 
 import 'package:flutter/material.dart';
+import 'package:kiosk_app/theme/kiosk_theme.dart';
 import 'package:provider/provider.dart';
 import 'models/cart_model.dart';
 import 'admin_product_list_page.dart';
@@ -12,11 +13,10 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+  final scale = KioskTheme.scale;
   void _showClearCartConfirmation() {
-    // Get the CartModel once, without listening.
     final cart = Provider.of<CartModel>(context, listen: false);
 
-    // Don't show the dialog if the cart is already empty.
     if (cart.items.isEmpty) {
       return;
     }
@@ -24,19 +24,41 @@ class _CartPageState extends State<CartPage> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Clear Cart?'),
-        content: Text('Are you sure you want to remove all items from your cart?'),
+        title: Text(
+          'Clear Cart?', 
+          style: TextStyle(
+            fontSize: 24 * scale
+          ),
+        ),
+        content: Text(
+          'Are you sure you want to remove all items from your cart?',
+          style: TextStyle(
+            fontSize: 18 * scale,
+            height: 1 * scale
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: Text('Cancel'),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                fontSize: 18 * scale,
+              ),
+            ),
           ),
           TextButton(
             onPressed: () {
               Navigator.of(ctx).pop();
               cart.clear(); 
             },
-            child: Text('Clear', style: TextStyle(color: Colors.red)),
+            child: Text(
+              'Clear', 
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: 18 * scale,
+              )
+            ),
           ),
         ],
       ),
@@ -49,20 +71,20 @@ class _CartPageState extends State<CartPage> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Confirm Your Order'),
+        title: Text('Confirm Your Order', style: TextStyle(fontSize: 24 * scale),),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(40.0)
+          borderRadius: BorderRadius.circular(35.0 * scale)
         ),
         content: Text(
           '\nYou are about to place an order for ${cart.itemCount} items, '
           'totaling ₹${cart.totalPrice.toStringAsFixed(2)}.\n\nDo you wish to proceed?',
-          style: TextStyle(fontSize: 16, height: 1.2),
+          style: TextStyle(fontSize: 18 * scale, height: 1 * scale),
           softWrap: true,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: Text('Go Back'),
+            child: Text('Go Back', style: TextStyle(fontSize: 18 * scale),),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -74,7 +96,7 @@ class _CartPageState extends State<CartPage> {
               final String orderId = cart.placeOrder();
               Navigator.pushNamed(context, '/confirmation', arguments: orderId);
             },
-            child: Text('Confirm'),
+            child: Text('Confirm', style: TextStyle(fontSize: 18 * scale),),
           ),
         ],
       ),
@@ -98,9 +120,9 @@ class _CartPageState extends State<CartPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Icon((Icons.shopping_cart_outlined) , size: 240, color: Color.fromARGB(255, 233, 226, 226)),
-                  SizedBox(height: 20),
-                  const Text('Your cart is empty.', style: TextStyle(fontSize: 24)),
+                  Icon((Icons.shopping_cart_outlined) , size: 240 * scale, color: Color.fromARGB(255, 233, 226, 226)),
+                  SizedBox(height: 20 * scale),
+                  Text('Your cart is empty.', style: TextStyle(fontSize: 24 * scale)),
                 ]
               ),
             ); 
@@ -109,40 +131,39 @@ class _CartPageState extends State<CartPage> {
             children: [
               Expanded(
                 child: ListView.builder(
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(8.0 * scale),
                   itemCount: cart.items.length,
                   itemBuilder: (context, index) {
                     final cartItem = cart.items[index];
                     return Card(
-                      margin: EdgeInsets.symmetric(vertical: 4.0),
+                      margin: EdgeInsets.symmetric(vertical: 4.0 * scale),
                       child: ListTile(
                         leading: ProductImageView(
-                          // width: 80,
-                          // height: 80,
+                          // width: 80 * scale,
+                          // height: 120 * scale,
                           imagePath: cartItem.product.image
                         ),
-                        title: Text(cartItem.product.name, style: TextStyle(fontSize: 18)),
-                        subtitle: Text('₹${cartItem.product.price.toStringAsFixed(2)}', style: TextStyle(fontSize: 14,)),
+                        title: Text(cartItem.product.name, style: TextStyle(fontSize: 24 * scale)),
+                        subtitle: Text('₹${cartItem.product.price.toStringAsFixed(2)}', style: TextStyle(fontSize: 18 * scale,)),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: Icon(Icons.remove),
+                              icon: Icon(Icons.remove, size: 28 * scale,),
                               onPressed: () => cart.decreaseQuantity(cartItem),
                             ),
-                            Text(cartItem.quantity.toString(), style: TextStyle(fontSize: 22)),
+                            Text(cartItem.quantity.toString(), style: TextStyle(fontSize: 22 * scale)),
                             IconButton(
-                              icon: Icon(Icons.add, size: 28,),
+                              icon: Icon(Icons.add, size: 28 * scale,),
                               onPressed: () => cart.add(cartItem.product),
                             ),
 
-                            // SizedBox(width: 6,),
+                            // SizedBox(width: 6 * scale,),
 
-                            // A divider for visual separation
-                            // VerticalDivider(), 
+                            VerticalDivider(color: Colors.grey,), 
 
                             IconButton(
-                              icon: Icon(Icons.delete_outline, color: Colors.red.shade700, size: 25,),
+                              icon: Icon(Icons.delete_outline, color: Colors.red.shade700, size: 25 * scale,),
                               tooltip: 'Remove from cart',
                               onPressed: () {
                                 showDialog(
@@ -177,7 +198,7 @@ class _CartPageState extends State<CartPage> {
               ),
 
               Container(
-                padding: const EdgeInsets.all(10.0),
+                padding: EdgeInsets.all(10.0 * scale),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   boxShadow: [
@@ -195,7 +216,7 @@ class _CartPageState extends State<CartPage> {
                       children: [
                         Text(
                           'Number of Items:  ${cart.itemCount} ',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 20 * scale, fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -203,50 +224,45 @@ class _CartPageState extends State<CartPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         TextButton.icon(
-                          icon: Icon(Icons.delete_sweep_outlined, size: 25,),
-                          label: Text('Clear Cart', style: TextStyle(fontSize: 16),),
+                          icon: Icon(Icons.delete_sweep_outlined, size: 30 * scale,),
+                          label: Text('Clear Cart', style: TextStyle(fontSize: 20 * scale),),
                           onPressed: _showClearCartConfirmation,
                         ),
-                        Text('Total:  ₹${cart.totalPrice.toStringAsFixed(2)} ', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black)),
-                        // Text('₹${cart.totalPrice.toStringAsFixed(2)}', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
+                        Text(
+                          'Total:  ₹${cart.totalPrice.toStringAsFixed(2)} ',
+                          style: TextStyle(
+                            fontSize: 25 * scale, 
+                            fontWeight: FontWeight.bold, 
+                            color: Colors.black
+                          )
+                        ),
                       ],
                     ),
-                    SizedBox(height: 6),
-                    
-                    // The "Place Order" button.
+                    SizedBox(height: 6 * scale),
+
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(vertical: 20),
+                          padding: EdgeInsets.symmetric(vertical: 20 * scale),
                           backgroundColor: Colors.green, 
                           foregroundColor: Colors.white, 
                         ),
                         onPressed: _showPlaceOrderConfirmation,
-                        child: Text('Place Order', style: TextStyle(fontSize: 30,)),
+                        child: Text(
+                          'Place Order', 
+                          style: TextStyle(
+                            fontSize: 30 * scale,
+                            fontWeight: FontWeight.bold,
+                          )
+                        ),
                       ),
                     ),
+
+                    SizedBox(height: 12 * scale),
                   ],
                 ),
               ),
-
-              // This is the total price bar at the bottom
-              // Padding(
-              //   padding: const EdgeInsets.all(16.0),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //     children: [
-              //       Text(
-              //         'Number of Items:  ${cart.itemCount}',
-              //         style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              //       ),
-              //       Text(
-              //         'Total:  ₹${cart.totalPrice.toStringAsFixed(2)}',
-              //         style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              //       ),
-              //     ],
-              //   ),
-              // ),
             ],
           );
         },

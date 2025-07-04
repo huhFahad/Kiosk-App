@@ -95,7 +95,8 @@ class _ProductsListPageState extends State<ProductsListPage> {
                       return Padding(
                         padding: EdgeInsets.symmetric(horizontal: 4.0 * scale),
                         child: ChoiceChip(
-                          label: Text(subcategory),
+                          padding: EdgeInsets.fromLTRB(5,5,5,40) ,
+                          label: Text(subcategory, style: TextStyle(fontSize: 20 * scale),),
                           selected: selectedSubcategory == subcategory,
                           onSelected: (isSelected) {
                             if (isSelected) {

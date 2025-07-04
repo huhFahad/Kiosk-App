@@ -54,16 +54,17 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Admin Access'),
+          title: Text('Admin Access', style: TextStyle(fontSize: 24 * scale),),
           content: TextField(
+            style: TextStyle(fontSize: 16 * scale),
             controller: pinController,
             keyboardType: TextInputType.number,
             obscureText: true,
             decoration: const InputDecoration(hintText: 'Enter PIN'),
-            autofocus: true, // This should trigger the OSK in the dialog
+            autofocus: true,
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+            TextButton(onPressed: () => Navigator.pop(context), child: Text('Cancel', style: TextStyle(fontSize: 19 * scale),)),
             ElevatedButton(
               onPressed: () async {
                 final String savedPin = await dataService.getAdminPin();
@@ -80,7 +81,7 @@ class _HomePageState extends State<HomePage> {
                     }
                   }
                 },
-              child: Text('Login'),
+              child: Text('Login', style: TextStyle(fontSize: 19 * scale),),
             ),
           ],
         );
@@ -136,14 +137,15 @@ class _HomePageState extends State<HomePage> {
                           SizedBox(
                             width: 620 * scale,
                             child: TextField(
+                              style: TextStyle(fontSize: 18 * scale),
                               controller: _searchController,
                               textAlign: TextAlign.center,
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: Colors.white,
-                                label: Text('Search for products'),
+                                label: Text('Search for products', style: TextStyle(fontSize: 18 * scale),),
                                 hintText: 'Apples, Mobile Phones.. etc',
-                                hintStyle: TextStyle(color: const Color.fromARGB(255, 142, 142, 142)),
+                                hintStyle: TextStyle(fontSize: 18 * scale, color: const Color.fromARGB(255, 142, 142, 142)),
                                 prefixIcon: Icon(Icons.search, color: Theme.of(context).primaryColor,),
                                 suffixIcon: _searchController.text.isNotEmpty
                                   ? IconButton(

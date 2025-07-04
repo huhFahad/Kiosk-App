@@ -2,12 +2,12 @@
 
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:kiosk_app/theme/kiosk_theme.dart';
 import 'models/product_model.dart';
 import 'models/category_model.dart';
 import 'services/data_service.dart';
 import 'admin_product_edit_page.dart';
 import 'widgets/common_app_bar.dart';
-// import 'package:image_picker/image_picker.dart';
 import '../widgets/edit_category_dialog.dart';
 
 class AdminProductListPage extends StatefulWidget {
@@ -16,6 +16,7 @@ class AdminProductListPage extends StatefulWidget {
 }
 
 class _AdminProductListPageState extends State<AdminProductListPage> {
+  final scale = KioskTheme.scale;
   final DataService _dataService = DataService();
   late Future<List<Product>> _productsFuture;
 
@@ -61,15 +62,19 @@ class _AdminProductListPageState extends State<AdminProductListPage> {
     final newName = await showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Rename Sub-category'),
+        title: Text('Rename Sub-category', style: TextStyle(fontSize: 24 * scale),),
         content: TextField(
+          style: TextStyle(fontSize: 18 * scale),
           controller: nameController,
           autofocus: true,
-          decoration: InputDecoration(labelText: 'New sub-category name'),
+          decoration: InputDecoration(
+            labelText: 'New sub-category name',
+            labelStyle: TextStyle(fontSize: 18 * scale), 
+          ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(ctx).pop(), child: Text('Cancel')),
-          ElevatedButton(onPressed: () => Navigator.of(ctx).pop(nameController.text), child: Text('Save')),
+          TextButton(onPressed: () => Navigator.of(ctx).pop(), child: Text('Cancel', style: TextStyle(fontSize: 18 * scale),)),
+          ElevatedButton(onPressed: () => Navigator.of(ctx).pop(nameController.text), child: Text('Save', style: TextStyle(fontSize: 18 * scale),)),
         ],
       ),
     );
@@ -132,16 +137,21 @@ class _AdminProductListPageState extends State<AdminProductListPage> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Are you sure?'),
-        content: Text('Do you want to permanently delete "${product.name}"?'),
+        title: Text('Are you sure?', style: TextStyle(fontSize: 24 * scale ),),
+        content: Text(
+          'Do you want to permanently delete "${product.name}"?',
+          style: TextStyle(fontSize: 18 * scale),
+        ),
         actions: [
           TextButton(
-            child: Text('No'),
+            child: Text('No', style: TextStyle(fontSize: 18 * scale),),
             onPressed: () => Navigator.of(ctx).pop(),
           ),
           ElevatedButton(
-            child: Text('Yes, Delete'),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red, 
+              foregroundColor: Colors.white
+            ),
             onPressed: () async {
               Navigator.of(ctx).pop();
               try {
@@ -155,6 +165,7 @@ class _AdminProductListPageState extends State<AdminProductListPage> {
                 }
               }
             },
+            child: Text('Delete', style: TextStyle(fontSize: 18 * scale),),
           ),
         ],
       ),
@@ -175,12 +186,15 @@ class _AdminProductListPageState extends State<AdminProductListPage> {
             ),
           body: _buildBody(snapshot),
           floatingActionButton: snapshot.hasData
-              ? FloatingActionButton(
-                  onPressed: () => _navigateAndRefresh(context, snapshot.data!),
-                  child: Icon(Icons.add),
-                  tooltip: 'Add Product',
-                )
-              : null,
+            ? FloatingActionButton.large(
+                onPressed: () => _navigateAndRefresh(context, snapshot.data!),
+                tooltip: 'Add Product',
+                child: SizedBox(
+                  // width: 200 * scale,
+                  // height: 200 * scale,
+                  child: Icon(Icons.add),)
+              )
+            : null,
         );
       },
     );
@@ -227,11 +241,13 @@ class _AdminProductListPageState extends State<AdminProductListPage> {
       children: [
         // --- THE SEARCH BAR ---
         Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.0 * scale),
           child: TextField(
+            style: TextStyle(fontSize: 18 * scale),
             controller: _searchController,
             decoration: InputDecoration(
               labelText: 'Search Products',
+              labelStyle: TextStyle(fontSize: 18 * scale),
               prefixIcon: Icon(Icons.search),
               suffixIcon: _searchQuery.isNotEmpty
                   ? IconButton(
@@ -249,6 +265,7 @@ class _AdminProductListPageState extends State<AdminProductListPage> {
         // --- NESTED EXPANDABLE LIST ---
         Expanded(
           child: ListView.builder(
+            padding: EdgeInsets.only(bottom: 120.0 * scale),
             itemCount: sortedCategories.length,
             itemBuilder: (context, categoryIndex) {
               final categoryName = sortedCategories[categoryIndex];
@@ -258,7 +275,7 @@ class _AdminProductListPageState extends State<AdminProductListPage> {
 
               // --- OUTER EXPANSION TILE (FOR CATEGORY) ---
               return Card(
-                margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                margin: EdgeInsets.symmetric(horizontal: 8.0 * scale, vertical: 4.0 * scale,),
                 elevation: 4,
                 child: ExpansionTile(
                   key: Key('$categoryName$_searchQuery'), 
@@ -268,10 +285,10 @@ class _AdminProductListPageState extends State<AdminProductListPage> {
                     children: [
                       Text(
                         '$categoryName ($totalProductsInCategory)',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 23 * scale),
                       ),
                       IconButton(
-                        icon: Icon(Icons.edit_note, color: Colors.grey.shade700),
+                        icon: Icon(Icons.edit_note, size: 25 * scale, color: Colors.grey.shade700),
                         tooltip: 'Edit Category',
                         onPressed: () => _editCategory(context, categoryName),
                       ),
@@ -283,7 +300,7 @@ class _AdminProductListPageState extends State<AdminProductListPage> {
 
                     // --- INNER EXPANSION TILE (FOR SUB-CATEGORY) ---
                     return Padding(
-                      padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 4.0),
+                      padding: EdgeInsets.only(left: 16.0 * scale, right: 16.0 * scale, bottom: 4.0 * scale),
                       child: ExpansionTile(
                         key: Key('$categoryName$subCategoryName$_searchQuery'),
                         initiallyExpanded: _searchQuery.isNotEmpty,
@@ -292,10 +309,10 @@ class _AdminProductListPageState extends State<AdminProductListPage> {
                           children: [
                             Text(
                               '$subCategoryName (${productsInSubCategory.length})',
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                              style: TextStyle(fontSize: 20 * scale, fontWeight: FontWeight.w500),
                             ),
                             IconButton(
-                              icon: Icon(Icons.edit, color: Colors.grey.shade600, size: 20),
+                              icon: Icon(Icons.edit, color: Colors.grey.shade600, size: 20 * scale),
                               tooltip: 'Rename Sub-category',
                               onPressed: () => _editSubCategory(context, categoryName, subCategoryName),
                             ),
@@ -305,22 +322,22 @@ class _AdminProductListPageState extends State<AdminProductListPage> {
                           return ListTile(
                             leading: ProductImageView(imagePath: product.image),
                             title: Text(product.name,
-                              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+                              style: TextStyle(fontSize: 18 * scale , fontWeight: FontWeight.w500),
                               ),
                             subtitle: 
                               Text(
                                 'Price: ₹${product.price.toStringAsFixed(2)}',
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                                style: TextStyle(fontSize: 16 * scale, fontWeight: FontWeight.w500),
                               ),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 IconButton(
-                                  icon: Icon(Icons.edit, color: Colors.blue),
+                                  icon: Icon(Icons.edit, color: Colors.blue, size: 23 * scale,),
                                   onPressed: () => _navigateAndRefresh(context, allProducts, product: product),
                                 ),
                                 IconButton(
-                                  icon: Icon(Icons.delete, color: Colors.red),
+                                  icon: Icon(Icons.delete, color: Colors.red, size: 23 * scale,),
                                   onPressed: () => _showDeleteDialog(context, product, allProducts),
                                 ),
                               ],
@@ -356,11 +373,12 @@ class ProductImageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isAsset = imagePath.startsWith('assets/');
+    final scale = KioskTheme.scale;
     return SizedBox(
       width: width,
       height: height,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(8.0),   
+        borderRadius: BorderRadius.circular(8.0 * scale),   
         child: isAsset
           ? Image.asset(
               imagePath,

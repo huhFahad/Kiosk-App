@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kiosk_app/theme/kiosk_theme.dart';
 import '../models/category_model.dart';
 import '../services/data_service.dart';
 
@@ -17,6 +18,7 @@ class EditCategoryDialog extends StatefulWidget {
 
 class _EditCategoryDialogState extends State<EditCategoryDialog> {
   late TextEditingController _nameController;
+  final scale = KioskTheme.scale;
   File? _imageFile;
   String? _imagePath;
   final _dataService = DataService();
@@ -50,13 +52,11 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
       try {
         finalImagePath = await _dataService.saveImage(_imageFile!);
       } catch (e) {
-        // Handle error if needed, maybe show a snackbar
         print("Error saving image: $e");
         return;
       }
     }
-    
-    // Return the result to the calling page
+
     Navigator.of(context).pop({
       'oldName': widget.category.name,
       'newName': _nameController.text,
@@ -67,42 +67,74 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Edit Category'),
+      alignment: Alignment.center,
+      actionsAlignment: MainAxisAlignment.center,
+      title: Text(
+        'EDIT CATEGORY', 
+        style: TextStyle(
+          color: Theme.of(context).primaryColor,
+          fontSize: 18 * scale,
+          fontWeight: FontWeight.bold,
+        ), 
+        textAlign: TextAlign.center ,),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center ,
           children: [
-            // Name field
-            Text('Category Name', style: Theme.of(context).textTheme.labelLarge),
-            SizedBox(height: 8),
+            Divider(color: Colors.black,),
+            SizedBox(height: 8 * scale),
+            Text(
+              'Category Name', 
+              style: TextStyle(
+                fontSize: 20 * scale,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              )
+            ),
+            SizedBox(height: 8 * scale),
             TextField(
+              style: TextStyle(fontSize: 18 * scale),
               controller: _nameController,
               decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey,), borderRadius: BorderRadius.circular(15)),
                 hintText: 'Enter category name',
+                hintStyle: TextStyle(fontSize: 18 * scale,)
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 20 * scale),
             // Image picker
-            Text('Category Image', style: Theme.of(context).textTheme.labelLarge),
-            SizedBox(height: 8),
+            Text(
+              'Category Image',
+              style: TextStyle(
+                fontSize: 20 * scale,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              )
+            ),
+            SizedBox(height: 8 * scale),
             Container(
-              height: 150,
-              width: 150,
+              height: 150 * scale,
+              width: 150 * scale,
               decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
               child: _imageFile != null
-                  ? Image.file(_imageFile!, fit: BoxFit.cover)
-                  : (_imagePath != null && _imagePath!.isNotEmpty)
-                      ? (_imagePath!.startsWith('assets/')
-                          ? Image.asset(_imagePath!, fit: BoxFit.cover)
-                          : Image.file(File(_imagePath!), fit: BoxFit.cover))
-                      : Center(child: Icon(Icons.image_not_supported)),
+                ? Image.file(_imageFile!, fit: BoxFit.cover)
+                : (_imagePath != null && _imagePath!.isNotEmpty)
+                    ? (_imagePath!.startsWith('assets/')
+                        ? Image.asset(_imagePath!, fit: BoxFit.cover)
+                        : Image.file(File(_imagePath!), fit: BoxFit.cover))
+                    : Center(child: Icon(Icons.image_not_supported)),
             ),
-            SizedBox(height: 8),
+            SizedBox(height: 8 * scale),
             TextButton.icon(
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.all(Theme.of(context).primaryColor.withAlpha(30)),
+              ),
               icon: Icon(Icons.image),
-              label: Text('Select New Image'),
+              label: Text(
+                'Select New Image',
+                style: TextStyle(fontSize: 16 * scale), 
+              ),
               onPressed: _pickImage,
             ),
           ],
@@ -111,11 +143,11 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: Text('Cancel'),
+          child: Text('Cancel', style: TextStyle(fontSize: 18 * scale), ),
         ),
         ElevatedButton(
           onPressed: _onSave,
-          child: Text('Save'),
+          child: Text('Save', style: TextStyle(fontSize: 18 * scale), ),
         ),
       ],
     );

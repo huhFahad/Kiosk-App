@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kiosk_app/theme/kiosk_theme.dart';
 import 'models/product_model.dart';
 import 'services/data_service.dart';
 import 'widgets/common_app_bar.dart';
@@ -21,6 +22,7 @@ class AdminProductEditPage extends StatefulWidget {
 class _AdminProductEditPageState extends State<AdminProductEditPage> {
   final _formKey = GlobalKey<FormState>();
   final _dataService = DataService();
+  final scale = KioskTheme.scale;
   
   // Form field values
   String? _id;
@@ -92,18 +94,15 @@ class _AdminProductEditPageState extends State<AdminProductEditPage> {
   @override
   void dispose() {
     _tagsController.dispose();
-    // ... dispose other controllers ...
     super.dispose();
   }
 
    void _openMapPicker() async {
-    // Navigate to the picker and wait for a result
     final result = await Navigator.push<Map<String, double>>(
       context,
       MaterialPageRoute(builder: (ctx) => const AdminMapPickerPage()),
     );
 
-    // If we get coordinates back, update our state
     if (result != null && result.containsKey('x') && result.containsKey('y')) {
       setState(() {
         _mapX = result['x'];
@@ -119,16 +118,15 @@ class _AdminProductEditPageState extends State<AdminProductEditPage> {
     _formKey.currentState?.save();
 
     final List<String> tags = _tagsController.text
-      .split(',') // Split the string by commas
-      .map((tag) => tag.trim()) // Remove leading/trailing whitespace from each tag
-      .where((tag) => tag.isNotEmpty) // Remove any empty tags that might result
+      .split(',') 
+      .map((tag) => tag.trim()) 
+      .where((tag) => tag.isNotEmpty)
       .toList();
     
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Saving...')));
 
     String finalImagePath = _imagePath ?? 'assets/images/placeholder.jpeg';
 
-    // If a new image file was picked, save it first.
     if (_imageFile != null) {
       try {
         finalImagePath = await _dataService.saveImage(_imageFile!);
@@ -139,7 +137,7 @@ class _AdminProductEditPageState extends State<AdminProductEditPage> {
             SnackBar(content: Text('Error saving image: $e'), backgroundColor: Colors.red),
           );
         }
-        return; // Stop if image saving fails
+        return;
       }
     }
 
@@ -279,14 +277,14 @@ class _AdminProductEditPageState extends State<AdminProductEditPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Product Image', style: Theme.of(context).textTheme.bodySmall),
-        SizedBox(height: 8),
+        SizedBox(height: 8 * scale),
         Container(
-          height: 150,
-          width: 150,
+          height: 150 * scale,
+          width: 150 * scale,
           decoration: BoxDecoration(border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(8)),
           child: _buildImagePreview(),
         ),
-        SizedBox(height: 8),
+        SizedBox(height: 8 * scale),
         TextButton.icon(
           icon: Icon(Icons.image),
           label: Text('Select Image'),
@@ -300,7 +298,7 @@ class _AdminProductEditPageState extends State<AdminProductEditPage> {
           },
         ),
         if (_isEditing && _imagePath != null)
-          Text('Current Path: $_imagePath', style: TextStyle(fontSize: 12, color: Colors.grey)),
+          Text('Current Path: $_imagePath', style: TextStyle(fontSize: 12 * scale, color: Colors.grey)),
       ],
     );
   }
@@ -349,16 +347,16 @@ class _AdminProductEditPageState extends State<AdminProductEditPage> {
         onSavePressed: _saveForm,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0 * scale),
         child: Form(
           key: _formKey,
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 12),
+                SizedBox(height: 12 * scale),
                 _buildNameField(),
-                SizedBox(height: 12),
+                SizedBox(height: 12 * scale),
                 _buildDropdown(
                   'Category',
                   _category,
@@ -378,7 +376,7 @@ class _AdminProductEditPageState extends State<AdminProductEditPage> {
                     });
                   },
                 ),
-                SizedBox(height: 12),
+                SizedBox(height: 12 * scale),
                 _buildDropdown(
                   'Sub-category',
                   _subcategory,
@@ -386,15 +384,15 @@ class _AdminProductEditPageState extends State<AdminProductEditPage> {
                   (value) => _subcategory = value,
                   (value) => setState(() => _subcategory = value),
                 ),
-                SizedBox(height: 12),
+                SizedBox(height: 12 * scale),
                 _buildPriceField(),
-                SizedBox(height: 12),
+                SizedBox(height: 12 * scale),
                 _buildDropdown('Unit', _unit, _existingUnits, (value) => _unit = value, (value) => setState(() => _unit = value)),
-                SizedBox(height: 24),
+                SizedBox(height: 24 * scale),
                 _buildImagePicker(),
-                const SizedBox(height: 24),
+                SizedBox(height: 24 * scale),
                 Text('Product Location on Map', style: Theme.of(context).textTheme.titleLarge),
-                const SizedBox(height: 8),
+                SizedBox(height: 8 * scale),
                 Row(
                   children: [
                     ElevatedButton.icon(
@@ -402,7 +400,7 @@ class _AdminProductEditPageState extends State<AdminProductEditPage> {
                       label: Text('Set Location'),
                       onPressed: _openMapPicker,
                     ),
-                    const SizedBox(width: 16),
+                    SizedBox(width: 16 * scale),
                     // Display the current coordinates
                     if (_mapX != null && _mapY != null)
                       Text(
@@ -413,7 +411,7 @@ class _AdminProductEditPageState extends State<AdminProductEditPage> {
                       const Text('No location set.', style: TextStyle(fontStyle: FontStyle.italic)),
                   ],
                 ),                
-                SizedBox(height: 20),
+                SizedBox(height: 20 * scale),
                 Divider(),
                 TextFormField(
                   controller: _tagsController,
@@ -424,11 +422,11 @@ class _AdminProductEditPageState extends State<AdminProductEditPage> {
                     helperText: 'Enter tags separated by commas',
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 20 * scale),
                 ElevatedButton(
                   onPressed: _saveForm,
-                  style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 50), foregroundColor: Colors.white, backgroundColor: Theme.of(context).primaryColor),  
-                  child: Padding(padding: const EdgeInsets.symmetric(vertical: 16.0), child: Text('Save Product')),
+                  style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 50 * scale), foregroundColor: Colors.white, backgroundColor: Theme.of(context).primaryColor),  
+                  child: Padding(padding: EdgeInsets.symmetric(vertical: 16.0 * scale), child: Text('Save Product', style: TextStyle(fontSize: 20 * scale),)),
                 ),
               ],
             ),
