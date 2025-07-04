@@ -1,4 +1,5 @@
 // lib/home_page.dart
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:kiosk_app/services/data_service.dart';
 
@@ -10,6 +11,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _searchController = TextEditingController();
   final DataService _dataService = DataService();
+  Timer? _longPressTimer;
+
 
   @override
   void initState() {
@@ -22,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     _searchController.dispose();
+    _longPressTimer?.cancel();
     super.dispose();
   }
   
@@ -55,7 +59,7 @@ class _HomePageState extends State<HomePage> {
             keyboardType: TextInputType.number,
             obscureText: true,
             decoration: const InputDecoration(hintText: 'Enter PIN'),
-            autofocus: true, // This should trigger the OSK in the dialog
+            autofocus: true,
           ),
           actions: [
             TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
@@ -100,11 +104,20 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset(
-                            "assets/images/urban_rain_logo.png",
-                            width: 700,
-                            // height: 500,
-                            fit: BoxFit.contain,
+                          GestureDetector(
+                            onLongPressStart: (_) {
+                              _longPressTimer = Timer(const Duration(seconds: 3), () {
+                                _showAdminPinDialog(context);
+                              });
+                            },
+                            onLongPressEnd: (_) {
+                              _longPressTimer?.cancel(); 
+                            },
+                            child: Image.asset(
+                              "assets/images/urban_rain_logo.png",
+                              width: 700,
+                              fit: BoxFit.contain,
+                            ),
                           ),
                           const SizedBox(height: 20),
                           const Text(
@@ -221,16 +234,16 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          Positioned(
-            bottom: 10,
-            left: 10,
-            child: GestureDetector(
-              onLongPress: () => _showAdminPinDialog(context),
-              child: Icon(Icons.icecream_outlined, size: 50,
-                color: Colors.black.withOpacity(0.6),
-              ),
-            ),
-          ),
+          // Positioned(
+          //   bottom: 10,
+          //   left: 10,
+          //   child: GestureDetector(
+          //     onLongPress: () => _showAdminPinDialog(context),
+          //     child: Icon(Icons.icecream_outlined, size: 50,
+          //       color: Colors.black.withOpacity(0.6),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
