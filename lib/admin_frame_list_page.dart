@@ -33,11 +33,35 @@ class _AdminFrameListPageState extends State<AdminFrameListPage> {
         builder: (ctx) => AdminFrameEditPage(frame: frame),
       ),
     ).then((didSaveChanges) {
-      // If the edit page pops with 'true', it means we should refresh.
       if (didSaveChanges == true) {
         _refreshFrames();
       }
     });
+  }
+
+  void _showDeleteConfirmation(Frame frame) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Delete Frame?'),
+        content: Text('Are you sure you want to permanently delete the "${frame.name}" frame? This action cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.of(ctx).pop(); 
+              await _dataService.deleteFrame(frame.id);
+              _refreshFrames(); 
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+            child: Text('Yes, Delete'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -66,17 +90,17 @@ class _AdminFrameListPageState extends State<AdminFrameListPage> {
           return GridView.builder(
             padding: const EdgeInsets.all(16.0),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3, // 2 frames per row
+              crossAxisCount: 3, 
               crossAxisSpacing: 16.0,
               mainAxisSpacing: 16.0,
-              childAspectRatio: 0.75, // Adjust to make cards taller or shorter
+              childAspectRatio: 0.75,
             ),
             itemCount: frames.length,
             itemBuilder: (context, index) {
               final frame = frames[index];
               // --- EACH ITEM IS A CUSTOM CARD WIDGET ---
               return Card(
-                clipBehavior: Clip.antiAlias, // Ensures the image respects the card's rounded corners
+                clipBehavior: Clip.antiAlias,
                 elevation: 4,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -84,7 +108,7 @@ class _AdminFrameListPageState extends State<AdminFrameListPage> {
                     // --- THE PREVIEW ---
                     Expanded(
                       child: Container(
-                        color: Colors.grey.shade200, // A background for the transparent parts
+                        color: Colors.grey.shade200,
                         child: _buildFrameThumbnail(frame.imagePath),
                       ),
                     ),
@@ -116,7 +140,7 @@ class _AdminFrameListPageState extends State<AdminFrameListPage> {
                           IconButton(
                             icon: Icon(Icons.delete, color: Colors.red.shade700),
                             onPressed: () {
-                              // TODO: Implement delete with confirmation
+                              _showDeleteConfirmation(frame);
                               print('Deleting ${frame.name}');
                             },
                             tooltip: 'Delete Frame',
@@ -147,7 +171,7 @@ class _AdminFrameListPageState extends State<AdminFrameListPage> {
     return isAsset
       ? Image.asset(
           imagePath,
-          fit: BoxFit.contain, // Use contain to see the whole frame
+          fit: BoxFit.contain,
           errorBuilder: (c,e,s) => Icon(Icons.error, color: Colors.red))
       : Image.file(
           File(imagePath),

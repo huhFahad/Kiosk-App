@@ -9,8 +9,6 @@ import 'models/frame_model.dart';
 import 'services/data_service.dart';
 
 class AdminFrameEditPage extends StatefulWidget {
-  // If a frame is passed, we are in "edit" mode.
-  // If null, we are in "add" mode.
   final Frame? frame;
 
   const AdminFrameEditPage({Key? key, this.frame}) : super(key: key);
@@ -23,18 +21,15 @@ class _AdminFrameEditPageState extends State<AdminFrameEditPage> {
   final _dataService = DataService();
   final _nameController = TextEditingController();
 
-  // State for the frame image
-  File? _frameImageFile; // A new image picked from the gallery
-  String? _frameImagePath; // The existing path (from assets or app storage)
+  File? _frameImageFile; 
+  String? _frameImagePath;
 
   double _windowX = 0.1;
   double _windowY = 0.1;
   double _windowWidth = 0.8;
   double _windowHeight = 0.8;
 
-  // We need the size of the displayed image to calculate relative coordinates
-  // Size _displayedImageSize = Size.zero;
-  final _imageKey = GlobalKey(); // To get the size of the Image widget
+  final _imageKey = GlobalKey(); 
 
   bool get _isEditing => widget.frame != null;
 
@@ -43,10 +38,8 @@ class _AdminFrameEditPageState extends State<AdminFrameEditPage> {
     super.initState();
 
     if (_isEditing) {
-      // Pre-fill fields if we are editing
       _nameController.text = widget.frame!.name;
       _frameImagePath = widget.frame!.imagePath;
-      // Load the saved relative values
       _windowX = widget.frame!.photoX;
       _windowY = widget.frame!.photoY;
       _windowWidth = widget.frame!.photoWidth;
@@ -65,7 +58,7 @@ class _AdminFrameEditPageState extends State<AdminFrameEditPage> {
     if (pickedFile != null) {
       setState(() {
         _frameImageFile = File(pickedFile.path);
-        _frameImagePath = null; // Prioritize the newly picked file
+        _frameImagePath = null;
       });
     }
   }
@@ -90,7 +83,7 @@ class _AdminFrameEditPageState extends State<AdminFrameEditPage> {
     );
 
     await _dataService.saveFrame(frameToSave);
-    Navigator.of(context).pop(true); // Pop to signal a refresh
+    Navigator.of(context).pop(true);
   }
   
   Widget _buildFrameImage() {
@@ -160,7 +153,6 @@ class _AdminFrameEditPageState extends State<AdminFrameEditPage> {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(color: Colors.grey.shade300),
-                // We use LayoutBuilder to get the size of this container
                 child: LayoutBuilder(
                   builder: (context, constraints) {
                     final containerWidth = constraints.maxWidth;
@@ -182,8 +174,6 @@ class _AdminFrameEditPageState extends State<AdminFrameEditPage> {
                               color: Colors.white.withOpacity(0.3),
                               border: Border.all(color: Colors.blue, width: 2),
                             ),
-                            // You could add gesture detectors here for dragging if desired,
-                            // but sliders provide more precise control.
                           ),
                         ),
                       ],
@@ -195,7 +185,6 @@ class _AdminFrameEditPageState extends State<AdminFrameEditPage> {
             SizedBox(height: 16),
 
             // --- Slider Controls ---
-            // These sliders directly manipulate the state variables for the window
             _buildSlider("Width", _windowWidth, (val) => setState(() => _windowWidth = val)),
             _buildSlider("Height", _windowHeight, (val) => setState(() => _windowHeight = val)),
             _buildSlider("Position X", _windowX, (val) => setState(() => _windowX = val)),

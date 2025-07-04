@@ -1,5 +1,7 @@
 // lib/main.dart
 
+// import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:encrypt_shared_preferences/provider.dart';
@@ -40,13 +42,22 @@ import 'theme/theme_notifier.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // windowManager.waitUntilReadyToShow(const WindowOptions(fullScreen: true));
-  windowManager.waitUntilReadyToShow(
+  // windowManager.waitUntilReadyToShow(
+  //   const WindowOptions(
+  //     // maximumSize: Size(width, height),
+  //     titleBarStyle: TitleBarStyle.hidden,
+  //     alwaysOnTop: false,
+  //   )
+  // );
+
+  await windowManager.ensureInitialized();
+  await windowManager.waitUntilReadyToShow(
     const WindowOptions(
-      // fullScreen: true,
       titleBarStyle: TitleBarStyle.hidden,
       alwaysOnTop: false,
     )
   );
+  await windowManager.maximize();
   
   MediaKit.ensureInitialized();
   await dotenv.load(fileName: ".env");

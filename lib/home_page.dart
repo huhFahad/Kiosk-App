@@ -15,7 +15,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _searchController.addListener(() {
-      setState(() {}); // triggers rebuild when text changes
+      setState(() {});
     });
   }
 
