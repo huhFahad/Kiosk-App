@@ -17,6 +17,9 @@ class _PhotoEditorPageState extends State<PhotoEditorPage> {
   late Frame _frame;
   late File _customerImageFile; 
   late Uint8List _blankBackground;
+  late bool _isAsset;
+  late String _assetImagePath;
+
 
   Future<void> _loadBlankBackground() async {
     final data = await rootBundle.load('assets/images/frames/white.jpg');
@@ -39,7 +42,20 @@ class _PhotoEditorPageState extends State<PhotoEditorPage> {
     super.didChangeDependencies();
     final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     _frame = args['frame'] as Frame;
-    _customerImageFile = args['customerImageFile'] as File;
+    // _customerImageFile = args['customerImageFile'] as File;
+    final bool isAsset = args['isAsset'] ?? false;
+    final String imagePath = args['imagePath'] as String;
+
+    if (isAsset) {
+      _customerImageFile = File(''); // Placeholder, not used
+      _isAsset = true;
+      _assetImagePath = imagePath;
+    } else {
+      _customerImageFile = File(imagePath);
+      _isAsset = false;
+      _assetImagePath = '';
+    }
+
   }
   
   Future<void> _setupEditor() async {
@@ -52,9 +68,24 @@ class _PhotoEditorPageState extends State<PhotoEditorPage> {
 
   Future<void> _addLayers() async {
     // Add customer photo as the bottom layer
-    final customerImageBytes = await _customerImageFile.readAsBytes();
+    // final customerImageBytes = await _customerImageFile.readAsBytes();
+    // _editorKey.currentState?.addLayer(
+    //   WidgetLayer( // Using WidgetLayer as we confirmed
+    //     widget: Image.memory(customerImageBytes),
+    //     offset: Offset.zero,
+    //     scale: 4.0,
+    //   ),
+    // );
+    Uint8List customerImageBytes;
+    if (_isAsset) {
+      final data = await rootBundle.load(_assetImagePath);
+      customerImageBytes = data.buffer.asUint8List();
+    } else {
+      customerImageBytes = await _customerImageFile.readAsBytes();
+    }
+
     _editorKey.currentState?.addLayer(
-      WidgetLayer( // Using WidgetLayer as we confirmed
+      WidgetLayer(
         widget: Image.memory(customerImageBytes),
         offset: Offset.zero,
         scale: 4.0,
@@ -71,7 +102,7 @@ class _PhotoEditorPageState extends State<PhotoEditorPage> {
           // height: _editorKey.currentState!.sizesManager.bodySize.height,
           fit: BoxFit.contain,
         ),
-        // scale: 1.0,
+        scale: 5.0,
         // offset: Offset(450, -200), // Adjust as needed
         interaction: LayerInteraction(
           // enableMove: false,

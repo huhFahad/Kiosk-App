@@ -13,7 +13,9 @@ class FrameSelectionPage extends StatefulWidget {
 class _FrameSelectionPageState extends State<FrameSelectionPage> {
   final DataService _dataService = DataService();
   late Future<List<Frame>> _framesFuture;
-  late File _customerImageFile; // This page now holds the customer's image
+  late File _customerImageFile;
+  String? _customerImageAssetPath;
+  bool _isAssetImage = false;
 
   @override
   void initState() {
@@ -25,7 +27,15 @@ class _FrameSelectionPageState extends State<FrameSelectionPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     // It now receives the image file from the PhotoUploadPage
-    _customerImageFile = ModalRoute.of(context)!.settings.arguments as File;
+    // _customerImageFile = ModalRoute.of(context)!.settings.arguments as File;
+    final args = ModalRoute.of(context)!.settings.arguments;
+    if (args is Map && args['isAsset'] == true) {
+      _customerImageAssetPath = args['imagePath'] as String;
+      _isAssetImage = true;
+    } else {
+      _customerImageFile = args as File;
+    }
+
   }
 
   // This method now proceeds to the final editor page
@@ -36,7 +46,9 @@ class _FrameSelectionPageState extends State<FrameSelectionPage> {
         '/photo_editor',
         arguments: {
           'frame': selectedFrame,
-          'customerImageFile': _customerImageFile,
+          // 'customerImageFile': _customerImageFile,
+          'isAsset': _isAssetImage,
+          'imagePath': _isAssetImage ? _customerImageAssetPath! : _customerImageFile.path,
         },
       );
     }

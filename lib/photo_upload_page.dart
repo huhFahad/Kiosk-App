@@ -21,20 +21,16 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
     _templatesFuture = _dataService.readTemplates();
   }
 
-  // This page no longer needs didChangeDependencies to get a frame.
-
-  // This method now navigates to the FRAME selection page.
   void _proceedToFrameSelection(File imageFile) {
     if (mounted) {
       Navigator.pushNamed(
         context,
         '/frame_selection',
-        arguments: imageFile, // Pass ONLY the selected image file
+        arguments: imageFile, 
       );
     }
   }
 
-  // This method is for when the user uploads their own photo.
   Future<void> _pickUserImage() async {
     final file = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (file != null) {
@@ -60,13 +56,8 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
                 if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
                 final templates = snapshot.data!;
                 return GridView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, 
-                    crossAxisSpacing: 16.0, 
-                    mainAxisSpacing: 8.0, 
-                    childAspectRatio: 0.6
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 16.0, mainAxisSpacing: 16.0, childAspectRatio: 0.75),
                   itemCount: templates.length,
                   itemBuilder: (context, index) {
                     final template = templates[index];
@@ -75,8 +66,15 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
                       elevation: 4,
                       child: InkWell(
                         onTap: () {
-                          // When a template is tapped, pass its file to the next step
-                          _proceedToFrameSelection(File(template.imagePath));
+                          // _proceedToFrameSelection(File(template.imagePath));
+                          Navigator.pushNamed(
+                            context,
+                            '/frame_selection',
+                            arguments: {
+                              'isAsset': true,
+                              'imagePath': template.imagePath,
+                            },
+                          );
                         },
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -84,11 +82,18 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
                             Expanded(
                               child: Container(
                                 color: Colors.grey.shade200,
-                                child: Image.asset(
-                                  template.imagePath,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (c, e, s) => Icon(Icons.error, color: Colors.red),
-                                ),
+                                // Admin-uploaded templates will always be files
+                                child: template.imagePath.startsWith('assets/')
+                                  ? Image.asset(
+                                      template.imagePath,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (c, e, s) => const Icon(Icons.error, color: Colors.red),
+                                    )
+                                  : Image.file(
+                                      File(template.imagePath),
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (c, e, s) => const Icon(Icons.error, color: Colors.red),
+                                    ),
                               ),
                             ),
                             Padding(

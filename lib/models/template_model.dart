@@ -6,8 +6,8 @@ part 'template_model.g.dart';
 @JsonSerializable()
 class Template {
   final String id;
-  final String name; // A name for the admin to identify it
-  final String imagePath; // Path to the template image
+  final String name;
+  final String imagePath; 
 
   Template({
     required this.id,

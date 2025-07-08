@@ -338,16 +338,25 @@ class DataService {
     try {
       final file = await _localTemplatesFile;
       if (await file.exists()) {
+        // print("📦 Loading templates from LOCAL file");
         final contents = await file.readAsString();
         return (jsonDecode(contents) as List).map((e) => Template.fromJson(e)).toList();
       }
-    } catch (e) { /* ... */ }
+    } catch (e) {
+      // print("❌ Error reading local templates: $e");
+    }
+
     try {
+      // print("🧳 Loading templates from ASSETS");
       final jsonString = await rootBundle.loadString('assets/data/templates.json');
       return (jsonDecode(jsonString) as List).map((e) => Template.fromJson(e)).toList();
-    } catch (e) { /* ... */ }
+    } catch (e) {
+      // print("❌ Error loading templates from assets: $e");
+    }
+
     return [];
   }
+
 
   Future<void> saveTemplates(List<Template> templates) async {
     final file = await _localTemplatesFile;
