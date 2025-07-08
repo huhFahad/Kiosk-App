@@ -57,7 +57,7 @@ class _AdminFrameListPageState extends State<AdminFrameListPage> {
               await _dataService.deleteFrame(frame.id);
               _refreshFrames(); // Refresh the list to show the change
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
             child: Text('Yes, Delete'),
           ),
         ],

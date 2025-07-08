@@ -84,9 +84,8 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
                             Expanded(
                               child: Container(
                                 color: Colors.grey.shade200,
-                                // Admin-uploaded templates will always be files
-                                child: Image.file(
-                                  File(template.imagePath),
+                                child: Image.asset(
+                                  template.imagePath,
                                   fit: BoxFit.cover,
                                   errorBuilder: (c, e, s) => Icon(Icons.error, color: Colors.red),
                                 ),

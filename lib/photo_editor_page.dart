@@ -64,7 +64,7 @@ class _PhotoEditorPageState extends State<PhotoEditorPage> {
     // Add frame as the top layer
     final frameBytes = await _loadImageBytes(_frame.imagePath);
     _editorKey.currentState?.addLayer(
-      WidgetLayer( // Using WidgetLayer as we confirmed
+      WidgetLayer( 
         widget: Image.memory(
           frameBytes,
           // width: _editorKey.currentState!.sizesManager.bodySize.width,
@@ -102,8 +102,8 @@ class _PhotoEditorPageState extends State<PhotoEditorPage> {
         onImageEditingComplete: (Uint8List bytes) async {
           img.Image? image = img.decodeImage(bytes);
           if (image == null) return; 
-          img.Image flippedImage = img.flipVertical(image);
-          Uint8List finalBytes = Uint8List.fromList(img.encodePng(flippedImage));
+          // img.Image flippedImage = img.flipVertical(image);
+          // Uint8List finalBytes = Uint8List.fromList(img.encodePng(flippedImage));
           showDialog(
             context: context,
             builder: (dialogContext) {
@@ -117,7 +117,7 @@ class _PhotoEditorPageState extends State<PhotoEditorPage> {
                       style: TextStyle(fontSize: 16),
                     ),
                     // const SizedBox(height: 16),
-                    Image.memory(finalBytes, fit: BoxFit.contain, height: 500, width: 500),
+                    Image.memory(bytes, fit: BoxFit.contain, height: 500, width: 500),
                   ],
                 ),
                 
@@ -131,7 +131,7 @@ class _PhotoEditorPageState extends State<PhotoEditorPage> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/print_confirmation', arguments: finalBytes);
+                      Navigator.pushNamed(context, '/print_confirmation', arguments: bytes);
                     },
                     child: const Text('Proceed'),
                   )
