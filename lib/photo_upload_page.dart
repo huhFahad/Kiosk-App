@@ -21,20 +21,16 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
     _templatesFuture = _dataService.readTemplates();
   }
 
-  // This page no longer needs didChangeDependencies to get a frame.
-
-  // This method now navigates to the FRAME selection page.
   void _proceedToFrameSelection(File imageFile) {
     if (mounted) {
       Navigator.pushNamed(
         context,
         '/frame_selection',
-        arguments: imageFile, // Pass ONLY the selected image file
+        arguments: imageFile, 
       );
     }
   }
 
-  // This method is for when the user uploads their own photo.
   Future<void> _pickUserImage() async {
     final file = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (file != null) {
@@ -70,7 +66,6 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
                       elevation: 4,
                       child: InkWell(
                         onTap: () {
-                          // When a template is tapped, pass its file to the next step
                           _proceedToFrameSelection(File(template.imagePath));
                         },
                         child: Column(
@@ -79,9 +74,8 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
                             Expanded(
                               child: Container(
                                 color: Colors.grey.shade200,
-                                // Admin-uploaded templates will always be files
-                                child: Image.file(
-                                  File(template.imagePath),
+                                child: Image.asset(
+                                  template.imagePath,
                                   fit: BoxFit.cover,
                                   errorBuilder: (c, e, s) => Icon(Icons.error, color: Colors.red),
                                 ),
