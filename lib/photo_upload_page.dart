@@ -66,7 +66,15 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
                       elevation: 4,
                       child: InkWell(
                         onTap: () {
-                          _proceedToFrameSelection(File(template.imagePath));
+                          // _proceedToFrameSelection(File(template.imagePath));
+                          Navigator.pushNamed(
+                            context,
+                            '/frame_selection',
+                            arguments: {
+                              'isAsset': true,
+                              'imagePath': template.imagePath,
+                            },
+                          );
                         },
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -74,11 +82,17 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
                             Expanded(
                               child: Container(
                                 color: Colors.grey.shade200,
-                                child: Image.asset(
-                                  template.imagePath,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (c, e, s) => Icon(Icons.error, color: Colors.red),
-                                ),
+                                child: template.imagePath.startsWith('assets/')
+                                  ? Image.asset(
+                                      template.imagePath,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (c, e, s) => const Icon(Icons.error, color: Colors.red),
+                                    )
+                                  : Image.file(
+                                      File(template.imagePath),
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (c, e, s) => const Icon(Icons.error, color: Colors.red),
+                                    ),
                               ),
                             ),
                             Padding(

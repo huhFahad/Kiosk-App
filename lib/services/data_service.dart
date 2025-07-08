@@ -322,14 +322,22 @@ class DataService {
     try {
       final file = await _localTemplatesFile;
       if (await file.exists()) {
+        // print("📦 Loading templates from LOCAL file");
         final contents = await file.readAsString();
         return (jsonDecode(contents) as List).map((e) => Template.fromJson(e)).toList();
       }
-    } catch (e) { /* ... */ }
+    } catch (e) {
+      // print("❌ Error reading local templates: $e");
+    }
+
     try {
+      // print("🧳 Loading templates from ASSETS");
       final jsonString = await rootBundle.loadString('assets/data/templates.json');
       return (jsonDecode(jsonString) as List).map((e) => Template.fromJson(e)).toList();
-    } catch (e) { /* ... */ }
+    } catch (e) {
+      // print("❌ Error loading templates from assets: $e");
+    }
+
     return [];
   }
 
@@ -420,7 +428,6 @@ class DataService {
 
   Future<void> removeStoreMapPath() async {
     final prefs = await SharedPreferences.getInstance();
-    // The .remove() method deletes the key from storage.
     await prefs.remove(_storeMapPathKey);
   }
 
@@ -448,13 +455,12 @@ class DataService {
 
   Future<void> clearCache() async {
     // We get the local files we want to delete
-    final productsFile = await _localFile; // Already defined for products
+    final productsFile = await _localFile; 
     final categoriesFile = await _localCategoriesFile;
     final framesFile = await _localFramesFile;
     final templatesFile = await _localTemplatesFile;
     final ordersFile = await _localOrdersFile;
 
-    // We can add any other files here in the future
     final filesToDelete = [
       productsFile,
       categoriesFile,

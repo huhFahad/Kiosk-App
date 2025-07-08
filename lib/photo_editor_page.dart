@@ -17,6 +17,9 @@ class _PhotoEditorPageState extends State<PhotoEditorPage> {
   late Frame _frame;
   late File _customerImageFile; 
   late Uint8List _blankBackground;
+  late bool _isAsset;
+  late String _assetImagePath;
+
 
   Future<void> _loadBlankBackground() async {
     final data = await rootBundle.load('assets/images/frames/white.jpg');
@@ -29,34 +32,56 @@ class _PhotoEditorPageState extends State<PhotoEditorPage> {
   void initState() {
     super.initState();
     _loadBlankBackground();
-    // This is a reliable way to perform an action after the widget has been built.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _setupEditor();
     });
   }
 
-  // We get the arguments here, but set up the layers in _setupEditor
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     _frame = args['frame'] as Frame;
-    _customerImageFile = args['customerImageFile'] as File;
+    // _customerImageFile = args['customerImageFile'] as File;
+    final bool isAsset = args['isAsset'] ?? false;
+    final String imagePath = args['imagePath'] as String;
+
+     if (isAsset) {
+      _customerImageFile = File('');
+      _isAsset = true;
+      _assetImagePath = imagePath;
+    } else {
+      _customerImageFile = File(imagePath);
+      _isAsset = false;
+      _assetImagePath = '';
+    }
   }
   
   Future<void> _setupEditor() async {
-    // Wait a brief moment to ensure the editor key is ready
     await Future.delayed(const Duration(milliseconds: 100));
-    
-    // Now we can safely add our layers
     await _addLayers();
   }
 
   Future<void> _addLayers() async {
     // Add customer photo as the bottom layer
-    final customerImageBytes = await _customerImageFile.readAsBytes();
+    // final customerImageBytes = await _customerImageFile.readAsBytes();
+    // _editorKey.currentState?.addLayer(
+    //   WidgetLayer(
+    //     widget: Image.memory(customerImageBytes),
+    //     offset: Offset.zero,
+    //     scale: 4.0,
+    //   ),
+    // );
+    Uint8List customerImageBytes;
+    if (_isAsset) {
+      final data = await rootBundle.load(_assetImagePath);
+      customerImageBytes = data.buffer.asUint8List();
+    } else {
+      customerImageBytes = await _customerImageFile.readAsBytes();
+    }
+
     _editorKey.currentState?.addLayer(
-      WidgetLayer( // Using WidgetLayer as we confirmed
+      WidgetLayer(
         widget: Image.memory(customerImageBytes),
         offset: Offset.zero,
         scale: 4.0,
@@ -66,7 +91,7 @@ class _PhotoEditorPageState extends State<PhotoEditorPage> {
     // Add frame as the top layer
     final frameBytes = await _loadImageBytes(_frame.imagePath);
     _editorKey.currentState?.addLayer(
-      WidgetLayer( // Using WidgetLayer as we confirmed
+      WidgetLayer(
         widget: Image.memory(
           frameBytes,
           // width: _editorKey.currentState!.sizesManager.bodySize.width,
