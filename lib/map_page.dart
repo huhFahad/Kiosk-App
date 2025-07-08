@@ -23,7 +23,6 @@ class _MapPageState extends State<MapPage> {
 
   final String _defaultMapPath = 'assets/images/placeholder_map.png';
 
-  // We'll store the pin's position here after calculating it
   Offset? _productPinPosition;
 
   Offset? _kioskPinPosition;
@@ -54,7 +53,6 @@ class _MapPageState extends State<MapPage> {
       : AssetImage(imagePath).resolve(const ImageConfiguration());
 
     listener = ImageStreamListener((ImageInfo imageInfo, bool synchronousCall) {
-      // Once the image is decoded, complete the future and clean up the listener
       imageCompleter.complete(imageInfo.image);
       stream.removeListener(listener);
     });
@@ -102,7 +100,6 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     final Product? product = ModalRoute.of(context)?.settings.arguments as Product?;
-    
     return Scaffold(
       appBar: CommonAppBar(context: context, title: product != null ? 'Location for ${product.name}' : 'Store Map'),
       body: _isLoading
@@ -124,13 +121,37 @@ class _MapPageState extends State<MapPage> {
                     Positioned(
                       left: _kioskPinPosition!.dx,
                       top: _kioskPinPosition!.dy,
-                      child: Transform.translate(
-                        offset: const Offset(-24, -24),
-                        child: const Tooltip(
+                      child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Transform.translate(
+                        offset: Offset(-24, -24),
+                        child: Tooltip(
                           message: 'You Are Here',
-                          child: Icon(Icons.my_location, color: Colors.blue, size: 48),
+                          child: Icon(Icons.my_location, shadows:[Shadow(color: Colors.white, blurRadius: 10.0)], color: Colors.blue, size: 48),
                         ),
                       ),
+                      Transform.translate(
+                        offset: Offset(-51, -20),
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                            child: Text(
+                              "You are here",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  )
                     ),
 
                   // Layer 3: The Product pin (RED)
