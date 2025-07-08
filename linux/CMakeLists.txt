@@ -94,6 +94,10 @@ set(INSTALL_BUNDLE_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib")
 install(TARGETS ${BINARY_NAME} RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}"
   COMPONENT Runtime)
 
+# Install icon and .desktop entry
+install(FILES icons/centocart_colored.png DESTINATION share/icons/hicolor/256x256/apps RENAME com.centelon.kiosk_app.png)
+install(FILES CentoCart.desktop DESTINATION share/applications)
+
 install(FILES "${FLUTTER_ICU_DATA_FILE}" DESTINATION "${INSTALL_BUNDLE_DATA_DIR}"
   COMPONENT Runtime)
 
