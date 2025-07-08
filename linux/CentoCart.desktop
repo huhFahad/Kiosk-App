@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=CentoCart
+Comment=A Retail Kiosk Application for shopping and browsing.
+Exec=CentoCart
+Icon=com.centelon.kiosk_app
+Terminal=false
+Type=Application
+Categories=Utility;Application;
