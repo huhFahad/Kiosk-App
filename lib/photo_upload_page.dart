@@ -57,7 +57,7 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
                 final templates = snapshot.data!;
                 return GridView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 16.0, mainAxisSpacing: 16.0, childAspectRatio: 0.75),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 16.0, mainAxisSpacing: 16.0, childAspectRatio: 0.75),
                   itemCount: templates.length,
                   itemBuilder: (context, index) {
                     final template = templates[index];
@@ -82,7 +82,6 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
                             Expanded(
                               child: Container(
                                 color: Colors.grey.shade200,
-                                // Admin-uploaded templates will always be files
                                 child: template.imagePath.startsWith('assets/')
                                   ? Image.asset(
                                       template.imagePath,

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:kiosk_app/models/product_model.dart';
 import 'package:kiosk_app/services/data_service.dart';
+import 'package:kiosk_app/theme/kiosk_theme.dart';
 import 'package:kiosk_app/widgets/common_app_bar.dart';
 
 class MapPage extends StatefulWidget {
@@ -22,12 +23,11 @@ class _MapPageState extends State<MapPage> {
 
   Offset? _productPinPosition;
   Offset? _kioskPinPosition;
-  bool _arePinsCalculated = false; // A flag to prevent repeated calculations
+  bool _arePinsCalculated = false;
 
   @override
   void initState() {
     super.initState();
-    // Start the process of loading paths and then calculating positions
     _initializeMap();
   }
 
@@ -38,58 +38,44 @@ class _MapPageState extends State<MapPage> {
       setState(() {
         _customMapPath = path;
       });
-      // After the state is set and the image widget is in the tree,
-      // start trying to calculate the pin positions.
       WidgetsBinding.instance.addPostFrameCallback((_) => _calculatePinPositions());
     }
   }
   
-  // This is the new, robust calculation method
   void _calculatePinPositions() async {
-    // If we've already successfully calculated the pins, don't do it again.
     if (_arePinsCalculated || !mounted) return;
 
-    // Find the RenderBox of our Image widget using its key
     final imageContext = _imageKey.currentContext;
     if (imageContext == null) {
-      // If the context isn't available yet, the widget hasn't been laid out.
-      // We schedule this function to run again on the next frame.
       WidgetsBinding.instance.addPostFrameCallback((_) => _calculatePinPositions());
       return;
     }
 
     final imageBox = imageContext.findRenderObject() as RenderBox;
-    // Also check if it has a size yet.
     if (!imageBox.hasSize) {
-      // If not, try again on the next frame.
       WidgetsBinding.instance.addPostFrameCallback((_) => _calculatePinPositions());
       return;
     }
     
-    // --- If we've reached this point, the image is guaranteed to have a size ---
     final imageSize = imageBox.size;
-    
-    // Get the data needed for the pins
+
     final Product? product = ModalRoute.of(context)?.settings.arguments as Product?;
     final kioskLocation = await _dataService.getKioskLocation();
 
-    // Calculate position for the product pin
     Offset? productPinPos;
     if (product != null && product.mapX >= 0 && product.mapY >= 0) {
       productPinPos = Offset(imageSize.width * product.mapX, imageSize.height * product.mapY);
     }
-    
-    // Calculate position for the kiosk pin
+
     Offset? kioskPinPos;
     if (kioskLocation != null) {
       kioskPinPos = Offset(imageSize.width * kioskLocation.dx, imageSize.height * kioskLocation.dy);
     }
 
-    // Update the state with the final, correct positions
     setState(() {
       _productPinPosition = productPinPos;
       _kioskPinPosition = kioskPinPos;
-      _arePinsCalculated = true; // Mark as done!
+      _arePinsCalculated = true;
     });
   }
 
@@ -105,6 +91,7 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
+    final scale = KioskTheme.scale;
     final Product? product = ModalRoute.of(context)?.settings.arguments as Product?;
     final bool useCustomMap = _customMapPath != null && _customMapPath!.isNotEmpty;
 
@@ -118,28 +105,49 @@ class _MapPageState extends State<MapPage> {
         child: Center(
           child: Stack(
             children: [
-              // The Map Image with the key
               if (useCustomMap)
                 Image.file(File(_customMapPath!), key: _imageKey, errorBuilder: (c, e, s) => Image.asset(_defaultMapPath, key: _imageKey))
               else
                 Image.asset(_defaultMapPath, key: _imageKey),
               
-              // Show a loader only while we are waiting for the pins to be calculated
               if (!_arePinsCalculated)
                 const Center(child: CircularProgressIndicator()),
 
-              // The You Are Here Pin
               if (_kioskPinPosition != null)
                 Positioned(
                   left: _kioskPinPosition!.dx,
                   top: _kioskPinPosition!.dy,
-                  child: Transform.translate(
-                    offset: const Offset(-24, -24),
-                    child: const Tooltip(
-                      message: 'You Are Here',
-                      child: Icon(Icons.my_location, shadows:[Shadow(color: Colors.white, blurRadius: 10.0)], color: Colors.blue, size: 48),
-                    ),
-                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Transform.translate(
+                        offset: Offset(-23 * scale, -23 * scale),
+                        child: Tooltip(
+                          message: 'You Are Here',
+                          child: Icon(Icons.my_location, shadows:[Shadow(color: Colors.white, blurRadius: 10.0)], color: Colors.blue, size: 46 * scale),
+                        ),
+                      ),
+                      Transform.translate(
+                        offset: Offset(-51 * scale, -20 * scale),
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                            child: Text(
+                              "You are here",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15 * scale,
+                                ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  )
                 ),
 
               // The Product Pin
@@ -148,14 +156,14 @@ class _MapPageState extends State<MapPage> {
                   left: _productPinPosition!.dx,
                   top: _productPinPosition!.dy,
                   child: Transform.translate(
-                    offset: const Offset(-24, -43),
+                    offset: Offset(-24 * scale, -43 * scale),
                     child: Tooltip(
                       message: product?.name ?? 'Product Location',
                       child: Icon(
                         Icons.location_on,
                         color: Colors.red,
                         shadows: [Shadow(color: Colors.white, blurRadius: 10.0)],
-                        size: 48,
+                        size: 48 * scale,
                       ),
                     ),
                   ),

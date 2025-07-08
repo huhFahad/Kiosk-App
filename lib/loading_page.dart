@@ -16,12 +16,11 @@ class _LoadingPageState extends State<LoadingPage> {
   @override
   void initState() {
     super.initState();
-    // Start the initialization process as soon as the page is created
     _initializeApp();
   }
 
   Future<void> _initializeApp() async {
-    final startTime = DateTime.now(); // Mark the start
+    final startTime = DateTime.now();
 
     try {
       MediaKit.ensureInitialized();
@@ -38,7 +37,7 @@ class _LoadingPageState extends State<LoadingPage> {
       final delay = Duration(seconds: 5) - elapsed;
 
       if (delay > Duration.zero) {
-        await Future.delayed(delay); // Ensure at least 2 seconds
+        await Future.delayed(delay);
       }
 
       if (mounted) {
